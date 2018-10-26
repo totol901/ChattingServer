@@ -10,9 +10,10 @@ class WinSock : public Singleton<WinSock>
 private:
 	WSADATA m_WSAData;
 
-	WinSock();
+	
 
 public:
+	WinSock();
 	~WinSock();
 
 public:

@@ -7,10 +7,8 @@
 
 class Error :public Singleton<Error>
 {
-private:
-	Error();
-
 public:
+	Error();
 	~Error();
 
 	/****************************************************************************
