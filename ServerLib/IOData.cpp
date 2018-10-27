@@ -43,6 +43,7 @@ int32_t IOData::SetTotalBytes()
 	}
 	offset += sizeof(packetLen);
 
+
 	return offset;
 }
 
