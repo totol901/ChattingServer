@@ -13,11 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Manager">
-      <UniqueIdentifier>{9eaf2249-5a91-4d42-a9b3-c922e254dcb8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{fa2dc7f5-315e-4e8e-8fa2-63834d96e269}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetWork">
+      <UniqueIdentifier>{19f8452b-e180-4251-a834-e994b3361392}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -27,17 +27,14 @@
     <ClInclude Include="targetver.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="WinSock.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Util.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="Error.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientNetWork.h">
+      <Filter>NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="IOCPServerSession.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -47,11 +44,14 @@
     <ClCompile Include="ChattingClient.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="WinSock.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Error.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientNetWork.cpp">
+      <Filter>NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="IOCPServerSession.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
