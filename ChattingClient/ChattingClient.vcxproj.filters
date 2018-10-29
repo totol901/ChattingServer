@@ -34,7 +34,7 @@
       <Filter>NetWork</Filter>
     </ClInclude>
     <ClInclude Include="IOCPServerSession.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>NetWork</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -51,7 +51,7 @@
       <Filter>NetWork</Filter>
     </ClCompile>
     <ClCompile Include="IOCPServerSession.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>NetWork</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

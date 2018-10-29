@@ -4,28 +4,86 @@
 IOCPServerSession::IOCPServerSession()
 	:Session()
 {
+	m_Id = 0;
+	m_Type = SESSION_TYPE_SERVER;
 	m_arrIOData[IO_READ].SetType(IO_READ);
 	m_arrIOData[IO_WRITE].SetType(IO_WRITE);
 }
 
 IOCPServerSession::~IOCPServerSession()
 {
-	closesocket(m_Socket);
+	if (m_Socket != NULL)
+	{
+		closesocket(m_Socket);
+	}
 }
 
-void IOCPServerSession::sendPacket(char * packet)
+bool IOCPServerSession::PacketParsing(char * buff)
+{
+	T_PACKET* packet = nullptr;
+	packet = (T_PACKET*)buff;
+
+	switch (packet->type)
+	{
+	case PK_NONE:
+		cout << "test : " << ((string*)(&packet->buff))->c_str() << endl;
+		break;
+
+	case PK_ANS_LOGIN:
+
+		break;
+	case PK_ANS_CREATE_ID:
+
+		break;
+
+	case PK_ANS_WAITINGCHANNAL_ENTER:
+		break;
+
+	case PK_ANS_WAITINGCHANNAL_CHREAT_CHANNAL:
+		break;
+
+	case PK_ANS_WAITINGCHANNAL_CHANNAL_JOIN:
+		break;
+
+	case PK_RECV_CHANNAL_MESSAGE:
+		break;
+
+	case PK_ANS_CHANNAL_OUT:
+		break;
+
+	case PK_ANS_EXIT:
+		break;
+	}
+
+	if (!m_bConnected)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void IOCPServerSession::SendPacket(T_PACKET packet)
 {
 	if (!m_arrIOData[IO_WRITE].SetData(packet))
 	{
+		cout << "Send error" << endl;
 		return;
 	}
 
 	WSABUF wsaBuf;
 	wsaBuf.buf = m_arrIOData[IO_WRITE].GetDataBuff();
-	wsaBuf.len = sizeof(m_arrIOData[IO_WRITE].GetDataBuff());
+	wsaBuf.len = SOCKET_BUFF_SIZE;
 
 	this->Send(wsaBuf);
 	this->RecvStandBy();
+}
+
+void IOCPServerSession::Disconnect()
+{
+	closesocket(m_Socket);
+	m_bConnected = false;
+	m_Socket = NULL;
 }
 
 void IOCPServerSession::OnConnect(const char* serverIp, u_short serverPort)
@@ -90,7 +148,7 @@ void IOCPServerSession::OnSend(size_t transferSize)
 string* IOCPServerSession::OnRecv(size_t transferSize)
 {
 	int32_t offset = 0;
-	offset += m_arrIOData[IO_READ].SetTotalBytes();
+	m_arrIOData[IO_READ].SetTotalBytes();
 
 	if (IsRecving(transferSize))
 	{
@@ -99,7 +157,9 @@ string* IOCPServerSession::OnRecv(size_t transferSize)
 
 	const size_t packetHeaderSize = sizeof(int32_t);
 	int32_t packetDataSize = (int32_t)(m_arrIOData[IO_READ].GetTotalByte() - packetHeaderSize);
-	char *packetData = m_arrIOData[IO_READ].GetDataBuff() + offset;
+	char *packetData = m_arrIOData[IO_READ].GetDataBuff();
+
+	T_PACKET* tmp = (T_PACKET*)packetData;
 
 	string* packet = new string(packetData);
 	

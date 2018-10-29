@@ -2,6 +2,7 @@
 
 enum
 {
+	SESSION_TYPE_NONE,
 	SESSION_TYPE_TERMINAL,
 	SESSION_TYPE_CLIENT,
 	SESSION_TYPE_SERVER,
@@ -14,7 +15,7 @@ protected:
 	INT64	m_Id;
 	int8_t	m_Type;
 	
-	bool setSocketOpt();
+	//bool setSocketOpt();
 
 public:
 	Session();
@@ -26,7 +27,7 @@ public:
 	리턴값	: 없음
 	매개변수	: 없음
 	*****************************************************************************/
-	void				updateHeartBeat();
+	//void				updateHeartBeat();
 
 public:
 	//get함수

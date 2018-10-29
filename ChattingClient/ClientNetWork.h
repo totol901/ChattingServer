@@ -4,22 +4,27 @@
 ******************************************************************************/
 #pragma once
 
+#define CLIENTNETWORK ClientNetwork::GetInstance()
+
 class IOCPServerSession;
-class ClientNetwork
+class ClientNetwork : public Singleton<ClientNetwork>
 {
 private:
 	HANDLE m_IOCP;
 	IOCPServerSession* p_mServerSession;
 
 private:
+	
 	//초기화
 	void WSAInit();
 	//서버에 접속
 	void ConnectServer(const char* serverIp, const u_short& serverPort);
 
 public:
-	ClientNetwork(char* serverIp, u_short serverPort);
+	ClientNetwork();
 	~ClientNetwork();
+
+	void Init(char* serverIp, u_short serverPort);
 
 	IOCPServerSession* GetServerSession() { return p_mServerSession; }
 

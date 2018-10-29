@@ -5,29 +5,16 @@ class IOCPServerSession : public Session
 private:
 	IOData m_arrIOData[2];
 	bool m_bConnected;
-	
+
+	void Send(WSABUF wsaBuf);
+	void Recv(WSABUF wsabuf);
+	bool IsRecving(size_t transferSize);
+
 public:
 	IOCPServerSession();
 	~IOCPServerSession();
 
-	void sendPacket(char *packet);
-
-	void Disconnect();
-
-	void OnConnect(const char* serverIp, u_short serverPort);
-
-	void Recv(WSABUF wsabuf);
-	string* OnRecv(size_t transferSize);
-	bool IsRecving(size_t transferSize);
-
-	void Send(WSABUF wsaBuf);
-	/****************************************************************************
-	함수명	: onSend
-	설명		: 페킷 보내기 On이면 패킷 송신함
-	리턴값	: 없음
-	매개변수	: size_t
-	*****************************************************************************/
-	void			OnSend(size_t transferSize);
+	bool PacketParsing(char* buff);
 
 	/****************************************************************************
 	함수명	: sendPacket
@@ -35,15 +22,27 @@ public:
 	리턴값	: 없음
 	매개변수	: Packet*
 	*****************************************************************************/
-	void		    sendPacket();
+	void SendPacket(T_PACKET packet);
 
+	void Disconnect();
+
+	void OnConnect(const char* serverIp, u_short serverPort);
+	
 	/****************************************************************************
 	함수명	: onRecv
 	설명		: 데이터 분석, Recv 상태인 패킷 리턴해줌
 	리턴값	: Package*
 	매개변수	: size_t
 	*****************************************************************************/
-	//Package*		onRecv(size_t transferSize);
+	string* OnRecv(size_t transferSize);
+	
+	/****************************************************************************
+	함수명	: onSend
+	설명		: 페킷 보내기 On이면 패킷 송신함
+	리턴값	: 없음
+	매개변수	: size_t
+	*****************************************************************************/
+	void OnSend(size_t transferSize);
 
 	/****************************************************************************
 	함수명	: RecvStandBy
@@ -51,7 +50,6 @@ public:
 	리턴값	: 없음
 	매개변수	: 없음
 	*****************************************************************************/
-	void			RecvStandBy();
-
+	void RecvStandBy();
 };
 

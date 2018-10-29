@@ -43,20 +43,23 @@ int32_t IOData::SetTotalBytes()
 	}
 	offset += sizeof(packetLen);
 
-
 	return offset;
 }
 
-bool IOData::SetData(char* stream)
+bool IOData::SetData(T_PACKET stream)
 {
 	Clear();
-
-	memcpy_s(m_Buff, SOCKET_BUFF_SIZE, 
-		(void *)stream, sizeof(stream));
-
-	return true;
+	size_t t = sizeof(stream);
+	if (!memcpy_s(m_Buff, SOCKET_BUFF_SIZE*2,
+		(void *)&stream, sizeof(stream)))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
-
 
 WSABUF IOData::GetCurrentWSABuf()
 {

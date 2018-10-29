@@ -14,7 +14,7 @@ private:
 	IO_OPERATION m_IOType;
 	size_t m_TotalBytes;
 	size_t m_CurrentBytes;
-	char m_Buff[SOCKET_BUFF_SIZE];
+	char m_Buff[SOCKET_BUFF_SIZE*2];
 
 public:
 	IOData();
@@ -58,7 +58,7 @@ public:
 	리턴값	: bool
 	매개변수	: char*
 	*****************************************************************************/
-	bool SetData(char* stream);
+	bool SetData(T_PACKET stream);
 
 public:
 	//get함수

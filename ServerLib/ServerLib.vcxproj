@@ -149,6 +149,8 @@
   <ItemGroup>
     <ClInclude Include="IOCPSession.h" />
     <ClInclude Include="IOData.h" />
+    <ClInclude Include="Packet.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="stdafx.h" />
@@ -169,6 +171,9 @@
     </ClCompile>
     <ClCompile Include="Stream.cpp" />
     <ClCompile Include="WinSock.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ServerLib.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,16 +2,23 @@
 #include "ClientNetWork.h"
 #include "IOCPServerSession.h"
 
-ClientNetwork::ClientNetwork(char* serverIp, u_short serverPort)
+ClientNetwork::ClientNetwork()
 {
-	WSAInit();
-
-	ConnectServer(serverIp, serverPort);
+	
 }
 
 ClientNetwork::~ClientNetwork()
 {
+	WSAERROR->DestroyInstance();
 	WSACleanup();
+}
+
+void ClientNetwork::Init(char * serverIp, u_short serverPort)
+{
+	WSAERROR;
+	WSAInit();
+
+	ConnectServer(serverIp, serverPort);
 }
 
 void ClientNetwork::WSAInit()
@@ -87,7 +94,7 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 		if (BytesTransferred == 0)
 		{
 			cout << "서버가 종료되었습니다." << endl;
-			continue;
+			break;
 		}
 
 		switch (pIOData->GetType())
@@ -99,12 +106,15 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 		case IO_READ:
 		{
 			string *packet = pSession->OnRecv((size_t)BytesTransferred);
-			//cout << pIOData->GetDataBuff() << endl;
+
 			if (packet != nullptr)
 			{
-				cout << packet->c_str() << endl;
+				if(!pSession->PacketParsing((char*)packet->c_str()))
+				{
+					//문제가 생김 접속 종료됨
+				}
+				SAFE_DELETE(packet);
 			}
-			
 		}
 		continue;
 
