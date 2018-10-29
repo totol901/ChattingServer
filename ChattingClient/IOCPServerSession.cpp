@@ -18,15 +18,14 @@ IOCPServerSession::~IOCPServerSession()
 	}
 }
 
-bool IOCPServerSession::PacketParsing(char * buff)
+bool IOCPServerSession::PacketParsing(T_PACKET * pakcet)
 {
-	T_PACKET* packet = nullptr;
-	packet = (T_PACKET*)buff;
+	T_PACKET* packet = pakcet;
 
 	switch (packet->type)
 	{
 	case PK_NONE:
-		cout << "test : " << ((string*)(&packet->buff))->c_str() << endl;
+		cout << "test : " << packet->buff << endl;
 		break;
 
 	case PK_ANS_LOGIN:
@@ -72,11 +71,11 @@ void IOCPServerSession::SendPacket(T_PACKET packet)
 	}
 
 	WSABUF wsaBuf;
-	wsaBuf.buf = m_arrIOData[IO_WRITE].GetDataBuff();
-	wsaBuf.len = SOCKET_BUFF_SIZE;
+	wsaBuf.buf = (char*)m_arrIOData[IO_WRITE].GetPacket();
+	wsaBuf.len = sizeof(T_PACKET);
 
 	this->Send(wsaBuf);
-	this->RecvStandBy();
+	//this->RecvStandBy();
 }
 
 void IOCPServerSession::Disconnect()
@@ -120,10 +119,10 @@ void IOCPServerSession::Recv(WSABUF wsabuf)
 
 bool IOCPServerSession::IsRecving(size_t transferSize)
 {
-	if (m_arrIOData[IO_READ].NeedMoreIO(transferSize))
+	//if (m_arrIOData[IO_READ].NeedMoreIO(transferSize))
 	{
 		Recv(m_arrIOData[IO_READ].GetCurrentWSABuf());
-		return true;
+		//return true;
 	}
 	return false;
 }
@@ -145,7 +144,7 @@ void IOCPServerSession::OnSend(size_t transferSize)
 	}
 }
 
-string* IOCPServerSession::OnRecv(size_t transferSize)
+T_PACKET* IOCPServerSession::OnRecv(size_t transferSize)
 {
 	int32_t offset = 0;
 	m_arrIOData[IO_READ].SetTotalBytes();
@@ -154,18 +153,13 @@ string* IOCPServerSession::OnRecv(size_t transferSize)
 	{
 		return nullptr;
 	}
-
-	const size_t packetHeaderSize = sizeof(int32_t);
-	int32_t packetDataSize = (int32_t)(m_arrIOData[IO_READ].GetTotalByte() - packetHeaderSize);
-	char *packetData = m_arrIOData[IO_READ].GetDataBuff();
-
-	T_PACKET* tmp = (T_PACKET*)packetData;
-
-	string* packet = new string(packetData);
+	
+	T_PACKET* packetData = new T_PACKET();
+	*packetData = *m_arrIOData[IO_READ].GetPacket();
 	
 	RecvStandBy();
 	
-	return packet;
+	return packetData;
 }
 
 void IOCPServerSession::RecvStandBy()
@@ -173,7 +167,7 @@ void IOCPServerSession::RecvStandBy()
 	m_arrIOData[IO_READ].Clear();
 
 	WSABUF wsaBuf;
-	wsaBuf.buf = m_arrIOData[IO_READ].GetDataBuff();
+	wsaBuf.buf = (char*)m_arrIOData[IO_READ].GetPacket();
 	wsaBuf.len = SOCKET_BUFF_SIZE;
 
 	Recv(wsaBuf);

@@ -14,7 +14,7 @@ public:
 	IOCPServerSession();
 	~IOCPServerSession();
 
-	bool PacketParsing(char* buff);
+	bool PacketParsing(T_PACKET* pakcet);
 
 	/****************************************************************************
 	함수명	: sendPacket
@@ -34,7 +34,7 @@ public:
 	리턴값	: Package*
 	매개변수	: size_t
 	*****************************************************************************/
-	string* OnRecv(size_t transferSize);
+	T_PACKET* OnRecv(size_t transferSize);
 	
 	/****************************************************************************
 	함수명	: onSend

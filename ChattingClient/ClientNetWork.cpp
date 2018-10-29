@@ -105,11 +105,11 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 
 		case IO_READ:
 		{
-			string *packet = pSession->OnRecv((size_t)BytesTransferred);
+			T_PACKET *packet = pSession->OnRecv((size_t)BytesTransferred);
 
 			if (packet != nullptr)
 			{
-				if(!pSession->PacketParsing((char*)packet->c_str()))
+				if(!pSession->PacketParsing(packet))
 				{
 					//巩力啊 积辫 立加 辆丰凳
 				}

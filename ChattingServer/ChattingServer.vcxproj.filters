@@ -16,6 +16,9 @@
     <Filter Include="Data">
       <UniqueIdentifier>{82053eae-3dce-4ceb-b6eb-a6178323e2bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{b76e5df8-eaab-4a0e-8c4b-3acdf290a210}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -27,6 +30,15 @@
     <ClInclude Include="DataManager.h">
       <Filter>Data</Filter>
     </ClInclude>
+    <ClInclude Include="ServerNetwork.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSessionManager.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSession.h">
+      <Filter>Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -37,6 +49,15 @@
     </ClCompile>
     <ClCompile Include="DataManager.cpp">
       <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerNetwork.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSessionManager.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSession.cpp">
+      <Filter>Network</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

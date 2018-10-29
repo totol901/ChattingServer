@@ -14,7 +14,8 @@ private:
 	IO_OPERATION m_IOType;
 	size_t m_TotalBytes;
 	size_t m_CurrentBytes;
-	char m_Buff[SOCKET_BUFF_SIZE*2];
+	T_PACKET m_Packet;
+	//char m_Buff[SOCKET_BUFF_SIZE*2];
 
 public:
 	IOData();
@@ -64,7 +65,7 @@ public:
 	//get함수
 	size_t GetTotalByte() { return m_TotalBytes; }
 	IO_OPERATION GetType() { return m_IOType; }
-	char * GetDataBuff() { return m_Buff; }
+	T_PACKET * GetPacket() { return &m_Packet; }
 	LPWSAOVERLAPPED GetOverlapped() { return &m_Overlapped; }
 
 	//set함수

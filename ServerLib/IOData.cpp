@@ -7,7 +7,7 @@ IOData::IOData()
 	m_CurrentBytes(0)
 {
 	ZeroMemory(&m_Overlapped, sizeof(m_Overlapped));
-	ZeroMemory(&m_Buff, sizeof(m_Buff));
+	ZeroMemory(&m_Packet, sizeof(m_Packet));
 }
 
 IOData::~IOData()
@@ -16,7 +16,6 @@ IOData::~IOData()
 
 void IOData::Clear()
 {
-	ZeroMemory(&m_Buff, sizeof(m_Buff));
 	m_TotalBytes = 0;
 	m_CurrentBytes = 0;
 }
@@ -37,7 +36,8 @@ int32_t IOData::SetTotalBytes()
 	int32_t packetLen[1] = { 0, };
 	if (m_TotalBytes == 0)
 	{
-		memcpy_s((void *)packetLen, sizeof(packetLen), (void *)m_Buff, sizeof(packetLen));
+		memcpy_s((void *)packetLen, sizeof(packetLen), 
+			(void *)&m_Packet, sizeof(packetLen));
 		
 		m_TotalBytes = (size_t)packetLen[0];
 	}
@@ -49,8 +49,7 @@ int32_t IOData::SetTotalBytes()
 bool IOData::SetData(T_PACKET stream)
 {
 	Clear();
-	size_t t = sizeof(stream);
-	if (!memcpy_s(m_Buff, SOCKET_BUFF_SIZE*2,
+	if (!memcpy_s((void *)&m_Packet, sizeof(m_Packet),
 		(void *)&stream, sizeof(stream)))
 	{
 		return true;
@@ -64,7 +63,7 @@ bool IOData::SetData(T_PACKET stream)
 WSABUF IOData::GetCurrentWSABuf()
 {
 	WSABUF wsaBuf;
-	wsaBuf.buf = m_Buff + m_CurrentBytes;
+	wsaBuf.buf = (char*)&m_Packet + m_CurrentBytes;
 	wsaBuf.len = (ULONG)(m_TotalBytes - m_CurrentBytes);
 
 	return wsaBuf;

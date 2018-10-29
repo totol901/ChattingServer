@@ -28,6 +28,14 @@ struct T_PACKET
 	E_PACKET_TYPE type;
 	char buff[SOCKET_BUFF_SIZE];
 	USHORT end;
+
+	T_PACKET() 
+		:Size(0),
+		type(PK_NONE),
+		end(USHRT_MAX)
+	{
+		memset(buff, 0, (SOCKET_BUFF_SIZE));
+	}
 	T_PACKET(E_PACKET_TYPE _type)
 	{
 		Size = sizeof(*this);
