@@ -4,18 +4,16 @@
 
 ClientNetwork::ClientNetwork()
 {
-	
 }
 
 ClientNetwork::~ClientNetwork()
 {
-	WSAERROR->DestroyInstance();
-	WSACleanup();
+
 }
 
 void ClientNetwork::Init(char * serverIp, u_short serverPort)
 {
-	WSAERROR;
+	WSAERROR->Init();
 	WSAInit();
 
 	ConnectServer(serverIp, serverPort);
@@ -23,16 +21,7 @@ void ClientNetwork::Init(char * serverIp, u_short serverPort)
 
 void ClientNetwork::WSAInit()
 {
-	//WSA 초기화
-	WSADATA WSAData;
-	ZeroMemory(&WSAData, sizeof(WSADATA));
-
-	if (WSAStartup(MAKEWORD(2, 2), &WSAData) != 0)
-	{
-		cout << "# WSA startup 실패!" << endl;
-		exit(0);
-	}
-	cout << "### WSA 2.2 세팅 성공!" << endl;
+	WSAWINSOCK->Init();
 }
 
 void ClientNetwork::ConnectServer(const char* serverIp, const u_short& serverPort)
@@ -71,8 +60,6 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 	DWORD BytesTransferred = 0;
 	IOCPServerSession* pSession;
 	IOData* pIOData = nullptr;
-	DWORD flags = 0;
-	DWORD sendBytes = 0;
 
 	while (1)
 	{
@@ -104,19 +91,19 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 			continue;
 
 		case IO_READ:
-		{
-			T_PACKET *packet = pSession->OnRecv((size_t)BytesTransferred);
-
-			if (packet != nullptr)
 			{
-				if(!pSession->PacketParsing(packet))
+				T_PACKET *packet = pSession->OnRecv((size_t)BytesTransferred);
+
+				if (packet != nullptr)
 				{
-					//문제가 생김 접속 종료됨
+					if(!pSession->PacketParsing(packet))
+					{
+						//문제가 생김 접속 종료됨
+					}
+					SAFE_DELETE(packet);
 				}
-				SAFE_DELETE(packet);
 			}
-		}
-		continue;
+			continue;
 
 		case IO_ERROR:
 

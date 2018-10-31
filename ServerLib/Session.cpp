@@ -2,7 +2,7 @@
 #include "Session.h"
 
 Session::Session()
-	:m_Id(-1),
+	:m_ID(-1),
 	m_Type(SESSION_TYPE_NONE),
 	m_Socket(NULL)
 {
@@ -10,4 +10,5 @@ Session::Session()
 
 Session::~Session()
 {
+	closesocket(m_Socket);
 }

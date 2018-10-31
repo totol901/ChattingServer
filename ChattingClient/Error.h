@@ -7,10 +7,13 @@
 
 class Error :public Singleton<Error>
 {
-public:
+	friend Singleton;
+private:
 	Error();
 	~Error();
 
+public:
+	void Init() {}
 	/****************************************************************************
 	함수명	: err_quit
 	설명		:소켓 함수 오류 출력 후 종료

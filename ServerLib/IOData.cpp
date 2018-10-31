@@ -6,8 +6,8 @@ IOData::IOData()
 	m_TotalBytes(0),
 	m_CurrentBytes(0)
 {
-	ZeroMemory(&m_Overlapped, sizeof(m_Overlapped));
-	ZeroMemory(&m_Packet, sizeof(m_Packet));
+	memset(&m_Overlapped, 0, sizeof(m_Overlapped));
+	memset(&m_Packet, 0, sizeof(m_Packet));
 }
 
 IOData::~IOData()
@@ -16,6 +16,7 @@ IOData::~IOData()
 
 void IOData::Clear()
 {
+	memset(&m_Packet, 0, sizeof(m_Packet));
 	m_TotalBytes = 0;
 	m_CurrentBytes = 0;
 }

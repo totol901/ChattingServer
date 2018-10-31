@@ -4,7 +4,7 @@
 IOCPServerSession::IOCPServerSession()
 	:Session()
 {
-	m_Id = 0;
+	m_ID = 0;
 	m_Type = SESSION_TYPE_SERVER;
 	m_arrIOData[IO_READ].SetType(IO_READ);
 	m_arrIOData[IO_WRITE].SetType(IO_WRITE);
@@ -12,10 +12,6 @@ IOCPServerSession::IOCPServerSession()
 
 IOCPServerSession::~IOCPServerSession()
 {
-	if (m_Socket != NULL)
-	{
-		closesocket(m_Socket);
-	}
 }
 
 bool IOCPServerSession::PacketParsing(T_PACKET * pakcet)
@@ -71,7 +67,7 @@ void IOCPServerSession::SendPacket(T_PACKET packet)
 	}
 
 	WSABUF wsaBuf;
-	wsaBuf.buf = (char*)m_arrIOData[IO_WRITE].GetPacket();
+	wsaBuf.buf = (char*)m_arrIOData[IO_WRITE].GetptPacket();
 	wsaBuf.len = sizeof(T_PACKET);
 
 	this->Send(wsaBuf);
@@ -114,7 +110,7 @@ void IOCPServerSession::Recv(WSABUF wsabuf)
 	DWORD flags = 0;
 	DWORD recvBytes = 0;
 	DWORD errorCode = WSARecv(m_Socket, &wsabuf, 1, &recvBytes, 
-		&flags, m_arrIOData[IO_READ].GetOverlapped(), NULL);
+		&flags, m_arrIOData[IO_READ].GetptOverlapped(), NULL);
 }
 
 bool IOCPServerSession::IsRecving(size_t transferSize)
@@ -133,7 +129,7 @@ void IOCPServerSession::Send(WSABUF wsaBuf)
 	DWORD sendBytes;
 	DWORD errorCode = WSASend(m_Socket,
 		&wsaBuf, 1, &sendBytes, flags,
-		m_arrIOData[IO_WRITE].GetOverlapped(), NULL);
+		m_arrIOData[IO_WRITE].GetptOverlapped(), NULL);
 }
 
 void IOCPServerSession::OnSend(size_t transferSize)
@@ -155,7 +151,7 @@ T_PACKET* IOCPServerSession::OnRecv(size_t transferSize)
 	}
 	
 	T_PACKET* packetData = new T_PACKET();
-	*packetData = *m_arrIOData[IO_READ].GetPacket();
+	*packetData = *m_arrIOData[IO_READ].GetptPacket();
 	
 	RecvStandBy();
 	
@@ -167,8 +163,8 @@ void IOCPServerSession::RecvStandBy()
 	m_arrIOData[IO_READ].Clear();
 
 	WSABUF wsaBuf;
-	wsaBuf.buf = (char*)m_arrIOData[IO_READ].GetPacket();
-	wsaBuf.len = SOCKET_BUFF_SIZE;
+	wsaBuf.buf = (char*)m_arrIOData[IO_READ].GetptPacket();
+	wsaBuf.len = PACKET_MAX_SIZE;
 
 	Recv(wsaBuf);
 }

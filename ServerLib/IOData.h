@@ -63,11 +63,11 @@ public:
 
 public:
 	//get함수
-	size_t GetTotalByte() { return m_TotalBytes; }
-	IO_OPERATION GetType() { return m_IOType; }
-	T_PACKET * GetPacket() { return &m_Packet; }
-	LPWSAOVERLAPPED GetOverlapped() { return &m_Overlapped; }
+	const size_t& GetTotalByte() const { return m_TotalBytes; }
+	const IO_OPERATION& GetType() const { return m_IOType; }
+	T_PACKET * const GetptPacket() { return &m_Packet; }
+	LPWSAOVERLAPPED const GetptOverlapped() { return &m_Overlapped; }
 
 	//set함수
-	void SetType(IO_OPERATION type) { m_IOType = type; }
+	void SetType(const IO_OPERATION& type) { m_IOType = type; }
 };

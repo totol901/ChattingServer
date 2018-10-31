@@ -147,7 +147,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="IOCPSession.h" />
     <ClInclude Include="IOData.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="resource.h" />
@@ -160,7 +159,6 @@
     <ClInclude Include="WinSock.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="IOCPSession.cpp" />
     <ClCompile Include="IOData.cpp" />
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -11,11 +11,12 @@ struct UserData
 class DataManager : public Singleton<DataManager>
 {
 private:
+	DataManager();
+	~DataManager();
 	map<string, UserData*> m_UserDataTable;
 
 public:
-	DataManager();
-	~DataManager();
+	
 
 	/****************************************************************************
 	ÇÔ¼ö¸í	: insert

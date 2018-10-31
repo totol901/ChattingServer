@@ -1,20 +1,24 @@
 #pragma once
 
-#define SERVERNETWORK ServerNetwork::GetInstance()
-
-class ServerNetwork : Singleton<ServerNetwork>
+class ServerNetwork : public Singleton<ServerNetwork>
 {
+	friend Singleton;
 private:
 	HANDLE m_IOCP;
+	SOCKET m_ListenSock;
+
 private:
-
-	//√ ±‚»≠
-	void WSAInit();
-
-public:
 	ServerNetwork();
 	~ServerNetwork();
 
+	void CreateListen();
 
+public:
+	void Init();
+
+	void CreateIOCP();
+	
+	void AcceptRoop();
+
+	static unsigned int WINAPI CompletionClientSessionThread(LPVOID pComPort);
 };
-

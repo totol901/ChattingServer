@@ -5,7 +5,7 @@ class Stream
 private:
 	size_t m_Offset;
 	size_t m_ReadPt;
-	array <UCHAR, SOCKET_BUFF_SIZE> m_Stream;
+	array <UCHAR, PAKCET_BUFF_SIZE> m_Stream;
 	
 public:
 	Stream();

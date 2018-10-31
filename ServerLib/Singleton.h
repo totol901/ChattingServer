@@ -8,9 +8,6 @@
 template<class T>
 class Singleton
 {
-private:
-	static T* m_pInstatnce;
-
 protected:
 	Singleton(const Singleton&) = delete;
 	Singleton(const Singleton&&) = delete;
@@ -19,32 +16,17 @@ protected:
 
 	Singleton() {}
 	virtual ~Singleton() {}
-
+	
 public:
-
 	/****************************************************************************
 	함수명	: GetInstance
 	설명		: T 클래스의 인스턴스 주소를 리턴받음
 	*****************************************************************************/
 	static T* GetInstance()
 	{
-		if (m_pInstatnce == nullptr)
-		{
-			m_pInstatnce = new T;
-		}
+		static T Instatnce;
 
-		return m_pInstatnce;
-	}
-
-	/****************************************************************************
-	함수명	: DestroyInstance
-	설명		: 인스턴스를 지워줌
-	*****************************************************************************/
-	void DestroyInstance()
-	{
-		SAFE_DELETE(m_pInstatnce);
+		return &Instatnce;
 	}
 };
 
-//m_pInstatnce를 nullptr로 초기화
-template<class T> T* Singleton<T>::m_pInstatnce = nullptr;

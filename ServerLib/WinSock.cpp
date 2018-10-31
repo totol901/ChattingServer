@@ -3,7 +3,7 @@
 
 WinSock::WinSock()
 {
-	ZeroMemory(&m_WSAData, sizeof(WSADATA));
+	memset(&m_WSAData, 0, sizeof(WSADATA));
 
 	if (WSAStartup(MAKEWORD(2, 2), &m_WSAData) != 0)
 	{

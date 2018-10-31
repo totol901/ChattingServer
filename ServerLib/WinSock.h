@@ -7,13 +7,15 @@
 
 class WinSock : public Singleton<WinSock>
 {
+	friend Singleton;
 private:
-	WSADATA m_WSAData;
-
-public:
 	WinSock();
 	~WinSock();
 
+	WSADATA m_WSAData;
+
 public:
+	void Init() {}
 	const WSADATA& GetWSAData();
+	
 };
