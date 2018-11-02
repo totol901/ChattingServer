@@ -14,6 +14,7 @@ private:
 	HANDLE m_IOCP;
 	IOCPServerSession* p_mServerSession;
 
+
 private:
 	ClientNetwork();
 	~ClientNetwork();
