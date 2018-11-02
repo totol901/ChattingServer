@@ -45,3 +45,13 @@ void Error::err_display(int errcode)
 	printf("[¿À·ù] %s", (char *)lpMsgBuf);
 	LocalFree(lpMsgBuf);
 }
+
+void Error::err_print(const char * str, ...)
+{
+	va_list args;
+	va_start(args, str);
+
+	printf(str, args);
+
+	va_end(str);
+}

@@ -17,5 +17,4 @@ private:
 public:
 	void Init() {}
 	const WSADATA& GetWSAData();
-	
 };

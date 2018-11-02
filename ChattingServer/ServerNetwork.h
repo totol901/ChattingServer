@@ -18,7 +18,11 @@ public:
 
 	void CreateIOCP();
 	
-	void AcceptRoop();
+	static unsigned int WINAPI AcceptRoop(LPVOID sNetwork);
 
 	static unsigned int WINAPI CompletionClientSessionThread(LPVOID pComPort);
+
+public:
+	const SOCKET & GetListenSock() const { return m_ListenSock; }
+	const HANDLE & GetIOCPHandle() const { return m_IOCP; }
 };

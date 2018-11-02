@@ -11,6 +11,7 @@ enum
 class Session
 {
 protected:
+	IOData m_arrIOData[2];
 	SOCKET m_Socket;
 	INT64	m_ID;
 	int8_t	m_Type;

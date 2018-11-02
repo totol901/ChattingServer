@@ -8,7 +8,7 @@ ClientNetwork::ClientNetwork()
 
 ClientNetwork::~ClientNetwork()
 {
-
+	CloseHandle(m_IOCP);
 }
 
 void ClientNetwork::Init(char * serverIp, u_short serverPort)
@@ -36,7 +36,7 @@ void ClientNetwork::ConnectServer(const char* serverIp, const u_short& serverPor
 		NULL, 0, numberOfCurrentThredCount);
 	if (m_IOCP == nullptr)
 	{
-		cout << "IOCP 생성 실패!" << endl;
+		WSAERROR->err_print("IOCP 생성 실패!\n");
 		return;
 	}
 
@@ -70,18 +70,22 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 
 		if (!ret)
 		{
-			continue;
+			if (BytesTransferred == 0)
+			{
+				WSAERROR->err_print("서버와 비정상 접속 종료 되었습니다.\n");
+			}
+			return 0;
 		}
 		if (pSession == nullptr)
 		{
-			//SLog(L"! socket data broken");
+			WSAERROR->err_print("서버 세션 오류\n");
 			return 0;
 		}
 
 		if (BytesTransferred == 0)
 		{
-			cout << "서버가 종료되었습니다." << endl;
-			break;
+			WSAERROR->err_print("서버가 종료되었습니다.\n");
+			return 0;
 		}
 
 		switch (pIOData->GetType())
@@ -98,7 +102,7 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 				{
 					if(!pSession->PacketParsing(packet))
 					{
-						//문제가 생김 접속 종료됨
+						WSAERROR->err_print("패킷 파싱 오류\n");
 					}
 					SAFE_DELETE(packet);
 				}
@@ -106,8 +110,8 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 			continue;
 
 		case IO_ERROR:
-
-			//SLog(L"* close by client error [%d][%s]", session->id(), session->clientAddress().c_str());
+			WSAERROR->err_print("IO 에러\n");
+			
 			continue;
 		}
 	}

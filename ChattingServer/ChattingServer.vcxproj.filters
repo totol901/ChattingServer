@@ -19,6 +19,9 @@
     <Filter Include="Network">
       <UniqueIdentifier>{b76e5df8-eaab-4a0e-8c4b-3acdf290a210}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{a01eeee8-5926-4261-a99f-a3d5fe1c4f0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

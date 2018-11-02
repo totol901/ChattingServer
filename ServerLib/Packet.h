@@ -42,4 +42,3 @@ struct T_PACKET
 	}
 };
 #pragma pack(pop)
-

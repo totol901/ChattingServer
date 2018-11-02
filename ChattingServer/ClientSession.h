@@ -3,9 +3,8 @@
 class ClientSession : public Session
 {
 private:
-	IOData m_arrIOData[2];
+	
 	bool m_bConnected;
-
 	void Send(const WSABUF& wsaBuf);
 	void Recv(const WSABUF& wsabuf);
 	bool IsRecving(const size_t& transferSize);

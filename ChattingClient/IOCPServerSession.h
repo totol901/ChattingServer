@@ -3,7 +3,6 @@
 class IOCPServerSession : public Session
 {
 private:
-	IOData m_arrIOData[2];
 	bool m_bConnected;
 
 	void Send(WSABUF wsaBuf);

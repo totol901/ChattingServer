@@ -8,6 +8,7 @@ ServerNetwork::ServerNetwork()
 
 ServerNetwork::~ServerNetwork()
 {
+	CloseHandle(m_IOCP);
 	closesocket(m_ListenSock);
 }
 
@@ -42,7 +43,7 @@ void ServerNetwork::CreateIOCP()
 
 void ServerNetwork::CreateListen()
 {
-	m_ListenSock = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
+	m_ListenSock = WSASocketW(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 
 	SOCKADDR_IN servAddr;
 	memset(&servAddr, 0, sizeof(SOCKADDR_IN));
@@ -52,11 +53,19 @@ void ServerNetwork::CreateListen()
 
 	bind(m_ListenSock, (SOCKADDR*)&servAddr, sizeof(servAddr));
 	listen(m_ListenSock, 5);
+
+	//acceptRoop 돌려줌
+	_beginthreadex(NULL, 0,
+		AcceptRoop,
+		this,
+		0, NULL);
 }
 
-void ServerNetwork::AcceptRoop()
+unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 {
+	ServerNetwork* serverNetwork = (ServerNetwork*)sNetwork;
 	SOCKADDR_IN clientAddr;
+	SOCKET clientSock = INVALID_SOCKET;
 	int addrLen = sizeof(clientAddr);
 	DWORD RecvBytes = 0;
 
@@ -66,7 +75,12 @@ void ServerNetwork::AcceptRoop()
 		memset(&clientAddr, 0, addrLen);
 		RecvBytes = 0;
 
-		SOCKET clientSock = accept(m_ListenSock, (SOCKADDR*)&clientAddr, &addrLen);
+		clientSock = accept(serverNetwork->GetListenSock(),
+			(SOCKADDR*)&clientAddr, &addrLen);
+		if (clientSock == INVALID_SOCKET)
+		{
+			return 0;
+		}
 
 		//클라이언트 세션 생성 후 매니저 컨터이너에 넣어줌
 		ClientSession* clientSession = new ClientSession;
@@ -82,11 +96,14 @@ void ServerNetwork::AcceptRoop()
 
 		//IOCP 연결
 		CreateIoCompletionPort((HANDLE)clientSession->GetSocket(),
-			m_IOCP, (ULONG_PTR)clientSession, 0);
+			serverNetwork->GetIOCPHandle(), 
+			(ULONG_PTR)clientSession, 0);
 
 		//IOCP 스레드를 대기모드에서 깨우기 위한 recv
 		clientSession->RecvStandBy();
 	}
+
+	return 0;
 }
 
 unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
@@ -105,6 +122,16 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 
 		if (!ret)
 		{
+			//비정상 접속 종료
+			if (bytesTransferred == 0)
+			{
+				if (!CLIENTSESSIONMANAGER->
+					DeleteClientSession(pClientSession->GetSocket()))
+				{
+					//해당 클라이언트 세션 못찾음
+				}
+				SAFE_DELETE(pClientSession);
+			}
 			continue;
 		}
 		if (pClientSession == nullptr)
@@ -112,9 +139,10 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			//SLog(L"! socket data broken");
 			return 0;
 		}
+
+		//정상적 접속 종료
 		if (bytesTransferred == 0)
 		{
-			//클라이언트가 종료함
 			if (!CLIENTSESSIONMANAGER->DeleteClientSession(pClientSession->GetSocket()))
 			{
 				// TODO : 매니저에서 찾을수가 없음 log 띄움

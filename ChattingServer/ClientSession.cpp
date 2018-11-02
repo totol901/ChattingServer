@@ -6,8 +6,6 @@ ClientSession::ClientSession()
 	m_bConnected(true)
 {
 	m_Type = SESSION_TYPE_CLIENT;
-	m_arrIOData[IO_READ].SetType(IO_READ);
-	m_arrIOData[IO_WRITE].SetType(IO_WRITE);
 }
 
 ClientSession::~ClientSession()

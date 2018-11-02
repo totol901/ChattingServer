@@ -16,6 +16,6 @@ private:
 public:
 	bool AddClientSession( ClientSession* const clientSession);
 	
-	ClientSession* FindSession(SOCKET socket);
+	ClientSession* FindSession(const SOCKET& socket);
 	bool DeleteClientSession(const SOCKET& socket);
 };
