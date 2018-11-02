@@ -26,30 +26,34 @@ void Logger::Init()
 void Logger::LogPrint(const char* str, ...)
 {
 	string tempStr = TIMER->NowTimeWithMilliSec();
-	tempStr += ": ";
-	tempStr += str;
-	tempStr += "\n";
+	tempStr += "... ";
 
-	char* buf = (char*)tempStr.c_str();
+	char buf[1024] = {0,};
 
 	va_list args;
-	va_start(args, buf);
-	vprintf(buf, args);
+	va_start(args, str);
+	vsprintf_s(buf, str, args);
 	va_end(args);
+
+	tempStr += buf;
+	tempStr += "\n";
+	printf(tempStr.c_str());
 }
 
 void Logger::LogPrintAtFile(const char * str, ...)
 {
 	string tempStr = TIMER->NowTimeWithMilliSec();
-	tempStr += ": ";
-	tempStr += str;
-	tempStr += "\n";
+	tempStr += "... ";
 
-	char* buf = (char*)tempStr.c_str();
+	char buf[1024] = { 0, };
 
 	va_list args;
-	va_start(args, buf);
-	vprintf(buf, args);
-	vfprintf_s(pFile, buf, args);
+	va_start(args, str);
+	vsprintf_s(buf, str, args);
 	va_end(args);
+
+	tempStr += buf;
+	tempStr += "\n";
+	printf(tempStr.c_str());
+	fprintf(pFile, tempStr.c_str());
 }

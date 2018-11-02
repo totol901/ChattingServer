@@ -1,13 +1,17 @@
 #include "stdafx.h"
 #include "ServerNetwork.h"
 
+static CRITICAL_SECTION ClientSessionThreadCS;
+
 ServerNetwork::ServerNetwork()
+	:m_Shutdown(false)
 {
 	WSAWINSOCK->Init();
 }
 
 ServerNetwork::~ServerNetwork()
 {
+	m_Shutdown = true;
 	CloseHandle(m_IOCP);
 	closesocket(m_ListenSock);
 }
@@ -25,10 +29,11 @@ void ServerNetwork::CreateIOCP()
 		NULL, 0, 0);
 	if (m_IOCP == nullptr)
 	{
-		cout << "IOCP 생성 실패!" << endl;
+		ASSERT(0);
 		return;
 	}
-
+	SLogPrint("IOCP 생성 성공!");
+	
 	SYSTEM_INFO SystemInfo;
 	memset(&SystemInfo, 0, sizeof(SYSTEM_INFO));
 	GetSystemInfo(&SystemInfo);
@@ -39,11 +44,12 @@ void ServerNetwork::CreateIOCP()
 			m_IOCP,
 			0, NULL);
 	}
+	SLogPrint("IOCP 스레드 생성");
 }
 
 void ServerNetwork::CreateListen()
 {
-	m_ListenSock = WSASocketW(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
+	m_ListenSock = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
 
 	SOCKADDR_IN servAddr;
 	memset(&servAddr, 0, sizeof(SOCKADDR_IN));
@@ -53,6 +59,7 @@ void ServerNetwork::CreateListen()
 
 	bind(m_ListenSock, (SOCKADDR*)&servAddr, sizeof(servAddr));
 	listen(m_ListenSock, 5);
+	SLogPrintAtFile("Listen 시작!");
 
 	//acceptRoop 돌려줌
 	_beginthreadex(NULL, 0,
@@ -63,55 +70,69 @@ void ServerNetwork::CreateListen()
 
 unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 {
-	ServerNetwork* serverNetwork = (ServerNetwork*)sNetwork;
-	SOCKADDR_IN clientAddr;
-	SOCKET clientSock = INVALID_SOCKET;
-	int addrLen = sizeof(clientAddr);
-	DWORD RecvBytes = 0;
+	ServerNetwork*	serverNetwork	= (ServerNetwork*)sNetwork;
+	SOCKET			clientSock		= INVALID_SOCKET;
+	int				addrLen			= sizeof(SOCKADDR_IN);
+	DWORD			RecvBytes		= 0;
+	SOCKADDR_IN		clientAddr;
 
-	while (true)
+	while (!serverNetwork->IsShutdown())
 	{
-		addrLen = sizeof(SOCKADDR_IN);
 		memset(&clientAddr, 0, addrLen);
-		RecvBytes = 0;
+		addrLen		= sizeof(SOCKADDR_IN);
+		RecvBytes	= 0;
 
 		clientSock = accept(serverNetwork->GetListenSock(),
 			(SOCKADDR*)&clientAddr, &addrLen);
 		if (clientSock == INVALID_SOCKET)
 		{
+			SErrPrintAtFile("accept 실패, ip = %s, port = %d",
+				clientAddr.sin_addr, clientAddr.sin_port);
 			return 0;
 		}
+		char ip[256] = {0,};
+		inet_ntop(AF_INET, &clientAddr.sin_addr, ip, sizeof(ip));
+		SLogPrintAtFile("클라이언트 접속, ip = %s, port = %d",
+			ip, clientAddr.sin_port);
 
 		//클라이언트 세션 생성 후 매니저 컨터이너에 넣어줌
 		ClientSession* clientSession = new ClientSession;
 		clientSession->SetSocket(clientSock);
 		clientSession->SetSocketAddr(clientAddr);
-		
-		cout << "클라접속!" << endl;
-
-		if (!CLIENTSESSIONMANAGER->AddClientSession(clientSession))
-		{
-			//TODO : Log 처리, 클라이언트 세션 중복
-		}
+		//세션매니저에 세션 추가
+		CLIENTSESSIONMANAGER->AddClientSession(clientSession);
 
 		//IOCP 연결
 		CreateIoCompletionPort((HANDLE)clientSession->GetSocket(),
 			serverNetwork->GetIOCPHandle(), 
 			(ULONG_PTR)clientSession, 0);
+		
+		//과제를 위한 추가 구문
+		char buf[PAKCET_BUFF_SIZE] = { 0, };
+		memcpy(buf, TIMER->NowTimeWithMilliSec().c_str(), 
+			TIMER->NowTimeWithMilliSec().size());
+		T_PACKET packet(PK_NONE);
+		packet.Size = sizeof(T_PACKET);
+		memcpy_s(packet.buff, (PAKCET_BUFF_SIZE),
+			buf, strlen(buf) + 1);
+		clientSession->SendPacket(packet);
 
 		//IOCP 스레드를 대기모드에서 깨우기 위한 recv
 		clientSession->RecvStandBy();
 	}
 
+	SLogPrintAtFile("Accept루프 스레드 종료");
 	return 0;
 }
 
 unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 {
-	HANDLE completionPort = (HANDLE)pComPort;
-	DWORD bytesTransferred = 0;
-	ClientSession* pClientSession = nullptr;
-	IOData* pIOData = nullptr;
+	HANDLE			completionPort		= (HANDLE)pComPort;
+	DWORD			bytesTransferred	= 0;
+	ClientSession*	pClientSession		= nullptr;
+	IOData*			pIOData				= nullptr;
+
+	InitializeCriticalSection(&ClientSessionThreadCS);
 
 	while (1)
 	{
@@ -125,29 +146,39 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			//비정상 접속 종료
 			if (bytesTransferred == 0)
 			{
+				//recv, send한 IOData 2개가 들어오게됨
+				//때문에 임계영역 설정
+				EnterCriticalSection(&ClientSessionThreadCS);
 				if (!CLIENTSESSIONMANAGER->
 					DeleteClientSession(pClientSession->GetSocket()))
 				{
-					//해당 클라이언트 세션 못찾음
+					LeaveCriticalSection(&ClientSessionThreadCS);
+					continue;
 				}
 				SAFE_DELETE(pClientSession);
+				LeaveCriticalSection(&ClientSessionThreadCS);
 			}
 			continue;
 		}
 		if (pClientSession == nullptr)
 		{
-			//SLog(L"! socket data broken");
+			SLogPrintAtFile("소켓 이상");
 			return 0;
 		}
 
 		//정상적 접속 종료
 		if (bytesTransferred == 0)
 		{
+			//recv, send한 IOData 2개가 들어오게됨
+			//때문에 임계영역 설정
+			EnterCriticalSection(&ClientSessionThreadCS);
 			if (!CLIENTSESSIONMANAGER->DeleteClientSession(pClientSession->GetSocket()))
 			{
-				// TODO : 매니저에서 찾을수가 없음 log 띄움
+				LeaveCriticalSection(&ClientSessionThreadCS);
+				continue;
 			}
 			SAFE_DELETE(pClientSession);
+			LeaveCriticalSection(&ClientSessionThreadCS);
 			continue;
 		}
 
@@ -165,7 +196,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 				{
 					if (!pClientSession->PacketParsing(pPacket))
 					{
-						//문제가 생김 접속 종료됨
+						SLogPrintAtFile("페킷 파싱중 문제가 생김");
 					}
 					SAFE_DELETE(pPacket);
 				}
@@ -173,11 +204,12 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			continue;
 
 		case IO_ERROR:
-
-			//SLog(L"* close by client error [%d][%s]", session->id(), session->clientAddress().c_str());
+			SLogPrintAtFile("IO 에러");
 			continue;
 		}
 	}
+
+	DeleteCriticalSection(&ClientSessionThreadCS);
 
 	return 0;
 }

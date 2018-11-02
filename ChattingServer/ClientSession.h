@@ -3,7 +3,6 @@
 class ClientSession : public Session
 {
 private:
-	
 	bool m_bConnected;
 	void Send(const WSABUF& wsaBuf);
 	void Recv(const WSABUF& wsabuf);

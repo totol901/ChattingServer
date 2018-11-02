@@ -12,5 +12,6 @@ Session::Session()
 
 Session::~Session()
 {
+	m_Type = SESSION_TYPE_NONE;
 	closesocket(m_Socket);
 }

@@ -1,7 +1,6 @@
 /******************************************************************************
 파일명	: Monitoring.h
 목적		: CPU, 메모리 사용량 체크
-사용방식	: TaskManager에 work로 Monitering의 함수를 스레드로 돌려주면 됨
 ******************************************************************************/
 #pragma once
 
@@ -10,13 +9,13 @@ class Monitoring : public Singleton<Monitoring>
 	friend Singleton;
 private:
 	ULARGE_INTEGER m_LastCPU, m_LastSysCPU, m_LastUserCPU;
-	int m_NumProcessors;
-	HANDLE m_Self;
+	int		m_NumProcessors;
+	HANDLE	m_Self;
 
 	Monitoring()
 	{
 		SYSTEM_INFO sysInfo;
-		FILETIME ftime, fsys, fuser;
+		FILETIME	ftime, fsys, fuser;
 
 		GetSystemInfo(&sysInfo);
 		m_NumProcessors = sysInfo.dwNumberOfProcessors;
@@ -35,14 +34,12 @@ public:
 	/****************************************************************************
 	함수명	: processCpuUsage
 	설명		: 프로세스가 사용중인 CPU %
-	리턴값	: double
-	매개변수	: 없음
 	*****************************************************************************/
 	double processCpuUsage()
 	{
-		FILETIME ftime, fsys, fuser;
-		ULARGE_INTEGER now, sys, user;
-		double percent;
+		ULARGE_INTEGER	now, sys, user;
+		FILETIME		ftime, fsys, fuser;
+		double			percent;
 
 		GetSystemTimeAsFileTime(&ftime);//현재 시간
 		memcpy(&now, &ftime, sizeof(FILETIME));
@@ -52,32 +49,28 @@ public:
 		memcpy(&user, &fuser, sizeof(FILETIME));//유저모드에서 사용 시간
 		percent = (double)((sys.QuadPart - m_LastSysCPU.QuadPart) +
 			(user.QuadPart - m_LastUserCPU.QuadPart));
-		percent /= (now.QuadPart - m_LastCPU.QuadPart);
-		percent /= m_NumProcessors;
-		percent = percent * 100;
+		percent /= (double)(now.QuadPart - m_LastCPU.QuadPart);
+		percent /= (double)m_NumProcessors;
+		percent = percent * 100.0;
 
-		return fixInRange<double>(0, percent, 100);
+		return fixInRange<double>(0.0, percent, 100.0);
 	}
 
 	/****************************************************************************
 	함수명	: processMemUsage
 	설명		: 현재 프로세스가 쓰고있는 메모리
-	리턴값	: SIZE_T
-	매개변수	: 없음
 	*****************************************************************************/
 	SIZE_T processMemUsage()
 	{
 		PROCESS_MEMORY_COUNTERS pmc;
 		GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-
+		
 		return (size_t)pmc.WorkingSetSize;
 	}
 
 	/****************************************************************************
 	함수명	: physyicMemUsage
 	설명		: 지금 쓰고 있는 전체 메모리
-	리턴값	: SIZE_T
-	매개변수	: 없음
 	*****************************************************************************/
 	SIZE_T physyicMemUsage()
 	{

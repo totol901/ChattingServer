@@ -12,13 +12,13 @@ Timer::~Timer()
 
 void Timer::Init()
 {
-	m_NowTime = time(NULL);
-	m_LastTime = time(NULL);
+	m_NowTime = clock();
+	m_LastTime = clock();
 }
 
 const tm & Timer::GetTM()
 {
-	m_NowTime = time(NULL);
+	time_t m_NowTime = time(NULL);
 	localtime_s(&m_TM, &m_NowTime);
 	
 	return m_TM;
@@ -34,4 +34,28 @@ string Timer::NowTimeWithMilliSec()
 		st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 
 	return currentTime;
+}
+
+string Timer::Today()
+{
+	char currentTime[128] = "";
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	sprintf_s(currentTime, "%d년%d월%d일%d시%d분%d.%d초\n",
+		st.wYear, st.wMonth, st.wDay,
+		st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+
+	return currentTime;
+}
+
+void Timer::Update()
+{
+	m_LastTime = m_NowTime;
+	m_NowTime = clock();
+}
+
+double Timer::ElipsedSec()
+{
+	m_NowTime = clock();
+	return double(m_NowTime - m_LastTime) / CLOCKS_PER_SEC;
 }

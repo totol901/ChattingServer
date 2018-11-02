@@ -10,6 +10,7 @@ ClientSession::ClientSession()
 
 ClientSession::~ClientSession()
 {
+	closesocket(m_Socket);
 }
 
 void ClientSession::Send(const WSABUF & wsaBuf)

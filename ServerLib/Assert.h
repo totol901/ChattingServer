@@ -12,15 +12,15 @@
 설명		: x의 조건이 flase면 assert처리함
 매개변수	: 조건식
 *****************************************************************************/
-#define ASSERT(x) Assert(x, (#x), (__FILE__), __LINE__)				   				
+#define ASSERT(x) UserAssert(x, (#x), (__FILE__), __LINE__)				   				
 
 /****************************************************************************
-함수명	: Assert
+함수명	: UserAssert
 설명		: condition이 false면 (conditionStr + fileName + lineNo)을 경고창에 띄움
 리턴값	: 없음
 매개변수	: int, LPCWSTR, LPCWSTR, int
 *****************************************************************************/
-void Assert(int condition, char* conditionStr, char* fileName, int lineNo)
+inline void UserAssert(int condition, const char* conditionStr, const char* fileName, int lineNo)
 {
 	if (condition)
 	{
@@ -35,7 +35,7 @@ void Assert(int condition, char* conditionStr, char* fileName, int lineNo)
 	msg += ", line : ";
 
 	char buf[16];
-	itoa(lineNo, buf, 10);
+	_itoa_s(lineNo, buf, 10);
 	msg += buf;
 
 	//로그에 씀

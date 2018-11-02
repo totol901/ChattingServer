@@ -7,13 +7,18 @@ private:
 	Timer();
 	~Timer();
 
-	time_t m_NowTime;
-	time_t m_LastTime;
+	clock_t m_NowTime;
+	clock_t m_LastTime;
 	tm m_TM;
 	void Init();
 
 public:
 	const tm& GetTM();
 	string NowTimeWithMilliSec();
+	string Today();
+	void Update();
+
+	double ElipsedSec();
+	
 };
 
