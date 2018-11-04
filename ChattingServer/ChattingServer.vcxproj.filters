@@ -42,6 +42,9 @@
     <ClInclude Include="ClientSession.h">
       <Filter>Network</Filter>
     </ClInclude>
+    <ClInclude Include="DBSession.h">
+      <Filter>Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="ClientSession.cpp">
       <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="DBSession.cpp">
+      <Filter>Data</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

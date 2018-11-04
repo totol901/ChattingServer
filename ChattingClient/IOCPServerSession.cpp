@@ -17,6 +17,9 @@ IOCPServerSession::~IOCPServerSession()
 bool IOCPServerSession::PacketParsing(T_PACKET * pakcet)
 {
 	T_PACKET* packet = pakcet;
+	bool IsSuccess = false;
+	int errorNum = 0;
+	char nickname[15] = {0, };
 
 	switch (packet->type)
 	{
@@ -25,10 +28,42 @@ bool IOCPServerSession::PacketParsing(T_PACKET * pakcet)
 		break;
 
 	case PK_ANS_LOGIN:
-
+		IsSuccess = false;
+		memcpy(&IsSuccess, packet->buff, sizeof(bool));
+		errorNum = 0;
+		memcpy(&errorNum, packet->buff +
+			sizeof(bool), sizeof(errorNum));
+		
+		memcpy(nickname, packet->buff +
+			sizeof(bool) + sizeof(int), sizeof(nickname));
+		if (IsSuccess)
+		{
+			cout << "로그인 성공" << endl;
+			cout << "닉네임 : " << nickname << endl;
+		}
+		else
+		{
+			cout << "로그인 실패 " << endl;
+			cout << "오류 번호 :" << errorNum << endl;
+		}
 		break;
-	case PK_ANS_CREATE_ID:
 
+	case PK_ANS_CREATE_ID:
+		IsSuccess = false;
+		memcpy(&IsSuccess, packet->buff, sizeof(bool));
+		errorNum = 0;
+		memcpy(&errorNum, packet->buff +
+			sizeof(bool), sizeof(errorNum));
+
+		if (IsSuccess)
+		{
+			cout << "아이디 생성 성공" << endl;
+		}
+		else
+		{
+			cout << "아이디 생성 실패 " << endl;
+			cout << "오류 번호 :" << errorNum << endl;
+		}
 		break;
 
 	case PK_ANS_WAITINGCHANNAL_ENTER:
@@ -115,10 +150,10 @@ void IOCPServerSession::Recv(WSABUF wsabuf)
 
 bool IOCPServerSession::IsRecving(size_t transferSize)
 {
-	//if (m_arrIOData[IO_READ].NeedMoreIO(transferSize))
+	if (m_arrIOData[IO_READ].NeedMoreIO(transferSize))
 	{
 		Recv(m_arrIOData[IO_READ].GetCurrentWSABuf());
-		//return true;
+		return true;
 	}
 	return false;
 }
