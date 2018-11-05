@@ -40,5 +40,9 @@ struct T_PACKET
 		type = _type;
 		memset(buff, 0, (PAKCET_BUFF_SIZE));
 	}
+	inline void SetStream(Stream& stream)
+	{
+		memcpy(buff, stream.data(), stream.size());
+	}
 };
 #pragma pack(pop)

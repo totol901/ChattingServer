@@ -30,3 +30,10 @@ inline bool isInRange(const T& minimum, const T& x, const T& maximum)
 {
 	return (x == fixInRange(minimum, x, maximum)) ? true : false;
 }
+
+//-------------------------------------------------------------------//
+//template<typename T>
+//inline bool writeDataAtPacketBuff(const T& data, char* packetBuff)
+//{
+//	
+//}

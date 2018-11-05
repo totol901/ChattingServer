@@ -30,9 +30,6 @@
     <ClInclude Include="targetver.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DataManager.h">
-      <Filter>Data</Filter>
-    </ClInclude>
     <ClInclude Include="ServerNetwork.h">
       <Filter>Network</Filter>
     </ClInclude>
@@ -45,6 +42,9 @@
     <ClInclude Include="DBSession.h">
       <Filter>Data</Filter>
     </ClInclude>
+    <ClInclude Include="ClientSessionParser.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -52,9 +52,6 @@
     </ClCompile>
     <ClCompile Include="ChattingServer.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DataManager.cpp">
-      <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="ServerNetwork.cpp">
       <Filter>Network</Filter>
@@ -67,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="DBSession.cpp">
       <Filter>Data</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSessionParser.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

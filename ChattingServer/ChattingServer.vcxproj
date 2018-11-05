@@ -156,7 +156,7 @@
   <ItemGroup>
     <ClInclude Include="ClientSession.h" />
     <ClInclude Include="ClientSessionManager.h" />
-    <ClInclude Include="DataManager.h" />
+    <ClInclude Include="ClientSessionParser.h" />
     <ClInclude Include="DBSession.h" />
     <ClInclude Include="ServerNetwork.h" />
     <ClInclude Include="stdafx.h" />
@@ -166,7 +166,7 @@
     <ClCompile Include="ChattingServer.cpp" />
     <ClCompile Include="ClientSession.cpp" />
     <ClCompile Include="ClientSessionManager.cpp" />
-    <ClCompile Include="DataManager.cpp" />
+    <ClCompile Include="ClientSessionParser.cpp" />
     <ClCompile Include="DBSession.cpp" />
     <ClCompile Include="ServerNetwork.cpp" />
     <ClCompile Include="stdafx.cpp">
