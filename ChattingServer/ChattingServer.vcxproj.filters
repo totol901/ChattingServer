@@ -19,9 +19,6 @@
     <Filter Include="Network">
       <UniqueIdentifier>{b76e5df8-eaab-4a0e-8c4b-3acdf290a210}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Util">
-      <UniqueIdentifier>{a01eeee8-5926-4261-a99f-a3d5fe1c4f0e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -43,7 +40,7 @@
       <Filter>Data</Filter>
     </ClInclude>
     <ClInclude Include="ClientSessionParser.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -66,7 +63,7 @@
       <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="ClientSessionParser.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Network</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

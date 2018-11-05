@@ -1,13 +1,17 @@
 #pragma once
 
+class ServerSessionParser;
 class IOCPServerSession : public Session
 {
 private:
 	bool m_bConnected;
+	ServerSessionParser* m_pServerSessionParser;
 
 	void Send(WSABUF wsaBuf);
 	void Recv(WSABUF wsabuf);
 	bool IsRecving(size_t transferSize);
+
+	void AnsLogin(T_PACKET* packet);
 
 public:
 	IOCPServerSession();

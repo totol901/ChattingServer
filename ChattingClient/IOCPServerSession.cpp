@@ -8,89 +8,22 @@ IOCPServerSession::IOCPServerSession()
 	m_Type = SESSION_TYPE_SERVER;
 	m_arrIOData[IO_READ].SetType(IO_READ);
 	m_arrIOData[IO_WRITE].SetType(IO_WRITE);
+
+	m_pServerSessionParser = new ServerSessionParser(this);
 }
 
 IOCPServerSession::~IOCPServerSession()
 {
+	SAFE_DELETE(m_pServerSessionParser);
 }
 
 bool IOCPServerSession::PacketParsing(T_PACKET * pakcet)
 {
-	T_PACKET* packet = pakcet;
-	bool IsSuccess = false;
-	int errorNum = 0;
-	char nickname[15] = {0, };
-
-	switch (packet->type)
+	if (m_pServerSessionParser->PacketParsing(pakcet))
 	{
-	case PK_NONE:
-		cout << "test : " << packet->buff << endl;
-		break;
-
-	case PK_ANS_LOGIN:
-		IsSuccess = false;
-		memcpy(&IsSuccess, packet->buff, sizeof(bool));
-		errorNum = 0;
-		memcpy(&errorNum, packet->buff +
-			sizeof(bool), sizeof(errorNum));
-		
-		memcpy(nickname, packet->buff +
-			sizeof(bool) + sizeof(int), sizeof(nickname));
-		if (IsSuccess)
-		{
-			cout << "로그인 성공" << endl;
-			cout << "닉네임 : " << nickname << endl;
-		}
-		else
-		{
-			cout << "로그인 실패 " << endl;
-			cout << "오류 번호 :" << errorNum << endl;
-		}
-		break;
-
-	case PK_ANS_CREATE_ID:
-		IsSuccess = false;
-		memcpy(&IsSuccess, packet->buff, sizeof(bool));
-		errorNum = 0;
-		memcpy(&errorNum, packet->buff +
-			sizeof(bool), sizeof(errorNum));
-
-		if (IsSuccess)
-		{
-			cout << "아이디 생성 성공" << endl;
-		}
-		else
-		{
-			cout << "아이디 생성 실패 " << endl;
-			cout << "오류 번호 :" << errorNum << endl;
-		}
-		break;
-
-	case PK_ANS_WAITINGCHANNAL_ENTER:
-		break;
-
-	case PK_ANS_WAITINGCHANNAL_CHREAT_CHANNAL:
-		break;
-
-	case PK_ANS_WAITINGCHANNAL_CHANNAL_JOIN:
-		break;
-
-	case PK_RECV_CHANNAL_MESSAGE:
-		break;
-
-	case PK_ANS_CHANNAL_OUT:
-		break;
-
-	case PK_ANS_EXIT:
-		break;
+		return true;
 	}
-
-	if (!m_bConnected)
-	{
-		return false;
-	}
-
-	return true;
+	return false;
 }
 
 void IOCPServerSession::SendPacket(T_PACKET packet)
@@ -156,6 +89,11 @@ bool IOCPServerSession::IsRecving(size_t transferSize)
 		return true;
 	}
 	return false;
+}
+
+void IOCPServerSession::AnsLogin(T_PACKET * packet)
+{
+
 }
 
 void IOCPServerSession::Send(WSABUF wsaBuf)

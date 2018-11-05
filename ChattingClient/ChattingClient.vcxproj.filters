@@ -36,6 +36,9 @@
     <ClInclude Include="IOCPServerSession.h">
       <Filter>NetWork</Filter>
     </ClInclude>
+    <ClInclude Include="ServerSessionParser.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -52,6 +55,9 @@
     </ClCompile>
     <ClCompile Include="IOCPServerSession.cpp">
       <Filter>NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerSessionParser.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

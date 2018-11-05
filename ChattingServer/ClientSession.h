@@ -8,10 +8,7 @@ private:
 	void Send(const WSABUF& wsaBuf);
 	void Recv(const WSABUF& wsabuf);
 	bool IsRecving(const size_t& transferSize);
-
-	void ReqLogin(T_PACKET* packet);
-	void ReqCreateID(T_PACKET* packet);
-
+	
 	ClientSessionParser* m_SessionParser;
 
 public:

@@ -152,7 +152,9 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Monitoring.h" />
     <ClInclude Include="Packet.h" />
+    <ClInclude Include="RecvStream.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SendStream.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="stdafx.h" />
@@ -165,6 +167,8 @@
   <ItemGroup>
     <ClCompile Include="IOData.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="RecvStream.cpp" />
+    <ClCompile Include="SendStream.cpp" />
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

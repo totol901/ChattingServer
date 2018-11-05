@@ -5,11 +5,12 @@ class ClientSessionParser
 {
 private:
 	ClientSession * m_ClientSession;
-	Stream recvStream;
-	Stream SendStream;
+	RecvStream recvStream;
+	SendStream SendStream;
 
 	void ReqLogin(T_PACKET* packet);
 	void ReqCreateID(T_PACKET * packet);
+	void ReqWatingChallnalEnter(T_PACKET* packet);
 
 public:
 	ClientSessionParser(ClientSession * clientSession);
@@ -17,4 +18,3 @@ public:
 
 	bool PacketParsing(T_PACKET* const packet);
 };
-

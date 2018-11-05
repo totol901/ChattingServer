@@ -57,8 +57,40 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 
 void ClientSessionParser::ReqCreateID(T_PACKET * packet)
 {
-	recvStream.clear();
-	SendStream.clear();
+	char id[15] = { 0, };
+	char pw[15] = { 0, };
+	char nickname[15] = { 0, };
+	bool isSucces = false;
+	int errNum = 0;
+
+	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	recvStream.read(id, sizeof(id));
+	recvStream.read(pw, sizeof(pw));
+	recvStream.read(nickname, sizeof(nickname));
+	T_PACKET pk(PK_ANS_CREATE_ID);
+
+	if (DATABASE->InsertQuery(id, pw, nickname))
+	{
+		isSucces = true;
+		errNum = 0;
+
+		SendStream.write(&isSucces, sizeof(isSucces));
+		SendStream.write(&errNum, sizeof(errNum));
+	}
+	else
+	{
+		isSucces = false;
+		errNum = 0;
+
+		SendStream.write(&isSucces, sizeof(isSucces));
+		SendStream.write(&errNum, sizeof(errNum));
+	}
+
+	m_ClientSession->SendPacket(pk);
+}
+
+void ClientSessionParser::ReqWatingChallnalEnter(T_PACKET * packet)
+{
 	char id[15] = { 0, };
 	char pw[15] = { 0, };
 	char nickname[15] = { 0, };
@@ -93,6 +125,9 @@ void ClientSessionParser::ReqCreateID(T_PACKET * packet)
 
 bool ClientSessionParser::PacketParsing(T_PACKET * const packet)
 {
+	recvStream.clear();
+	SendStream.clear();
+
 	switch (packet->type)
 	{
 	case PK_NONE:
@@ -108,6 +143,7 @@ bool ClientSessionParser::PacketParsing(T_PACKET * const packet)
 		break;
 
 	case PK_REQ_WAITINGCHANNAL_ENTER:
+		ReqWatingChallnalEnter(packet);
 		break;
 
 	case PK_REQ_WAITINGCHANNAL_CHREAT_CHANNAL:
