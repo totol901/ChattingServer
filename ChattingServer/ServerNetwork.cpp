@@ -19,7 +19,6 @@ ServerNetwork::~ServerNetwork()
 void ServerNetwork::Init()
 {
 	CreateIOCP();
-
 	CreateListen();
 }
 
@@ -122,6 +121,7 @@ unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 	}
 
 	SLogPrintAtFile("Accept루프 스레드 종료");
+
 	return 0;
 }
 

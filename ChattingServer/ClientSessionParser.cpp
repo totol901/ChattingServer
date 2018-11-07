@@ -28,8 +28,9 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 	recvStream.read(pw, sizeof(pw));
 
 	//id, pw 쿼리 채크
-	if (DATABASE->CheckQuery(id, pw))
+	if (DATABASE->CheckUserInfoQuery(id, pw))
 	{
+		//로그인 성공
 		isSuccess = true;
 		errorNum = 0;
 
@@ -39,6 +40,11 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 		SendStream.write(&isSuccess, sizeof(isSuccess));
 		SendStream.write(&errorNum, sizeof(errorNum));
 		SendStream.write((void*)str, nickname.size());
+
+		SLogPrint("%s - 로그인 성공", id);
+
+		//데이터베이스에 로그 남겨줌
+		DATABASE->InsertUserLogQuery(id, "로그인 완료");
 	}
 	else
 	{
@@ -48,6 +54,11 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 		//stream에 보내줄 data 써줌
 		SendStream.write(&isSuccess, sizeof(isSuccess));
 		SendStream.write(&errorNum, sizeof(errorNum));
+
+		SLogPrint("%s - 로그인 실패", id);
+
+		//데이터베이스에 로그 남겨줌
+		DATABASE->InsertUserLogQuery(id, "로그인 시도");
 	}
 
 	//패킷 송신
@@ -69,13 +80,17 @@ void ClientSessionParser::ReqCreateID(T_PACKET * packet)
 	recvStream.read(nickname, sizeof(nickname));
 	T_PACKET pk(PK_ANS_CREATE_ID);
 
-	if (DATABASE->InsertQuery(id, pw, nickname))
+	if (DATABASE->InsertUserInfoQuery(id, pw, nickname))
 	{
+		//아이디 생성 성공
 		isSucces = true;
 		errNum = 0;
 
 		SendStream.write(&isSucces, sizeof(isSucces));
 		SendStream.write(&errNum, sizeof(errNum));
+
+		//데이터베이스에 로그 남겨줌
+		DATABASE->InsertUserLogQuery(id, "아이디 생성");
 	}
 	else
 	{
@@ -84,6 +99,8 @@ void ClientSessionParser::ReqCreateID(T_PACKET * packet)
 
 		SendStream.write(&isSucces, sizeof(isSucces));
 		SendStream.write(&errNum, sizeof(errNum));
+
+		SLogPrint("%s - 아이디 생성 실패", id);
 	}
 
 	m_ClientSession->SendPacket(pk);
@@ -91,34 +108,17 @@ void ClientSessionParser::ReqCreateID(T_PACKET * packet)
 
 void ClientSessionParser::ReqWatingChallnalEnter(T_PACKET * packet)
 {
-	char id[15] = { 0, };
-	char pw[15] = { 0, };
-	char nickname[15] = { 0, };
-	bool isSucces = false;
+	bool isSucces = true;
 	int errNum = 0;
+	string vecChannel = CHANNELMANAGER->GetChannelList();
 
-	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
-	recvStream.read(id, sizeof(id));
-	recvStream.read(pw, sizeof(pw));
-	recvStream.read(nickname, sizeof(nickname));
-	T_PACKET pk(PK_ANS_CREATE_ID);
+	SendStream.write(&isSucces, sizeof(isSucces));
+	SendStream.write(&errNum, sizeof(errNum));
+	//TODO : 벡터 재대로 써지나 검사해야함
+	SendStream.write((void*)vecChannel.c_str(), 64);
 
-	if (DATABASE->InsertQuery(id, pw, nickname))
-	{
-		isSucces = true;
-		errNum = 0;
-
-		SendStream.write(&isSucces, sizeof(isSucces));
-		SendStream.write(&errNum, sizeof(errNum));
-	}
-	else
-	{
-		isSucces = false;
-		errNum = 0;
-
-		SendStream.write(&isSucces, sizeof(isSucces));
-		SendStream.write(&errNum, sizeof(errNum));
-	}
+	T_PACKET pk(PK_ANS_WAITINGCHANNAL_ENTER);
+	pk.SetStream(SendStream);
 
 	m_ClientSession->SendPacket(pk);
 }

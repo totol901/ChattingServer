@@ -19,6 +19,9 @@
     <Filter Include="Network">
       <UniqueIdentifier>{b76e5df8-eaab-4a0e-8c4b-3acdf290a210}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{a0f53845-2786-4834-8528-e88be37714b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -42,12 +45,18 @@
     <ClInclude Include="ClientSessionParser.h">
       <Filter>Network</Filter>
     </ClInclude>
+    <ClInclude Include="Channel.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ChannelManager.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ChattingServer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ServerNetwork.cpp">
@@ -64,6 +73,18 @@
     </ClCompile>
     <ClCompile Include="ClientSessionParser.cpp">
       <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Channel.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="ChannelManager.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="ChattingServer.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Object</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

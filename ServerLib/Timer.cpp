@@ -29,9 +29,21 @@ string Timer::NowTimeWithMilliSec()
 	char currentTime[128] = "";
 	SYSTEMTIME st;
 	GetLocalTime(&st);
-	sprintf_s(currentTime, "%d-%d-%d_%d_%d_%d_%d", 
+	sprintf_s(currentTime, "%d-%d-%d %d:%d:%d.%d", 
 		st.wYear, st.wMonth, st.wDay,
 		st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+
+	return currentTime;
+}
+
+string Timer::NowTimeWithSec()
+{
+	char currentTime[128] = "";
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	sprintf_s(currentTime, "%d-%d-%d %d:%d:%d",
+		st.wYear, st.wMonth, st.wDay,
+		st.wHour, st.wMinute, st.wSecond);
 
 	return currentTime;
 }
@@ -41,7 +53,7 @@ string Timer::Today()
 	char currentTime[128] = "";
 	SYSTEMTIME st;
 	GetLocalTime(&st);
-	sprintf_s(currentTime, "%d년%d월%d일%d시%d분%d.%d초\n",
+	sprintf_s(currentTime, "%d년%d월%d일%d시%d분%d_%d초",
 		st.wYear, st.wMonth, st.wDay,
 		st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 

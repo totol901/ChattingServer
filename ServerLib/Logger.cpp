@@ -14,7 +14,7 @@ Logger::~Logger()
 
 void Logger::Init()
 {
-	if (fopen_s(&pFile, (TIMER->NowTimeWithMilliSec() + ".log").c_str(), "a+") != 0)
+	if (fopen_s(&pFile, (TIMER->Today() + ".log").c_str(), "a+") != 0)
 	{
 		printf("Log 파일 생성 실패\n");
 		return;

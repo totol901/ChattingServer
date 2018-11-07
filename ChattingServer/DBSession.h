@@ -10,10 +10,13 @@ private:
 public:
 	bool InitDB();
 
-	bool CheckQuery(string ID, string PW);
-	bool InsertQuery(string ID, string PW, string nickname);
-	bool DeleteQuery(string ID);
+	bool CheckUserInfoQuery(string ID, string PW);
+	bool InsertUserInfoQuery(string ID, string PW, string nickname);
+	bool DeleteUserInfoQuery(string ID);
 	string FindNickname(string ID);
+	bool InsertUserLogQuery(string ID, string log);
+
+	const char* MySQLError() const { return mysql_error(conn); }
 
 private:
 	const char* DB_HOST;
@@ -32,4 +35,3 @@ private:
 	MYSQL_RES* res;
 	MYSQL_ROW row;
 };
-

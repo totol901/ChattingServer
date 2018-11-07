@@ -19,4 +19,5 @@ private:
 public:
 	void LogPrint(const char* str, ...);
 	void LogPrintAtFile(const char* str, ...);
+
 };

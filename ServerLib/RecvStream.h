@@ -11,6 +11,6 @@ public:
 	// read
 	//------------------------------------------------------------------------//
 	bool checkReadBound(size_t len);
-	void read(void *retVal, size_t len);
+	void read(OUT string& retVal);
+	void read(OUT void *retVal, size_t len);
 };
-

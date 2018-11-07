@@ -11,6 +11,7 @@ private:
 
 	void AnsLogin(T_PACKET* packet);
 	void AnsCreateId(T_PACKET* packet);
+	void AnsWaitingChannalEnter(T_PACKET* packet);
 
 public:
 	ServerSessionParser(IOCPServerSession* ServerSession);

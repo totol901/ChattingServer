@@ -19,6 +19,8 @@ Stream::~Stream()
 
 void Stream::clear()
 {
+	offset = 0;
+	readPt = 0;
 	memset(&stream, 0, sizeof(stream));
 }
 

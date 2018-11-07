@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "DBSession.h"
 
-
 DBSession::DBSession()
 {
 	DB_HOST = "localhost";
@@ -14,7 +13,6 @@ DBSession::DBSession()
 DBSession::~DBSession()
 {
 	mysql_free_result(res);
-	
 	mysql_close(conn);
 }
 
@@ -25,28 +23,45 @@ bool DBSession::InitDB()
 	if (!mysql_real_connect(conn, DB_HOST, DB_USER, DB_PASS, DB_NAME,
 		DB_PORT, DB_SOCK, DB_OPT))
 	{
-		cout << "DB Connect Error : " << mysql_error(conn) << endl;
+		SLogPrintAtFile("DB Connect Error : %s", mysql_error(conn));
+		return false;
+	}
+
+	//한글 쓰기 위한 세팅
+	if (mysql_query(conn, "set character_set_client = euckr"))
+	{
+		SLogPrintAtFile("DB  Error : %s", mysql_error(conn));
+		return false;
+	}
+	if (mysql_query(conn, "set character_set_connection = euckr"))
+	{
+		SLogPrintAtFile("DB  Error : %s", mysql_error(conn));
+		return false;
+	}
+	if (mysql_query(conn, "set character_set_results = euckr"))
+	{
+		SLogPrintAtFile("DB  Error : %s", mysql_error(conn));
 		return false;
 	}
 
 	if (mysql_query(conn, "SHOW TABLES"))
 	{
-		cout << "DB Query Error : " << mysql_error(conn) << endl;
+		SLogPrintAtFile("DB Query Error : %s", mysql_error(conn));
 		return false;
 	}
 
 	res = mysql_use_result(conn);
 
-	cout << "**DB Show Tables in " << DB_NAME << " **" << endl;
+	SLogPrint("**DB Show Tables in %s **", DB_NAME);
 
 	while ((row = mysql_fetch_row(res)) != NULL)
 	{
-		cout << row[0] << endl;
+		SLogPrint(row[0]);
 	}
 	return true;
 }
 
-bool DBSession::CheckQuery(string ID, string PW)
+bool DBSession::CheckUserInfoQuery(string ID, string PW)
 {
 	string query = "SELECT * FROM USER_INFO WHERE ID='";
 	query += ID + "' AND PW='";
@@ -58,7 +73,7 @@ bool DBSession::CheckQuery(string ID, string PW)
 
 	if (mysql_query(conn, q) != NULL)
 	{
-		cout << "Query Error : " << mysql_error(conn) << endl;
+		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
 		return false;
 	}
 	
@@ -68,27 +83,35 @@ bool DBSession::CheckQuery(string ID, string PW)
 		if (row[0] == ID)
 		{
 			if (row[1] == PW)
+			{
 				break;
+			}
 			else
+			{
 				return false;
+			}
 		}
 		else
+		{
 			return false;
+		}
 
 		if (row == NULL)
+		{
 			return false;
+		}
 	}
 	if (res->row_count == 0)
 	{
 		return false;
 	}
 
-	cout << "Query Success..." << endl;
+	SLogPrint("Query Success...");
 
 	return true;
 }
 
-bool DBSession::InsertQuery(string ID, string PW, string nickname)
+bool DBSession::InsertUserInfoQuery(string ID, string PW, string nickname)
 {
 	string query = "INSERT INTO USER_INFO VALUE ('";
 
@@ -99,32 +122,30 @@ bool DBSession::InsertQuery(string ID, string PW, string nickname)
 
 	if (mysql_query(conn, query.c_str()) != NULL)
 	{
-		cout << "Query Error : " << mysql_error(conn) << endl;
+		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
 		return false;
 	}
 
-	cout << "Query Success..." << endl;
+	SLogPrint("Query Success...");
 
 	return true;
 }
 
-bool DBSession::DeleteQuery(string ID)
+bool DBSession::DeleteUserInfoQuery(string ID)
 {
 	string query = "DELETE FROM USER_INFO WHERE id = '";
 	query += ID + "'";
 
 	if (mysql_query(conn, query.c_str()) != NULL)
 	{
-		cout << "Query Error : " << mysql_error(conn) << endl;
+		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
 		return false;
 	}
 	
-	cout << "Query Success..." << endl;
+	SLogPrint("Query Success...");
 
 	return true;
 }
-
-
 
 string DBSession::FindNickname(string ID)
 {
@@ -138,7 +159,7 @@ string DBSession::FindNickname(string ID)
 
 	if (mysql_query(conn, q) != NULL)
 	{
-		cout << "Query Error : " << mysql_error(conn) << endl;
+		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
 		return false;
 	}
 
@@ -146,7 +167,9 @@ string DBSession::FindNickname(string ID)
 	while ((row = mysql_fetch_row(res)) != NULL)
 	{
 		if (row == NULL)
+		{
 			return false;
+		}
 		else
 		{
 			nickname = row[0];
@@ -157,7 +180,32 @@ string DBSession::FindNickname(string ID)
 		return false;
 	}
 
-	cout << "Query Success..." << endl;
+	SLogPrint("Query Success...");
 
 	return nickname;
+}
+
+bool DBSession::InsertUserLogQuery(string ID, string log)
+{
+	string query = "INSERT INTO USER_LOG VALUE ('";
+
+	query += ID;
+	query += "', '";
+	query += TIMER->NowTimeWithSec();
+	query += "', '";
+	query += log + "')";
+
+	char q[256];
+	memset(q, 0, sizeof(q));
+	memcpy(q, query.c_str(), query.size());
+
+	if (mysql_query(conn, q) != NULL)
+	{
+		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
+		return false;
+	}
+
+	SLogPrint("Query Success...");
+
+	return true;
 }
