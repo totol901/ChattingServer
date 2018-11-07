@@ -10,7 +10,12 @@ private:
 
 	void ReqLogin(T_PACKET* packet);
 	void ReqCreateID(T_PACKET * packet);
-	void ReqWatingChallnalEnter(T_PACKET* packet);
+	void ReqWatingChannelEnter(T_PACKET* packet);
+	void ReqWaitingChannelCreateChannel(T_PACKET* packet);
+	void ReqWaitingChannelChannelJoin(T_PACKET* packet);
+	void ReqChannelSendMessage(T_PACKET* packet);
+	void ReqChannelOut(T_PACKET* packet);
+	void ReqExit(T_PACKET* packet);
 
 public:
 	ClientSessionParser(ClientSession * clientSession);

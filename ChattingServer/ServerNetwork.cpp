@@ -196,7 +196,21 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 				{
 					if (!pClientSession->PacketParsing(pPacket))
 					{
-						SLogPrintAtFile("페킷 파싱중 문제가 생김");
+						if (!pClientSession->IsConnected())
+						{
+							//파일 로그, 데이터 베이스 로그에 남김
+							SLogPrintAtFile("%s : 정상 접속 종료", 
+								pClientSession->GetPlayerData()->GetPlayerID().c_str());
+							DATABASE->InsertUserLogQuery(pClientSession->GetPlayerData()->GetPlayerID(),
+								"정상 접속 종료");
+							//세션 매니저에서 제거, 메모리에서 제거
+							CLIENTSESSIONMANAGER->DeleteClientSession(pClientSession->GetSocket());
+							SAFE_DELETE(pClientSession);
+						}
+						else
+						{
+							SLogPrintAtFile("페킷 파싱중 문제가 생김");
+						}
 					}
 					SAFE_DELETE(pPacket);
 				}

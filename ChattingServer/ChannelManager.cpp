@@ -106,10 +106,11 @@ string ChannelManager::GetChannelList()
 {
 	string temp;
 	for (auto iter = m_mapIDChannels.begin();
-		iter != m_mapIDChannels.end();
-		iter++)
+		iter != m_mapIDChannels.end(); iter++)
 	{
-		temp += iter->first;
+		char num[8];
+		_itoa_s((int)iter->first, num, 10);
+		temp += num;
 		temp += ". ";
 		temp += iter->second->GetName();
 		temp += "\n";

@@ -30,7 +30,7 @@ bool SendStream::checkWriteBound(size_t len)
 void SendStream::write(string & reVal)
 {
 	//string 길이 넣어줌
-	int Stringlen = reVal.length();
+	size_t Stringlen = reVal.length();
 	memcpy_s((void *)(stream.data() + offset), stream.size() - offset, 
 		(void *)&Stringlen, sizeof(Stringlen));
 	offset += sizeof(Stringlen);

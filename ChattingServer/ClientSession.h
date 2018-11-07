@@ -1,19 +1,26 @@
 #pragma once
 
+class Player;
 class ClientSessionParser;
 class ClientSession : public Session
 {
 private:
 	bool m_bConnected;
+
 	void Send(const WSABUF& wsaBuf);
 	void Recv(const WSABUF& wsabuf);
 	bool IsRecving(const size_t& transferSize);
 	
-	ClientSessionParser* m_SessionParser;
+	ClientSessionParser* m_pSessionParser;
+	Player* m_pPlayerData;
 
 public:
 	ClientSession();
 	~ClientSession();
+
+	const bool& IsConnected() { return m_bConnected; }
+	void SetConnected(bool connected) { m_bConnected = connected;}
+	Player* GetPlayerData() { return m_pPlayerData; }
 
 	IOData* const GetptIOData(const int& type); const
 

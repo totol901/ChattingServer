@@ -10,6 +10,8 @@ public:
 	Channel(const string& channelName);
 	~Channel();
 
+	bool IsChannelEmpty() { return m_setClientSessions.empty(); }
+
 	bool InsertClientSession(ClientSession* clientsession);
 	bool IsClientSessionIntoSet(ClientSession* clientsession);
 	bool DeleteClientSession(ClientSession* clientsession);

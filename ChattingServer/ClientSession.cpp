@@ -1,17 +1,20 @@
 #include "stdafx.h"
 #include "ClientSession.h"
+#include "Player.h"
 
 ClientSession::ClientSession()
 	:Session(),
 	m_bConnected(true)
 {
 	m_Type = SESSION_TYPE_CLIENT;
-	m_SessionParser = new ClientSessionParser(this);
+	m_pSessionParser = new ClientSessionParser(this);
+	m_pPlayerData = new Player();
 }
 
 ClientSession::~ClientSession()
 {
-	SAFE_DELETE(m_SessionParser);
+	SAFE_DELETE(m_pPlayerData);
+	SAFE_DELETE(m_pSessionParser);
 	closesocket(m_Socket);
 }
 
@@ -60,7 +63,7 @@ bool ClientSession::IsRecving(const size_t& transferSize)
 
  const bool ClientSession::PacketParsing(T_PACKET * const packet)
  {
-	 if (m_SessionParser->PacketParsing(packet))
+	 if (m_pSessionParser->PacketParsing(packet))
 	 {
 		 return true;
 	 }

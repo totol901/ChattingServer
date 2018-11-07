@@ -77,8 +77,96 @@ void ServerSessionParser::AnsWaitingChannalEnter(T_PACKET * packet)
 			cout << "생성된 채널이 없음." << endl;
 		}
 
+	}
+}
+
+void ServerSessionParser::AnsWaitingChannelCreateChannel(T_PACKET * packet)
+{
+	bool IsSuccess = false;
+	int errornum = 0;
+
+	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	recvStream.read(&IsSuccess, sizeof(IsSuccess));
+	recvStream.read(&errornum, sizeof(errornum));
+
+	if (IsSuccess)
+	{
+		cout << "채널 생성 성공" << endl;
 		return;
 	}
+
+	cout << "채널 생성 실패 " << endl;
+	cout << "오류 번호 :" << errornum << endl;
+}
+
+void ServerSessionParser::AnsWaitingChannelJoin(T_PACKET * packet)
+{
+	bool IsSuccess = false;
+	int errornum = 0;
+
+	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	recvStream.read(&IsSuccess, sizeof(IsSuccess));
+	recvStream.read(&errornum, sizeof(errornum));
+
+	if (IsSuccess)
+	{
+		cout << "채널 입장 성공" << endl;
+		return;
+	}
+
+	cout << "채널 입장 실패 " << endl;
+	cout << "오류 번호 :" << errornum << endl;
+}
+
+void ServerSessionParser::RecvChannelMessage(T_PACKET * packet)
+{
+	char nickname[15];
+	char message[64];
+
+	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	recvStream.read(nickname, sizeof(nickname));
+	recvStream.read(message, sizeof(message));
+
+	cout << nickname << " : " << message << endl;
+}
+
+void ServerSessionParser::AnsChannelOut(T_PACKET * packet)
+{
+	bool IsSuccess = false;
+	int errornum = 0;
+
+	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	recvStream.read(&IsSuccess, sizeof(IsSuccess));
+	recvStream.read(&errornum, sizeof(errornum));
+
+	if (IsSuccess)
+	{
+		cout << "채널 나가기 성공" << endl;
+		return;
+	}
+
+	cout << "채널 나가기 실패 " << endl;
+	cout << "오류 번호 :" << errornum << endl;
+}
+
+void ServerSessionParser::AnsExit(T_PACKET * packet)
+{
+	bool IsSuccess = false;
+	int errornum = 0;
+
+	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	recvStream.read(&IsSuccess, sizeof(IsSuccess));
+	recvStream.read(&errornum, sizeof(errornum));
+
+	if (IsSuccess)
+	{
+		cout << "서버 연결 종료 성공" << endl;
+		exit(0);
+		return;
+	}
+
+	cout << "서버 연결 종료 실패 " << endl;
+	cout << "오류 번호 :" << errornum << endl;
 }
 
 bool ServerSessionParser::PacketParsing(T_PACKET * const packet)
@@ -105,18 +193,23 @@ bool ServerSessionParser::PacketParsing(T_PACKET * const packet)
 		break;
 
 	case PK_ANS_WAITINGCHANNAL_CHREAT_CHANNAL:
+		AnsWaitingChannelCreateChannel(packet);
 		break;
 
 	case PK_ANS_WAITINGCHANNAL_CHANNAL_JOIN:
+		AnsWaitingChannelJoin(packet);
 		break;
 
 	case PK_RECV_CHANNAL_MESSAGE:
+		RecvChannelMessage(packet);
 		break;
 
 	case PK_ANS_CHANNAL_OUT:
+		AnsChannelOut(packet);
 		break;
 
 	case PK_ANS_EXIT:
+		AnsExit(packet);
 		break;
 	}
 

@@ -14,4 +14,3 @@ public:
 	void write(string& reVal);
 	void write(void* retVal, size_t len);
 };
-
