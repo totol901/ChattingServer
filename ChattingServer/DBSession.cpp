@@ -52,7 +52,7 @@ bool DBSession::InitDB()
 
 	res = mysql_use_result(conn);
 
-	SLogPrint("**DB Show Tables in %s **", DB_NAME);
+	SLogPrint("** %s 안의 테이블을 보여줌 **", DB_NAME);
 
 	while ((row = mysql_fetch_row(res)) != NULL)
 	{
@@ -106,7 +106,7 @@ bool DBSession::CheckUserInfoQuery(string ID, string PW)
 		return false;
 	}
 
-	SLogPrint("Query Success...");
+	SLogPrint("CheckUserInfoQuery 성공...");
 
 	return true;
 }
@@ -126,7 +126,7 @@ bool DBSession::InsertUserInfoQuery(string ID, string PW, string nickname)
 		return false;
 	}
 
-	SLogPrint("Query Success...");
+	SLogPrint("InsertUserInfoQuery 성공...");
 
 	return true;
 }
@@ -142,7 +142,7 @@ bool DBSession::DeleteUserInfoQuery(string ID)
 		return false;
 	}
 	
-	SLogPrint("Query Success...");
+	SLogPrint("DeleteUserInfoQuery 성공...");
 
 	return true;
 }
@@ -180,7 +180,7 @@ string DBSession::FindNickname(string ID)
 		return false;
 	}
 
-	SLogPrint("Query Success...");
+	SLogPrint("FindNickname Query 성공...");
 
 	return nickname;
 }
@@ -205,7 +205,7 @@ bool DBSession::InsertUserLogQuery(string ID, string log)
 		return false;
 	}
 
-	SLogPrint("Query Success...");
+	SLogPrint("InsertUserLogQuery 성공...");
 
 	return true;
 }

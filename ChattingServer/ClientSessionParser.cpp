@@ -35,10 +35,10 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 	if (DATABASE->CheckUserInfoQuery(id, pw))
 	{
 		//로그인 중인지 확인
-		if (CLIENTSESSIONMANAGER->FindClientSession(
-			m_ClientSession->GetSocket()) != nullptr)
+		if (CLIENTSESSIONMANAGER->FindClientSessionID(
+			id) != nullptr)
 		{
-			//로그인 중임
+			//로그인 이미 함
 			isSuccess = false;
 			errorNum = LOGIN_ERROR_ALREADY_LOGIN;
 
@@ -73,6 +73,9 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 
 			//데이터베이스에 로그 남겨줌
 			DATABASE->InsertUserLogQuery(id, "로그인 완료");
+
+			//로그인된 세션 풀에 넣음
+			CLIENTSESSIONMANAGER->AddClientSessionID(id, m_ClientSession);
 		}
 	}
 	else

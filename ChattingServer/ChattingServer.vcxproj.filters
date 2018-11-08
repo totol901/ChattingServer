@@ -86,9 +86,6 @@
     <ClCompile Include="ChannelManager.cpp">
       <Filter>Object</Filter>
     </ClCompile>
-    <ClCompile Include="ChattingServer.cpp">
-      <Filter>Object</Filter>
-    </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Object</Filter>
     </ClCompile>
@@ -97,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="ChattingServer.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
