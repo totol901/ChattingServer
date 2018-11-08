@@ -150,18 +150,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseScene.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="ClientNetWork.h" />
+    <ClInclude Include="InChannelScene.h" />
     <ClInclude Include="IOCPServerSession.h" />
+    <ClInclude Include="LoginScene.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="ServerSessionParser.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="WaittingChannelScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="ChattingClient.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="ClientNetWork.cpp" />
+    <ClCompile Include="InChannelScene.cpp" />
     <ClCompile Include="IOCPServerSession.cpp" />
+    <ClCompile Include="LoginScene.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ServerSessionParser.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -169,6 +178,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="WaittingChannelScene.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

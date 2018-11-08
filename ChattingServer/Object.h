@@ -14,7 +14,7 @@ protected:
 
 public:
 	Object();
-	~Object();
+	virtual ~Object();
 
 	UINT GetID() const { return m_id; }
 

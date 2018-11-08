@@ -67,7 +67,7 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 		SLogPrint("%s - 로그인 실패", id);
 
 		//데이터베이스에 로그 남겨줌
-		DATABASE->InsertUserLogQuery(id, "로그인 시도");
+		DATABASE->InsertUserLogQuery(id, "로그인 실패");
 	}
 
 	//패킷 송신
@@ -112,6 +112,7 @@ void ClientSessionParser::ReqCreateID(T_PACKET * packet)
 		SLogPrint("%s - 아이디 생성 실패", id);
 	}
 
+	pk.SetStream(SendStream);
 	m_ClientSession->SendPacket(pk);
 }
 
@@ -169,10 +170,13 @@ void ClientSessionParser::ReqWaitingChannelCreateChannel(T_PACKET * packet)
 			m_ClientSession->GetPlayerData()->SetPlayerState(PLAYER_IN_CHANNEL);
 
 			//채널 입장 성공 패킷 송신
-			SendStream.write(&isSucces, sizeof(isSucces));
-			SendStream.write(&errNum, sizeof(errNum));
-			pk.SetStream(SendStream);
-			m_ClientSession->SendPacket(pk);
+			//SendStream.clear();
+			//SendStream.write(&isSucces, sizeof(isSucces));
+			//SendStream.write(&errNum, sizeof(errNum));
+			//
+			//T_PACKET pk(PK_ANS_WAITINGCHANNAL_CHANNAL_JOIN);
+			//pk.SetStream(SendStream);
+			//m_ClientSession->SendPacket(pk);
 		}
 		else
 		{
@@ -312,6 +316,8 @@ void ClientSessionParser::ReqExit(T_PACKET * packet)
 
 	m_ClientSession->SendPacket(pk);
 }
+
+
 
 bool ClientSessionParser::PacketParsing(T_PACKET * const packet)
 {

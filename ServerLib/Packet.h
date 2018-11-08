@@ -44,5 +44,11 @@ struct T_PACKET
 	{
 		memcpy(buff, stream.data(), stream.size());
 	}
+	inline void Clear()
+	{
+		Size = sizeof(*this);
+		type = PK_NONE;
+		memset(buff, 0, (PAKCET_BUFF_SIZE));
+	}
 };
 #pragma pack(pop)

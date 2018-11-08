@@ -26,12 +26,30 @@ void ServerSessionParser::AnsLogin(T_PACKET * packet)
 	if (IsSuccess)
 	{
 		cout << "로그인 성공" << endl;
-		cout << "닉네임 : " << nickname << endl;
+		cout << "닉네임 : " << nickname << endl << endl;
+		
+		SCENEAMANGER->ChangeCurrentScene(WAITTING_CHANNEL);
+		SCENEAMANGER->GetBeforeScene()->SignalEvent();
 		return;
 	}
 
 	cout << "로그인 실패 " << endl;
-	cout << "오류 번호 :" << errorNum << endl;
+	//cout << "오류 번호 :" << errorNum << endl;
+	switch (errorNum)
+	{
+	case LOGIN_ERROR_WRONG_ID:
+		cout << "!아이디가 잘못됨" << endl;
+		break;
+	case LOGIN_ERROR_WRONG_PW:
+		cout << "!비밀번호가 잘못됨" << endl;
+		break;
+	default:
+		cout << "로그인 오류번호 이상" << endl;
+		ASSERT(false);
+	}
+
+	SCENEAMANGER->ChangeCurrentScene(LOGIN);
+	SCENEAMANGER->GetBeforeScene()->SignalEvent();
 }
 
 void ServerSessionParser::AnsCreateId(T_PACKET * packet)
@@ -47,18 +65,36 @@ void ServerSessionParser::AnsCreateId(T_PACKET * packet)
 	if (IsSuccess)
 	{
 		cout << "아이디 생성 성공" << endl;
+
+		SCENEAMANGER->ChangeCurrentScene(LOGIN);
+		SCENEAMANGER->GetBeforeScene()->SignalEvent();
 		return;
 	}
 
 	cout << "아이디 생성 실패 " << endl;
 	cout << "오류 번호 :" << errorNum << endl;
+	switch (errorNum)
+	{
+	case LOGIN_ERROR_CREATEID_ID_ALREADY_EXE:
+		cout << "!ID 중복" << endl;
+		break;
+	case LOGIN_ERROR_CREATEID_NICKNAME_ALREADY_EXE:
+		cout << "!닉네임 중복" << endl;
+		break;
+	default:
+		cout << "아이디 생성 오류번호 이상" << endl;
+		ASSERT(false);
+	}
+
+	SCENEAMANGER->ChangeCurrentScene(LOGIN);
+	SCENEAMANGER->GetBeforeScene()->SignalEvent();
 }
 
 void ServerSessionParser::AnsWaitingChannalEnter(T_PACKET * packet)
 {
 	bool IsSuccess = false;
 	int errornum = 0;
-	char channelList[64];
+	char channelList[64] = {0,};
 
 	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
 	recvStream.read(&IsSuccess, sizeof(IsSuccess));
@@ -76,8 +112,10 @@ void ServerSessionParser::AnsWaitingChannalEnter(T_PACKET * packet)
 		{
 			cout << "생성된 채널이 없음." << endl;
 		}
-
 	}
+
+	SCENEAMANGER->ChangeCurrentScene(WAITTING_CHANNEL);
+	SCENEAMANGER->GetBeforeScene()->SignalEvent();
 }
 
 void ServerSessionParser::AnsWaitingChannelCreateChannel(T_PACKET * packet)
@@ -92,11 +130,17 @@ void ServerSessionParser::AnsWaitingChannelCreateChannel(T_PACKET * packet)
 	if (IsSuccess)
 	{
 		cout << "채널 생성 성공" << endl;
+
+		SCENEAMANGER->ChangeCurrentScene(IN_CHANNEL);
+		SCENEAMANGER->GetBeforeScene()->SignalEvent();
 		return;
 	}
 
 	cout << "채널 생성 실패 " << endl;
 	cout << "오류 번호 :" << errornum << endl;
+
+	SCENEAMANGER->ChangeCurrentScene(WAITTING_CHANNEL);
+	SCENEAMANGER->GetBeforeScene()->SignalEvent();
 }
 
 void ServerSessionParser::AnsWaitingChannelJoin(T_PACKET * packet)
@@ -111,23 +155,32 @@ void ServerSessionParser::AnsWaitingChannelJoin(T_PACKET * packet)
 	if (IsSuccess)
 	{
 		cout << "채널 입장 성공" << endl;
+
+		SCENEAMANGER->ChangeCurrentScene(IN_CHANNEL);
+		SCENEAMANGER->GetBeforeScene()->SignalEvent();
 		return;
 	}
 
 	cout << "채널 입장 실패 " << endl;
 	cout << "오류 번호 :" << errornum << endl;
+
+	SCENEAMANGER->ChangeCurrentScene(WAITTING_CHANNEL);
+	SCENEAMANGER->GetBeforeScene()->SignalEvent();
 }
 
 void ServerSessionParser::RecvChannelMessage(T_PACKET * packet)
 {
-	char nickname[15];
-	char message[64];
+	char nickname[15] = {0,};
+	char message[64] = {0,};
 
 	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
 	recvStream.read(nickname, sizeof(nickname));
 	recvStream.read(message, sizeof(message));
 
 	cout << nickname << " : " << message << endl;
+
+	SCENEAMANGER->ChangeCurrentScene(IN_CHANNEL);
+	SCENEAMANGER->GetBeforeScene()->SignalEvent();
 }
 
 void ServerSessionParser::AnsChannelOut(T_PACKET * packet)
@@ -142,11 +195,17 @@ void ServerSessionParser::AnsChannelOut(T_PACKET * packet)
 	if (IsSuccess)
 	{
 		cout << "채널 나가기 성공" << endl;
+
+		SCENEAMANGER->ChangeCurrentScene(WAITTING_CHANNEL);
+		SCENEAMANGER->GetBeforeScene()->SignalEvent();
 		return;
 	}
 
 	cout << "채널 나가기 실패 " << endl;
 	cout << "오류 번호 :" << errornum << endl;
+
+	SCENEAMANGER->ChangeCurrentScene(IN_CHANNEL);
+	SCENEAMANGER->GetBeforeScene()->SignalEvent();
 }
 
 void ServerSessionParser::AnsExit(T_PACKET * packet)
@@ -211,6 +270,8 @@ bool ServerSessionParser::PacketParsing(T_PACKET * const packet)
 	case PK_ANS_EXIT:
 		AnsExit(packet);
 		break;
+	default:
+		ASSERT(false);
 	}
 
 	//if (!m_bConnected)

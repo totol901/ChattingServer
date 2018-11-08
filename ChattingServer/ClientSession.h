@@ -18,6 +18,8 @@ public:
 	ClientSession();
 	~ClientSession();
 
+	void Clear();
+
 	const bool& IsConnected() { return m_bConnected; }
 	void SetConnected(bool connected) { m_bConnected = connected;}
 	Player* GetPlayerData() { return m_pPlayerData; }

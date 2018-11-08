@@ -13,9 +13,19 @@ ClientSession::ClientSession()
 
 ClientSession::~ClientSession()
 {
+	Clear();
 	SAFE_DELETE(m_pPlayerData);
 	SAFE_DELETE(m_pSessionParser);
 	closesocket(m_Socket);
+}
+
+void ClientSession::Clear()
+{
+	//채널에 있을수 있으니 있다면 빠져나옴
+	if (m_pPlayerData->GetChannel())
+	{
+		m_pPlayerData->GetChannel()->DeleteClientSession(this);
+	}
 }
 
 void ClientSession::Send(const WSABUF & wsaBuf)
