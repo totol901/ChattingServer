@@ -11,8 +11,9 @@ class ClientNetwork : public Singleton<ClientNetwork>
 {
 	friend Singleton;
 private:
-	HANDLE m_IOCP;
-	IOCPServerSession* p_mServerSession;
+	HANDLE				m_IOCP;
+	IOCPServerSession*	p_mServerSession;
+	bool* isOn;
 
 private:
 	ClientNetwork();
@@ -23,9 +24,17 @@ private:
 	void ConnectServer(const char* serverIp, const u_short& serverPort);
 
 public:
+	void SetLinkIsOn(bool* ison);
+
+	/****************************************************************************
+	함수명	: Init
+	설명		: IP, Port의 서버에 접속함
+	*****************************************************************************/
 	void Init(char* serverIp, u_short serverPort);
 
-	IOCPServerSession* GetServerSession() { return p_mServerSession; }
-
+	//IOCP를 사용한 소켓 처리 스레드
 	static unsigned int WINAPI WorkThread(LPVOID param);
+
+	//클라이언트와 통신하는 서버세션 Get
+	IOCPServerSession* GetServerSession() { return p_mServerSession; }
 };

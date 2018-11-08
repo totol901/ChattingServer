@@ -156,6 +156,7 @@
     <ClInclude Include="InChannelScene.h" />
     <ClInclude Include="IOCPServerSession.h" />
     <ClInclude Include="LoginScene.h" />
+    <ClInclude Include="MainClass.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="ServerSessionParser.h" />
     <ClInclude Include="stdafx.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="InChannelScene.cpp" />
     <ClCompile Include="IOCPServerSession.cpp" />
     <ClCompile Include="LoginScene.cpp" />
+    <ClCompile Include="MainClass.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ServerSessionParser.cpp" />
     <ClCompile Include="stdafx.cpp">

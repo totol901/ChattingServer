@@ -25,7 +25,6 @@ BaseScene::~BaseScene()
 void BaseScene::WaitForRecvPacket()
 {
 	WaitForSingleObject(m_Event, INFINITE);
-
 }
 
 void BaseScene::SignalEvent()

@@ -1,17 +1,18 @@
 /******************************************************************************
-파일명	: InChannelScene.h
-목적		: inChannel씬 객체
+파일명	: MainClass.h
+목적		: ChattingClient 객체, 메인 로직 담당함
 ******************************************************************************/
 #pragma once
 
-class InChannelScene : public BaseScene
+class MainClass
 {
-public:
-	InChannelScene();
-	InChannelScene(UINT id);
-	~InChannelScene();
+private:
+	bool isOn;
 
-	void Init();
+public:
+	MainClass();
+	~MainClass();
+
 	void Update();
 };
 

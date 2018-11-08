@@ -52,6 +52,12 @@ void ClientNetwork::ConnectServer(const char* serverIp, const u_short& serverPor
 
 	//recv 비동기 시작
 	p_mServerSession->RecvStandBy();
+	p_mServerSession->SetLinkIsOn(isOn);
+}
+
+void ClientNetwork::SetLinkIsOn(bool * ison)
+{
+	isOn = ison;
 }
 
 unsigned int ClientNetwork::WorkThread(LPVOID param)
@@ -68,6 +74,7 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 			(LPOVERLAPPED*)&pIOData,
 			INFINITE);
 
+		//오류 처리 및 종료 처리
 		if (!ret)
 		{
 			if (BytesTransferred == 0)
@@ -81,13 +88,13 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 			WSAERROR->err_print("서버 세션 오류\n");
 			return 0;
 		}
-
 		if (BytesTransferred == 0)
 		{
 			WSAERROR->err_print("서버가 종료되었습니다.\n");
 			return 0;
 		}
 
+		//패킷의 타입에 따라 Send, 파싱, 에러처리 해줌
 		switch (pIOData->GetType())
 		{
 		case IO_WRITE:
@@ -111,7 +118,7 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 
 		case IO_ERROR:
 			WSAERROR->err_print("IO 에러\n");
-			
+			ASSERT(false);
 			continue;
 		}
 	}

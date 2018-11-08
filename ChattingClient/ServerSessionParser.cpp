@@ -201,7 +201,7 @@ void ServerSessionParser::AnsExit(T_PACKET * packet)
 	if (IsSuccess)
 	{
 		cout << "서버 연결 종료 성공" << endl;
-		exit(0);
+		m_ClientSession->Disconnect();
 		return;
 	}
 
@@ -253,12 +253,8 @@ bool ServerSessionParser::PacketParsing(T_PACKET * const packet)
 		break;
 	default:
 		ASSERT(false);
+		return false;
 	}
-
-	//if (!m_bConnected)
-	//{
-	//	return false;
-	//}
 
 	return true;
 }

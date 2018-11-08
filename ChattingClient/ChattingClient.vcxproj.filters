@@ -39,9 +39,6 @@
     <ClInclude Include="IOCPServerSession.h">
       <Filter>NetWork</Filter>
     </ClInclude>
-    <ClInclude Include="ServerSessionParser.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="BaseScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -56,6 +53,12 @@
     </ClInclude>
     <ClInclude Include="InChannelScene.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerSessionParser.h">
+      <Filter>NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="MainClass.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -74,9 +77,6 @@
     <ClCompile Include="IOCPServerSession.cpp">
       <Filter>NetWork</Filter>
     </ClCompile>
-    <ClCompile Include="ServerSessionParser.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="BaseScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -91,6 +91,12 @@
     </ClCompile>
     <ClCompile Include="InChannelScene.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerSessionParser.cpp">
+      <Filter>NetWork</Filter>
+    </ClCompile>
+    <ClCompile Include="MainClass.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

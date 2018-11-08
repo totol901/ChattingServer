@@ -17,6 +17,11 @@ IOCPServerSession::~IOCPServerSession()
 	SAFE_DELETE(m_pServerSessionParser);
 }
 
+void IOCPServerSession::SetLinkIsOn(bool * ison)
+{
+	m_IsOn = ison;
+}
+
 bool IOCPServerSession::PacketParsing(T_PACKET * pakcet)
 {
 	if (m_pServerSessionParser->PacketParsing(pakcet))
@@ -39,13 +44,12 @@ void IOCPServerSession::SendPacket(T_PACKET packet)
 	wsaBuf.len = sizeof(T_PACKET);
 
 	this->Send(wsaBuf);
-	//this->RecvStandBy();
 }
 
 void IOCPServerSession::Disconnect()
 {
 	closesocket(m_Socket);
-	m_bConnected = false;
+	*m_IsOn = false;
 	m_Socket = NULL;
 }
 
@@ -69,8 +73,6 @@ void IOCPServerSession::OnConnect(const char* serverIp, u_short serverPort)
 		WSAERROR->err_quit("connect()");
 		//Á¾·áµÊ
 	}
-
-	m_bConnected = true;
 }
 
 void IOCPServerSession::Recv(WSABUF wsabuf)
@@ -89,11 +91,6 @@ bool IOCPServerSession::IsRecving(size_t transferSize)
 		return true;
 	}
 	return false;
-}
-
-void IOCPServerSession::AnsLogin(T_PACKET * packet)
-{
-
 }
 
 void IOCPServerSession::Send(WSABUF wsaBuf)
