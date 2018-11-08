@@ -41,3 +41,14 @@ bool ClientSessionManager::DeleteClientSession(const SOCKET & socket)
 	m_mapClientSession.erase(iter);
 	return true;
 }
+
+ClientSession* ClientSessionManager::FindClientSession(SOCKET socket)
+{
+	auto iter = m_mapClientSession.find(socket);
+	if (iter == m_mapClientSession.end())
+	{
+		return nullptr;
+	}
+
+	return iter->second;
+}

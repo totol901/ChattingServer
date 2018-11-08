@@ -35,18 +35,7 @@ void ServerSessionParser::AnsLogin(T_PACKET * packet)
 
 	cout << "로그인 실패 " << endl;
 	//cout << "오류 번호 :" << errorNum << endl;
-	switch (errorNum)
-	{
-	case LOGIN_ERROR_WRONG_ID:
-		cout << "!아이디가 잘못됨" << endl;
-		break;
-	case LOGIN_ERROR_WRONG_PW:
-		cout << "!비밀번호가 잘못됨" << endl;
-		break;
-	default:
-		cout << "로그인 오류번호 이상" << endl;
-		ASSERT(false);
-	}
+	ErrorPrint(errorNum);
 
 	SCENEAMANGER->ChangeCurrentScene(LOGIN);
 	SCENEAMANGER->GetBeforeScene()->SignalEvent();
@@ -72,19 +61,8 @@ void ServerSessionParser::AnsCreateId(T_PACKET * packet)
 	}
 
 	cout << "아이디 생성 실패 " << endl;
-	cout << "오류 번호 :" << errorNum << endl;
-	switch (errorNum)
-	{
-	case LOGIN_ERROR_CREATEID_ID_ALREADY_EXE:
-		cout << "!ID 중복" << endl;
-		break;
-	case LOGIN_ERROR_CREATEID_NICKNAME_ALREADY_EXE:
-		cout << "!닉네임 중복" << endl;
-		break;
-	default:
-		cout << "아이디 생성 오류번호 이상" << endl;
-		ASSERT(false);
-	}
+	//cout << "오류 번호 :" << errorNum << endl;
+	ErrorPrint(errorNum);
 
 	SCENEAMANGER->ChangeCurrentScene(LOGIN);
 	SCENEAMANGER->GetBeforeScene()->SignalEvent();
@@ -137,7 +115,8 @@ void ServerSessionParser::AnsWaitingChannelCreateChannel(T_PACKET * packet)
 	}
 
 	cout << "채널 생성 실패 " << endl;
-	cout << "오류 번호 :" << errornum << endl;
+	//cout << "오류 번호 :" << errornum << endl;
+	ErrorPrint(errornum);
 
 	SCENEAMANGER->ChangeCurrentScene(WAITTING_CHANNEL);
 	SCENEAMANGER->GetBeforeScene()->SignalEvent();
@@ -162,7 +141,8 @@ void ServerSessionParser::AnsWaitingChannelJoin(T_PACKET * packet)
 	}
 
 	cout << "채널 입장 실패 " << endl;
-	cout << "오류 번호 :" << errornum << endl;
+	//cout << "오류 번호 :" << errornum << endl;
+	ErrorPrint(errornum);
 
 	SCENEAMANGER->ChangeCurrentScene(WAITTING_CHANNEL);
 	SCENEAMANGER->GetBeforeScene()->SignalEvent();
@@ -202,7 +182,8 @@ void ServerSessionParser::AnsChannelOut(T_PACKET * packet)
 	}
 
 	cout << "채널 나가기 실패 " << endl;
-	cout << "오류 번호 :" << errornum << endl;
+	//cout << "오류 번호 :" << errornum << endl;
+	ErrorPrint(errornum);
 
 	SCENEAMANGER->ChangeCurrentScene(IN_CHANNEL);
 	SCENEAMANGER->GetBeforeScene()->SignalEvent();
@@ -280,5 +261,34 @@ bool ServerSessionParser::PacketParsing(T_PACKET * const packet)
 	//}
 
 	return true;
+}
+
+void ServerSessionParser::ErrorPrint(UINT errorNum)
+{
+	switch (errorNum)
+	{
+	case LOGIN_ERROR_WRONG:
+		cout << "!아이디 없음" << endl;
+		break;
+	case LOGIN_ERROR_ALREADY_LOGIN:
+		cout << "!이미 로그인 중" << endl;
+		break;
+	case LOGIN_ERROR_CREATEID_ID_ALREADY_EXE:
+		cout << "!만드려는 아이디 이미 존재함" << endl;
+		break;
+	case CREATE_CHANNEL_ALREADY_EXE:
+		cout << "!만드려는 채널 이미 존재함" << endl;
+		break;
+	case ENTER_CHANNEL_CANT_FIND:
+		cout << "!들어가려는 채널 없음" << endl;
+		break;
+	case LEAVE_CHANNEL_CANT_FIND:
+		cout << "!나가려는 채널 없음" << endl;
+		break;
+	
+	default:
+		cout << "로그인 오류번호 이상" << endl;
+		ASSERT(false);
+	}
 }
 

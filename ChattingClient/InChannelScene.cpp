@@ -5,7 +5,7 @@ InChannelScene::InChannelScene()
 	:BaseScene()
 {
 }
-
+//기존 아이디 접속중이면 접속 못하게 처리
 InChannelScene::InChannelScene(UINT id)
 	:BaseScene(id)
 {

@@ -15,8 +15,8 @@ private:
 
 public:
 	bool			AddClientSession( ClientSession* const clientSession);
-	//ClientSession*	FindSession(const SOCKET& socket);
 	bool			DeleteClientSession(const SOCKET& socket);
+	ClientSession*	FindClientSession(SOCKET socket);
 
 	const size_t GetCCU() const { return m_mapClientSession.size(); }
 };

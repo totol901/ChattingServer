@@ -23,5 +23,7 @@ public:
 	~ServerSessionParser();
 
 	bool PacketParsing(T_PACKET* const packet);
+
+	void ErrorPrint(UINT errorNum);
 };
 
