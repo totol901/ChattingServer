@@ -84,7 +84,7 @@ bool ClientSession::IsRecving(const size_t& transferSize)
  {
 	 if (!m_arrIOData[IO_WRITE].SetData(packet))
 	 {
-		 cout << "Send error" << endl;
+		 SLogPrintAtFile("Send error");
 		 return;
 	 }
 

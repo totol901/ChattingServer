@@ -115,16 +115,6 @@ unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 		CreateIoCompletionPort((HANDLE)clientSession->GetSocket(),
 			serverNetwork->GetIOCPHandle(), 
 			(ULONG_PTR)clientSession, 0);
-		
-		//과제를 위한 추가 구문
-		char buf[PAKCET_BUFF_SIZE] = { 0, };
-		memcpy(buf, TIMER->NowTimeWithMilliSec().c_str(), 
-			TIMER->NowTimeWithMilliSec().size());
-		T_PACKET packet(PK_NONE);
-		packet.Size = sizeof(T_PACKET);
-		memcpy_s(packet.buff, (PAKCET_BUFF_SIZE),
-			buf, strlen(buf) + 1);
-		clientSession->SendPacket(packet);
 
 		//IOCP 스레드를 대기모드에서 깨우기 위한 recv
 		clientSession->RecvStandBy();

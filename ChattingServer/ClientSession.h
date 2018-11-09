@@ -33,7 +33,7 @@ public:
 	함수명	: PacketParsing
 	설명		: 페킷을 파싱함
 	*****************************************************************************/
-	bool PacketParsing(T_PACKET* const pakcet);
+	const bool PacketParsing(T_PACKET* const pakcet);
 
 	/****************************************************************************
 	함수명	: sendPacket
