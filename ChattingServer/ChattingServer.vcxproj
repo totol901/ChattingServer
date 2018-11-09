@@ -161,6 +161,7 @@
     <ClInclude Include="ClientSessionParser.h" />
     <ClInclude Include="DBSession.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="MainClass.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ServerNetwork.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="ClientSessionParser.cpp" />
     <ClCompile Include="DBSession.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="MainClass.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ServerNetwork.cpp" />
