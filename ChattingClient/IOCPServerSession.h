@@ -21,6 +21,7 @@ private:
 public:
 	IOCPServerSession();
 	~IOCPServerSession();
+	//ison 변수 메모리링크 함수
 	void SetLinkIsOn(bool* ison);
 
 	/****************************************************************************

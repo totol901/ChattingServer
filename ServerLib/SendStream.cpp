@@ -27,10 +27,10 @@ bool SendStream::checkWriteBound(size_t len)
 	return true;
 }
 
-void SendStream::write(string & reVal)
+void SendStream::write(string  reVal)
 {
 	//string ±Ê¿Ã ≥÷æÓ¡‹
-	size_t Stringlen = reVal.length();
+	UINT Stringlen = (UINT)reVal.length();
 	memcpy_s((void *)(stream.data() + offset), stream.size() - offset, 
 		(void *)&Stringlen, sizeof(Stringlen));
 	offset += sizeof(Stringlen);

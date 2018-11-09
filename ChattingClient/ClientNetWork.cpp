@@ -52,12 +52,12 @@ void ClientNetwork::ConnectServer(const char* serverIp, const u_short& serverPor
 
 	//recv 비동기 시작
 	p_mServerSession->RecvStandBy();
-	p_mServerSession->SetLinkIsOn(isOn);
 }
 
 void ClientNetwork::SetLinkIsOn(bool * ison)
 {
 	isOn = ison;
+	p_mServerSession->SetLinkIsOn(ison);
 }
 
 unsigned int ClientNetwork::WorkThread(LPVOID param)
@@ -80,7 +80,9 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 			if (BytesTransferred == 0)
 			{
 				WSAERROR->err_print("서버와 비정상 접속 종료 되었습니다.\n");
+				return 0;
 			}
+			WSAERROR->err_print("IOCP 오류\n");
 			return 0;
 		}
 		if (pSession == nullptr)
@@ -90,7 +92,7 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 		}
 		if (BytesTransferred == 0)
 		{
-			WSAERROR->err_print("서버가 종료되었습니다.\n");
+			WSAERROR->err_print("서버와 정상 접속 종료.\n");
 			return 0;
 		}
 
@@ -109,7 +111,9 @@ unsigned int ClientNetwork::WorkThread(LPVOID param)
 				{
 					if(!pSession->PacketParsing(packet))
 					{
-						WSAERROR->err_print("패킷 파싱 오류\n");
+						SAFE_DELETE(packet);
+						//종료 패킷을 받음
+						return 0;
 					}
 					SAFE_DELETE(packet);
 				}

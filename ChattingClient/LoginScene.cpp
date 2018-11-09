@@ -46,12 +46,13 @@ void LoginScene::Update()
 			cout << "PW 입력 : ";
 			cin >> pw;
 
+			//stream에 데이터 넣음
+			m_SendStream.write(id);
+			m_SendStream.write(pw);
+
 			//입력 받은 데이터 송신
 			m_Packet.Clear();
 			m_Packet.type = PK_REQ_LOGIN;
-			m_Packet.Size = sizeof(T_PACKET);
-			m_SendStream.write(id, sizeof(id));
-			m_SendStream.write(pw, sizeof(pw));
 			m_Packet.SetStream(m_SendStream);
 
 			//패킷 전송
@@ -72,13 +73,13 @@ void LoginScene::Update()
 			cout << "nickname 입력 : ";
 			cin >> nickname;
 
+			m_SendStream.write(id);
+			m_SendStream.write(pw);
+			m_SendStream.write(nickname);
+
 			//입력 받은 데이터 송신
 			m_Packet.Clear();
 			m_Packet.type = PK_REQ_CREATE_ID;
-			m_Packet.Size = sizeof(T_PACKET);
-			m_SendStream.write(id, sizeof(id));
-			m_SendStream.write(pw, sizeof(pw));
-			m_SendStream.write(nickname, sizeof(nickname));
 			m_Packet.SetStream(m_SendStream);
 
 			//패킷 전송
@@ -88,8 +89,15 @@ void LoginScene::Update()
 
 		case 3:
 		{
-			cout << "종료하기";
-			exit(1);
+			cout << "종료하기" << endl;
+			//종료
+			m_Packet.Clear();
+			m_Packet.type = PK_REQ_EXIT;
+			m_Packet.SetStream(m_SendStream);
+
+			CLIENTNETWORK->GetServerSession()->SendPacket(m_Packet);
+			//보내는 스트림 종료
+			shutdown(CLIENTNETWORK->GetServerSession()->GetSocket(), SD_SEND);
 		}
 			break;
 
@@ -99,7 +107,10 @@ void LoginScene::Update()
 			break;
 	}
 
-	WaitForRecvPacket();
+	if (CLIENTNETWORK->IsOn())
+	{
+		WaitForRecvPacket();
+	}
 
 	cin.ignore();
 }

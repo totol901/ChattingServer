@@ -4,7 +4,8 @@
 Player::Player()
 	:GameObject(),
 	m_PlayerState(PLAYER_NONE),
-	m_pChannel(nullptr)
+	m_pChannel(nullptr),
+	m_PlayerID("")
 {
 }
 

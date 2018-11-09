@@ -13,6 +13,8 @@ private:
 	RecvStream recvStream;
 	SendStream SendStream;
 
+	void SetRecvStream(T_PACKET* packet);
+
 	//로그인 답장
 	void AnsLogin(T_PACKET* packet);
 	//아이디 생성 답장

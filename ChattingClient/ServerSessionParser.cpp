@@ -11,22 +11,29 @@ ServerSessionParser::~ServerSessionParser()
 	m_ClientSession = nullptr;
 }
 
+void ServerSessionParser::SetRecvStream(T_PACKET * packet)
+{
+	recvStream.clear();
+	const size_t headSize = sizeof(packet->Size) + sizeof(packet->type);
+	recvStream.set(packet->buff, packet->Size - headSize);
+}
+
 void ServerSessionParser::AnsLogin(T_PACKET * packet)
 {
 	bool IsSuccess = false;
 	int errorNum = 0;
-	char nickname[15] = { 0, };
+	string nickname;
 
-	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	SetRecvStream(packet);
 	recvStream.read(&IsSuccess, sizeof(IsSuccess));
 	recvStream.read(&errorNum, sizeof(errorNum));
-	recvStream.read(&nickname, sizeof(nickname));
+	recvStream.read(nickname);
 
 	//로그인 성공 유무
 	if (IsSuccess)
 	{
 		cout << "로그인 성공" << endl;
-		cout << "닉네임 : " << nickname << endl << endl;
+		cout << "닉네임 : " << nickname.c_str() << endl << endl;
 		
 		SCENEAMANGER->ChangeCurrentScene(WAITTING_CHANNEL);
 		SCENEAMANGER->GetBeforeScene()->SignalEvent();
@@ -45,9 +52,8 @@ void ServerSessionParser::AnsCreateId(T_PACKET * packet)
 {
 	bool IsSuccess = false;
 	int errorNum = 0;
-	char nickname[15] = { 0, };
 
-	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	SetRecvStream(packet);
 	recvStream.read(&IsSuccess, sizeof(IsSuccess));
 	recvStream.read(&errorNum, sizeof(errorNum));
 
@@ -61,7 +67,6 @@ void ServerSessionParser::AnsCreateId(T_PACKET * packet)
 	}
 
 	cout << "아이디 생성 실패 " << endl;
-	//cout << "오류 번호 :" << errorNum << endl;
 	ErrorPrint(errorNum);
 
 	SCENEAMANGER->ChangeCurrentScene(LOGIN);
@@ -72,19 +77,19 @@ void ServerSessionParser::AnsWaitingChannalEnter(T_PACKET * packet)
 {
 	bool IsSuccess = false;
 	int errornum = 0;
-	char channelList[64] = {0,};
+	string channelList;
 
-	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	SetRecvStream(packet);
 	recvStream.read(&IsSuccess, sizeof(IsSuccess));
 	recvStream.read(&errornum, sizeof(errornum));
-	recvStream.read(channelList, sizeof(channelList));
+	recvStream.read(channelList);
 
 	cout << "채널 리스트" << endl;
 	if (IsSuccess)
 	{
-		if (*channelList != NULL)
+		if (channelList[0] != '\0')
 		{
-			cout << channelList;
+			cout << channelList.c_str();
 		}
 		else
 		{
@@ -101,7 +106,7 @@ void ServerSessionParser::AnsWaitingChannelCreateChannel(T_PACKET * packet)
 	bool IsSuccess = false;
 	int errornum = 0;
 
-	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	SetRecvStream(packet);
 	recvStream.read(&IsSuccess, sizeof(IsSuccess));
 	recvStream.read(&errornum, sizeof(errornum));
 
@@ -115,7 +120,6 @@ void ServerSessionParser::AnsWaitingChannelCreateChannel(T_PACKET * packet)
 	}
 
 	cout << "채널 생성 실패 " << endl;
-	//cout << "오류 번호 :" << errornum << endl;
 	ErrorPrint(errornum);
 
 	SCENEAMANGER->ChangeCurrentScene(WAITTING_CHANNEL);
@@ -127,7 +131,7 @@ void ServerSessionParser::AnsWaitingChannelJoin(T_PACKET * packet)
 	bool IsSuccess = false;
 	int errornum = 0;
 
-	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	SetRecvStream(packet);
 	recvStream.read(&IsSuccess, sizeof(IsSuccess));
 	recvStream.read(&errornum, sizeof(errornum));
 
@@ -141,7 +145,6 @@ void ServerSessionParser::AnsWaitingChannelJoin(T_PACKET * packet)
 	}
 
 	cout << "채널 입장 실패 " << endl;
-	//cout << "오류 번호 :" << errornum << endl;
 	ErrorPrint(errornum);
 
 	SCENEAMANGER->ChangeCurrentScene(WAITTING_CHANNEL);
@@ -150,14 +153,14 @@ void ServerSessionParser::AnsWaitingChannelJoin(T_PACKET * packet)
 
 void ServerSessionParser::RecvChannelMessage(T_PACKET * packet)
 {
-	char nickname[15] = {0,};
-	char message[64] = {0,};
+	string nickname;
+	string message;
 
-	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
-	recvStream.read(nickname, sizeof(nickname));
-	recvStream.read(message, sizeof(message));
+	SetRecvStream(packet);
+	recvStream.read(nickname);
+	recvStream.read(message);
 
-	cout << nickname << " : " << message << endl;
+	cout << nickname.c_str() << " : " << message.c_str() << endl;
 
 	SCENEAMANGER->ChangeCurrentScene(IN_CHANNEL);
 	SCENEAMANGER->GetBeforeScene()->SignalEvent();
@@ -168,7 +171,7 @@ void ServerSessionParser::AnsChannelOut(T_PACKET * packet)
 	bool IsSuccess = false;
 	int errornum = 0;
 
-	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	SetRecvStream(packet);
 	recvStream.read(&IsSuccess, sizeof(IsSuccess));
 	recvStream.read(&errornum, sizeof(errornum));
 
@@ -182,7 +185,6 @@ void ServerSessionParser::AnsChannelOut(T_PACKET * packet)
 	}
 
 	cout << "채널 나가기 실패 " << endl;
-	//cout << "오류 번호 :" << errornum << endl;
 	ErrorPrint(errornum);
 
 	SCENEAMANGER->ChangeCurrentScene(IN_CHANNEL);
@@ -194,7 +196,7 @@ void ServerSessionParser::AnsExit(T_PACKET * packet)
 	bool IsSuccess = false;
 	int errornum = 0;
 
-	recvStream.set(packet->buff, PAKCET_BUFF_SIZE);
+	SetRecvStream(packet);
 	recvStream.read(&IsSuccess, sizeof(IsSuccess));
 	recvStream.read(&errornum, sizeof(errornum));
 
@@ -202,11 +204,16 @@ void ServerSessionParser::AnsExit(T_PACKET * packet)
 	{
 		cout << "서버 연결 종료 성공" << endl;
 		m_ClientSession->Disconnect();
+		SCENEAMANGER->GetCurrentScene()->SignalEvent();
 		return;
 	}
 
 	cout << "서버 연결 종료 실패 " << endl;
 	cout << "오류 번호 :" << errornum << endl;
+	SCENEAMANGER->GetCurrentScene()->SignalEvent();
+
+	//받는 스트림 종료
+	shutdown(m_ClientSession->GetSocket(), SD_RECEIVE);
 }
 
 bool ServerSessionParser::PacketParsing(T_PACKET * const packet)
@@ -250,10 +257,10 @@ bool ServerSessionParser::PacketParsing(T_PACKET * const packet)
 
 	case PK_ANS_EXIT:
 		AnsExit(packet);
-		break;
+		return false;
+
 	default:
 		ASSERT(false);
-		return false;
 	}
 
 	return true;

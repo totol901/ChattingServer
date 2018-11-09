@@ -59,7 +59,7 @@ bool ClientSessionManager::DeleteClientSession(const SOCKET & socket)
 		return false;
 	}
 
-	DeleteClientSessionID(iter->second->GetPlayerData()->GetPlayerID());
+	//DeleteClientSessionID(iter->second->GetPlayerData()->GetPlayerID());
 
 	m_mapClientSession.erase(iter);
 

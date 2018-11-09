@@ -41,16 +41,14 @@ void IOCPServerSession::SendPacket(T_PACKET packet)
 
 	WSABUF wsaBuf;
 	wsaBuf.buf = (char*)m_arrIOData[IO_WRITE].GetptPacket();
-	wsaBuf.len = sizeof(T_PACKET);
+	wsaBuf.len = (ULONG)m_arrIOData[IO_WRITE].GetptPacket()->Size;
 
 	this->Send(wsaBuf);
 }
 
 void IOCPServerSession::Disconnect()
 {
-	closesocket(m_Socket);
 	*m_IsOn = false;
-	m_Socket = NULL;
 }
 
 void IOCPServerSession::OnConnect(const char* serverIp, u_short serverPort)

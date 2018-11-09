@@ -24,7 +24,7 @@ enum E_PACKET_TYPE
 #pragma pack(push, 1)
 struct T_PACKET
 {
-	DWORD Size;
+	UINT Size;
 	E_PACKET_TYPE type;
 	char buff[PAKCET_BUFF_SIZE];
 
@@ -43,6 +43,7 @@ struct T_PACKET
 	inline void SetStream(Stream& stream)
 	{
 		memcpy(buff, stream.data(), stream.size());
+		Size = (UINT)(sizeof(Size) + stream.size() + sizeof(type));
 	}
 	inline void Clear()
 	{

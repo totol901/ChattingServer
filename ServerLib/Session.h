@@ -17,7 +17,7 @@ protected:
 	int8_t	m_Type;
 	SOCKADDR_IN m_ClientAddr;
 	
-	//bool setSocketOpt();
+	
 
 public:
 	Session();
@@ -30,6 +30,9 @@ public:
 	매개변수	: 없음
 	*****************************************************************************/
 	//void				updateHeartBeat();
+
+	//소켓 옵션(좀비 소켓 체크) 설정
+	bool setSocketOpt();
 
 public:
 	//get함수

@@ -41,14 +41,15 @@ void InChannelScene::Update()
 		char message[64] = { 0, };
 		cout << "채널에 보낼 메시지 입력 : ";
 		cin >> message;
-		
-		//채널에 메시지 송신
-		T_PACKET packet(PK_REQ_CHANNAL_SEND_MESSAGE);
-		packet.Size = sizeof(T_PACKET);
-		m_SendStream.write(message, sizeof(message));
 
-		packet.SetStream(m_SendStream);
-		CLIENTNETWORK->GetServerSession()->SendPacket(packet);
+		m_SendStream.write(message);
+
+		//채널에 메시지 송신
+		m_Packet.Clear();
+		m_Packet.type = PK_REQ_CHANNAL_SEND_MESSAGE;
+		m_Packet.SetStream(m_SendStream);
+
+		CLIENTNETWORK->GetServerSession()->SendPacket(m_Packet);
 	}
 	break;
 
@@ -56,11 +57,11 @@ void InChannelScene::Update()
 	{
 		cout << "채널 나가기";
 
-		T_PACKET packet(PK_REQ_CHANNAL_OUT);
-		packet.Size = sizeof(T_PACKET);
-		packet.SetStream(m_SendStream);
+		m_Packet.Clear();
+		m_Packet.type = PK_REQ_CHANNAL_OUT;
+		m_Packet.SetStream(m_SendStream);
 
-		CLIENTNETWORK->GetServerSession()->SendPacket(packet);
+		CLIENTNETWORK->GetServerSession()->SendPacket(m_Packet);
 	}
 	break;
 
@@ -69,11 +70,13 @@ void InChannelScene::Update()
 		cout << "종료하기";
 
 		//종료
-		T_PACKET packet(PK_REQ_EXIT);
-		packet.Size = sizeof(T_PACKET);
-		packet.SetStream(m_SendStream);
+		m_Packet.Clear();
+		m_Packet.type = PK_REQ_EXIT;
+		m_Packet.SetStream(m_SendStream);
 
-		CLIENTNETWORK->GetServerSession()->SendPacket(packet);
+		CLIENTNETWORK->GetServerSession()->SendPacket(m_Packet);
+		//보내는 스트림 종료
+		shutdown(CLIENTNETWORK->GetServerSession()->GetSocket(), SD_SEND);
 	}
 	break;
 
@@ -84,6 +87,9 @@ void InChannelScene::Update()
 	}
 	}
 
-	WaitForRecvPacket();
+	if (CLIENTNETWORK->IsOn())
+	{
+		WaitForRecvPacket();
+	}
 	cin.ignore();
 }

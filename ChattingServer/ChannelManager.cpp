@@ -82,11 +82,11 @@ bool ChannelManager::DeleteChannelByID(const UINT & id)
 	if (iterString == m_mapStringChannels.end())
 	{
 		SLogPrintAtFile("! 채널 매니저의 채널 삭제 불가능");
+		return false;
 	}
 	else
 	{
 		m_mapStringChannels.erase(iterString);
-		return false;
 	}
 
 	if (iterID == m_mapIDChannels.end())

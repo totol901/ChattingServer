@@ -13,7 +13,7 @@ class ClientNetwork : public Singleton<ClientNetwork>
 private:
 	HANDLE				m_IOCP;
 	IOCPServerSession*	p_mServerSession;
-	bool* isOn;
+	bool*				isOn;
 
 private:
 	ClientNetwork();
@@ -24,6 +24,8 @@ private:
 	void ConnectServer(const char* serverIp, const u_short& serverPort);
 
 public:
+	bool IsOn() { return *isOn; }
+	//ison 변수 메모리링크 함수
 	void SetLinkIsOn(bool* ison);
 
 	/****************************************************************************

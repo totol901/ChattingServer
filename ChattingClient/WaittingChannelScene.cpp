@@ -40,12 +40,13 @@ void WaittingChannelScene::Update()
 	case 1:
 	{
 		//채널 리스트 받아옴
-		T_PACKET packet(PK_REQ_WAITINGCHANNAL_ENTER);
-		packet.Size = sizeof(T_PACKET);
+		m_Packet.Clear();
+		m_Packet.type = PK_REQ_WAITINGCHANNAL_ENTER;
+		m_Packet.SetStream(m_SendStream);
 
-		CLIENTNETWORK->GetServerSession()->SendPacket(packet);
+		CLIENTNETWORK->GetServerSession()->SendPacket(m_Packet);
 	}
-	break;
+		break;
 
 	case 2:
 	{
@@ -54,14 +55,15 @@ void WaittingChannelScene::Update()
 		cout << "만들 channelName 입력 : ";
 		cin >> channelName;
 
-		T_PACKET packet(PK_REQ_WAITINGCHANNAL_CHREAT_CHANNAL);
-		packet.Size = sizeof(T_PACKET);
-		m_SendStream.write(channelName, sizeof(channelName));
-		packet.SetStream(m_SendStream);
+		m_SendStream.write(channelName);
 
-		CLIENTNETWORK->GetServerSession()->SendPacket(packet);
+		m_Packet.Clear();
+		m_Packet.type = PK_REQ_WAITINGCHANNAL_CHREAT_CHANNAL;
+		m_Packet.SetStream(m_SendStream);
+
+		CLIENTNETWORK->GetServerSession()->SendPacket(m_Packet);
 	}
-	break;
+		break;
 
 	case 3:
 	{
@@ -72,12 +74,13 @@ void WaittingChannelScene::Update()
 		cin >> channelNumStr;
 		channelNum = atoi(channelNumStr);
 
-		T_PACKET packet(PK_REQ_WAITINGCHANNAL_CHANNAL_JOIN);
-		packet.Size = sizeof(T_PACKET);
 		m_SendStream.write(&channelNum, sizeof(channelNum));
-		packet.SetStream(m_SendStream);
 
-		CLIENTNETWORK->GetServerSession()->SendPacket(packet);
+		m_Packet.Clear();
+		m_Packet.type = PK_REQ_WAITINGCHANNAL_CHANNAL_JOIN;
+		m_Packet.SetStream(m_SendStream);
+
+		CLIENTNETWORK->GetServerSession()->SendPacket(m_Packet);
 	}
 	break;
 
@@ -85,11 +88,13 @@ void WaittingChannelScene::Update()
 	{
 		cout << "종료하기";
 
-		T_PACKET packet(PK_REQ_EXIT);
-		packet.Size = sizeof(T_PACKET);
-		packet.SetStream(m_SendStream);
+		m_Packet.Clear();
+		m_Packet.type = PK_REQ_EXIT;
+		m_Packet.SetStream(m_SendStream);
 
-		CLIENTNETWORK->GetServerSession()->SendPacket(packet);
+		CLIENTNETWORK->GetServerSession()->SendPacket(m_Packet);
+		//보내는 스트림 종료
+		shutdown(CLIENTNETWORK->GetServerSession()->GetSocket(), SD_SEND);
 	}
 		break;
 
@@ -100,6 +105,9 @@ void WaittingChannelScene::Update()
 	}
 
 	//Scene이 변경될때 까지 대기
-	WaitForRecvPacket();
+	if (CLIENTNETWORK->IsOn())
+	{
+		WaitForRecvPacket();
+	}
 	cin.ignore();
 }

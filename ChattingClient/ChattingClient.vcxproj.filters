@@ -16,11 +16,11 @@
     <Filter Include="Util">
       <UniqueIdentifier>{fa2dc7f5-315e-4e8e-8fa2-63834d96e269}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NetWork">
-      <UniqueIdentifier>{19f8452b-e180-4251-a834-e994b3361392}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{9d6c863e-1ad2-47ec-a9dd-e2da391562a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetWork">
+      <UniqueIdentifier>{19f8452b-e180-4251-a834-e994b3361392}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

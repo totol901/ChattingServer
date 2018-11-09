@@ -9,8 +9,13 @@ class ClientSessionParser
 {
 private:
 	ClientSession * m_ClientSession;
+	T_PACKET m_SendPk;
+
 	RecvStream recvStream;
 	SendStream SendStream;
+
+	void SendPacketWithSendStream(E_PACKET_TYPE&& type);
+	void SetRecvStream(T_PACKET* packet);
 
 	void ReqLogin(T_PACKET* packet);
 	void ReqCreateID(T_PACKET * packet);

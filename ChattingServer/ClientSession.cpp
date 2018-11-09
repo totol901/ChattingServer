@@ -3,8 +3,7 @@
 #include "Player.h"
 
 ClientSession::ClientSession()
-	:Session(),
-	m_bConnected(true)
+	:Session()
 {
 	m_Type = SESSION_TYPE_CLIENT;
 	m_pSessionParser = new ClientSessionParser(this);
@@ -77,6 +76,7 @@ bool ClientSession::IsRecving(const size_t& transferSize)
 	 {
 		 return true;
 	 }
+	
 	 return false;
  }
 

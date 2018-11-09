@@ -100,6 +100,8 @@ unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 		clientSession->SetSocketAddr(clientAddr);
 		//세션매니저에 세션 추가
 		CLIENTSESSIONMANAGER->AddClientSession(clientSession);
+		//소켓 옵션 세팅
+		clientSession->setSocketOpt();
 
 		//IOCP 연결
 		CreateIoCompletionPort((HANDLE)clientSession->GetSocket(),
@@ -149,12 +151,29 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 				//recv, send한 IOData 2개가 들어오게됨
 				//때문에 임계영역 설정
 				EnterCriticalSection(&ClientSessionThreadCS);
+				//접속한 세션 제거
 				if (!CLIENTSESSIONMANAGER->
 					DeleteClientSession(pClientSession->GetSocket()))
 				{
 					LeaveCriticalSection(&ClientSessionThreadCS);
 					continue;
 				}
+				//로그인된 세션 제거
+				if (pClientSession->GetPlayerData()->GetPlayerID() != "")
+				{
+					if (!CLIENTSESSIONMANAGER->DeleteClientSessionID(pClientSession->GetPlayerData()->GetPlayerID()))
+					{
+						LeaveCriticalSection(&ClientSessionThreadCS);
+						continue;
+					}
+					DATABASE->InsertUserLogQuery(pClientSession->GetPlayerData()->GetPlayerID(),
+						"비정상 접속 종료");
+				}
+
+				//파일 로그, 데이터 베이스 로그에 남김
+				SLogPrintAtFile("%s : 비정상 접속 종료",
+					pClientSession->GetPlayerData()->GetPlayerID().c_str());
+			
 				SAFE_DELETE(pClientSession);
 				LeaveCriticalSection(&ClientSessionThreadCS);
 			}
@@ -172,11 +191,28 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			//recv, send한 IOData 2개가 들어오게됨
 			//때문에 임계영역 설정
 			EnterCriticalSection(&ClientSessionThreadCS);
+			//접속한 세션 제거
 			if (!CLIENTSESSIONMANAGER->DeleteClientSession(pClientSession->GetSocket()))
 			{
 				LeaveCriticalSection(&ClientSessionThreadCS);
 				continue;
 			}
+			//로그인된 세션 제거
+			if (pClientSession->GetPlayerData()->GetPlayerID() != "")
+			{
+				if (!CLIENTSESSIONMANAGER->DeleteClientSessionID(pClientSession->GetPlayerData()->GetPlayerID()))
+				{
+					LeaveCriticalSection(&ClientSessionThreadCS);
+					continue;
+				}
+				DATABASE->InsertUserLogQuery(pClientSession->GetPlayerData()->GetPlayerID(),
+					"정상 접속 종료");
+			}
+	
+			//파일 로그, 데이터 베이스 로그에 남김
+			SLogPrintAtFile("%s : 정상 접속 종료",
+				pClientSession->GetPlayerData()->GetPlayerID().c_str());
+			
 			SAFE_DELETE(pClientSession);
 			LeaveCriticalSection(&ClientSessionThreadCS);
 			continue;
@@ -196,21 +232,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 				{
 					if (!pClientSession->PacketParsing(pPacket))
 					{
-						if (!pClientSession->IsConnected())
-						{
-							//파일 로그, 데이터 베이스 로그에 남김
-							SLogPrintAtFile("%s : 정상 접속 종료", 
-								pClientSession->GetPlayerData()->GetPlayerID().c_str());
-							DATABASE->InsertUserLogQuery(pClientSession->GetPlayerData()->GetPlayerID(),
-								"정상 접속 종료");
-							//세션 매니저에서 제거, 메모리에서 제거
-							CLIENTSESSIONMANAGER->DeleteClientSession(pClientSession->GetSocket());
-							SAFE_DELETE(pClientSession);
-						}
-						else
-						{
-							SLogPrintAtFile("페킷 파싱중 문제가 생김");
-						}
+						SLogPrintAtFile("종료 패킷 받음");
 					}
 					SAFE_DELETE(pPacket);
 				}
