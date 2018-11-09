@@ -1,10 +1,14 @@
+/******************************************************************************
+파일명	: Channel.h
+목적		: 채널 객체
+******************************************************************************/
 #pragma once
 
 class Channel : public Object
 {
 private:
 	set<ClientSession*> m_setClientSessions;
-	string m_name;
+	string				m_name;
 
 public:
 	Channel(const string& channelName);

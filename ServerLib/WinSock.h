@@ -15,6 +15,6 @@ private:
 	WSADATA m_WSAData;
 
 public:
-	void Init() {}
-	const WSADATA& GetWSAData();
+	void			Init() {}
+	const WSADATA&	GetWSAData();
 };

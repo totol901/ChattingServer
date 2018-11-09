@@ -1,3 +1,7 @@
+/******************************************************************************
+파일명	: Logger.h
+목적		: 로그를 출력하기 위한 객체
+******************************************************************************/
 #pragma once
 
 #define SLogPrint(arg, ...)	Logger::GetInstance()->LogPrint(arg, __VA_ARGS__);
@@ -11,6 +15,7 @@ class Logger : public Singleton<Logger>
 	friend Singleton;
 private:
 	FILE* pFile;
+
 	Logger();
 	~Logger();
 
@@ -19,5 +24,4 @@ private:
 public:
 	void LogPrint(const char* str, ...);
 	void LogPrintAtFile(const char* str, ...);
-
 };

@@ -9,14 +9,16 @@ class ClientSessionParser
 {
 private:
 	ClientSession * m_ClientSession;
-	T_PACKET m_SendPk;
+	T_PACKET		m_SendPk;
 
 	RecvStream recvStream;
 	SendStream SendStream;
 
+	//스트림 관련 함수들
 	void SendPacketWithSendStream(E_PACKET_TYPE&& type);
 	void SetRecvStream(T_PACKET* packet);
 
+	//패킷 분석 함수들
 	void ReqLogin(T_PACKET* packet);
 	void ReqCreateID(T_PACKET * packet);
 	void ReqWatingChannelEnter(T_PACKET* packet);

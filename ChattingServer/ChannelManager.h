@@ -1,22 +1,24 @@
+/******************************************************************************
+파일명	: ChannelManager.h
+목적		: 채널 객체를 관리하는 매니저
+******************************************************************************/
 #pragma once
 
 class ChannelManager : public Singleton<ChannelManager>
 {
 	friend ChannelManager;
 private:
-	map<string, Channel*> m_mapStringChannels;
-	map<UINT, Channel*> m_mapIDChannels;
-
-	//vector<Channel> m_vecChannelList;
+	map<string, Channel*>	m_mapStringChannels;
+	map<UINT, Channel*>		m_mapIDChannels;
 
 public:
 	ChannelManager();
 	~ChannelManager();
 
-	bool MakeChannel(string channelName);
-	Channel* FindChannelByName(const string& channelName);
-	Channel* FindChannelByID(UINT id);
-	bool DeleteChannelByName(const string& channelName);
-	bool DeleteChannelByID(const UINT& id);
-	string GetChannelList();
+	bool		MakeChannel(string channelName);
+	Channel*	FindChannelByName(const string& channelName);
+	Channel*	FindChannelByID(UINT id);
+	bool		DeleteChannelByName(const string& channelName);
+	bool		DeleteChannelByID(const UINT& id);
+	string		GetChannelList();
 };

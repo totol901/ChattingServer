@@ -1,3 +1,7 @@
+/******************************************************************************
+파일명	: ClientSessionManager.h
+목적		: 클라이언트 세션들을 관리함
+******************************************************************************/
 #pragma once
 
 class ClientSessionManager : public Singleton<ClientSessionManager>
@@ -5,8 +9,8 @@ class ClientSessionManager : public Singleton<ClientSessionManager>
 	friend Singleton;
 private:
 	UINT						m_GenerateSessionID;
-	map<SOCKET, ClientSession*> m_mapClientSession;//억셉트된 세션
-	map<string, ClientSession*> m_mapClientSessionID;//로그인된 세션
+	map<SOCKET, ClientSession*> m_mapClientSession;		//억셉트된 세션
+	map<string, ClientSession*> m_mapClientSessionID;	//로그인된 세션
 
 private:
 	ClientSessionManager();

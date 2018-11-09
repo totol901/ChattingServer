@@ -1,3 +1,7 @@
+/******************************************************************************
+파일명	: Player.h
+목적		: 클라이언트의 플레이어를 추상화
+******************************************************************************/
 #pragma once
 
 enum E_PLAYER_STATE
@@ -12,10 +16,10 @@ enum E_PLAYER_STATE
 class Player : public GameObject
 {
 private:
-	E_PLAYER_STATE m_PlayerState;
-	string m_PlayerID;
-	string m_PlayerNickname;
-	Channel* m_pChannel;
+	E_PLAYER_STATE	m_PlayerState;
+	string			m_PlayerID;
+	string			m_PlayerNickname;
+	Channel*		m_pChannel;
 
 public:
 	Player();
@@ -26,8 +30,8 @@ public:
 	void SetPlayerID(string playerID) { m_PlayerID = playerID; }
 	void SetPlayerNickname(string playerNickname) { m_PlayerNickname = playerNickname; }
 
-	const E_PLAYER_STATE& GetPlayerState() { return m_PlayerState; }
-	string& GetPlayerNickname() { return m_PlayerNickname; }
-	string& GetPlayerID() { return m_PlayerID; }
-	Channel* GetChannel() const {return m_pChannel;}
+	const E_PLAYER_STATE&	GetPlayerState()	{ return m_PlayerState; }
+	string&					GetPlayerNickname() { return m_PlayerNickname; }
+	string&					GetPlayerID()		{ return m_PlayerID; }
+	Channel*				GetChannel() const	{return m_pChannel;}
 };
