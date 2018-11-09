@@ -52,6 +52,10 @@ UINT ClientSessionManager::GetGenerateSessionID()
 
 bool ClientSessionManager::DeleteClientSession(const SOCKET & socket)
 {
+	if (m_mapClientSession.empty())
+	{
+		return false;
+	}
 	auto iter = m_mapClientSession.find(socket);
 
 	if (iter ==	m_mapClientSession.end())
@@ -68,6 +72,10 @@ bool ClientSessionManager::DeleteClientSession(const SOCKET & socket)
 
 bool ClientSessionManager::DeleteClientSessionID(string& id)
 {
+	if (m_mapClientSessionID.empty())
+	{
+		return false;
+	}
 	auto iter = m_mapClientSessionID.find(id);
 	if (iter == m_mapClientSessionID.end())
 	{
@@ -80,6 +88,10 @@ bool ClientSessionManager::DeleteClientSessionID(string& id)
 
 ClientSession* ClientSessionManager::FindClientSession(SOCKET socket)
 {
+	if (m_mapClientSessionID.empty())
+	{
+		return nullptr;
+	}
 	auto iter = m_mapClientSession.find(socket);
 	if (iter == m_mapClientSession.end())
 	{
@@ -91,6 +103,10 @@ ClientSession* ClientSessionManager::FindClientSession(SOCKET socket)
 
 ClientSession * ClientSessionManager::FindClientSessionID(string id)
 {
+	if (m_mapClientSessionID.empty())
+	{
+		return nullptr;
+	}
 	auto iter = m_mapClientSessionID.find(id);
 	if (iter == m_mapClientSessionID.end())
 	{

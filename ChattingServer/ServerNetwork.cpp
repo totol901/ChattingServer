@@ -83,8 +83,16 @@ unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 
 		clientSock = accept(serverNetwork->GetListenSock(),
 			(SOCKADDR*)&clientAddr, &addrLen);
+		
 		if (clientSock == INVALID_SOCKET)
 		{
+			DWORD errorCode = WSAGetLastError();
+			if (errorCode == WSAEINTR)
+			{
+				//억셉트 중단됨
+				return 0;
+			}
+
 			SErrPrintAtFile("accept 실패, ip = %s, port = %d",
 				clientAddr.sin_addr, clientAddr.sin_port);
 			return 0;
@@ -142,9 +150,19 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			(PULONG_PTR)&pClientSession,
 			(LPOVERLAPPED*)&pIOData,
 			INFINITE);
+		
 
 		if (!ret)
 		{
+			DWORD errorCode = GetLastError();
+
+			//IOCP 정지됨
+			if (errorCode == ERROR_ABANDONED_WAIT_0)
+			{
+				//스레드 종료
+				return 0;
+			}
+
 			//비정상 접속 종료
 			if (bytesTransferred == 0)
 			{
@@ -179,9 +197,10 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			}
 			continue;
 		}
+
 		if (pClientSession == nullptr)
 		{
-			SLogPrintAtFile("소켓 이상");
+			SLogPrintAtFile("클라이언트 세션 삭제됨");
 			return 0;
 		}
 
