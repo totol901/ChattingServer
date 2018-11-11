@@ -6,7 +6,7 @@ MainClass::MainClass()
 {
 	printf("--채팅 클라이언트--\n");
 
-	const char*	ServerIp = "127.0.0.1";
+	const char*	ServerIp = "27.117.200.221";
 	u_short	ServerPort = 9000;
 
 	//클라이언트 네트워크 선언 및 초기화
