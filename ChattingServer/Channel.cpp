@@ -4,12 +4,25 @@
 Channel::Channel(const string& channelName)
 	:Object()
 {
+	m_ChannelID = CHANNELMANAGER->GetCanMakeMinimumChannelID();
 	m_type = OBJECT_CHANNEL;
 	m_name = channelName;
 }
 
 Channel::~Channel()
 {
+}
+
+bool Channel::ChannelErase()
+{
+	if (!IsChannelEmpty())
+	{
+		return false;
+	}
+
+	CHANNELMANAGER->DeleteChannelByID(this->GetChannelID());
+
+	return true;
 }
 
 bool Channel::InsertClientSession(ClientSession * clientsession)

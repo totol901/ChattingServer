@@ -24,6 +24,7 @@ void ClientSession::Clear()
 	if (m_pPlayerData->GetChannel())
 	{
 		m_pPlayerData->GetChannel()->DeleteClientSession(this);
+		m_pPlayerData->GetChannel()->ChannelErase();
 	}
 }
 

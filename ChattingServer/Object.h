@@ -14,12 +14,12 @@ class Object
 {
 protected:
 	E_OBJECT_TYPE	m_type;
-	UINT			m_id;
+	UINT			m_ObjectID;
 
 public:
 	Object();
 	virtual ~Object();
 
-	UINT GetID() const { return m_id; }
+	UINT GetObjectID() const { return m_ObjectID; }
 };
 

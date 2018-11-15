@@ -4,6 +4,8 @@
 ******************************************************************************/
 #pragma once
 
+
+
 class BaseScene
 {
 protected:
@@ -11,9 +13,7 @@ protected:
 	string		m_Name;
 	SendStream	m_SendStream;
 	T_PACKET	m_Packet;
-
-	HANDLE		m_Event;
-
+	static HANDLE m_Event;
 public:
 	BaseScene();
 	BaseScene(UINT id);
@@ -25,8 +25,8 @@ public:
 	void SetName(string name) { m_Name = name; }
 
 	//Event관련 함수
-	void WaitForRecvPacket();
-	void SignalEvent();
+	static void WaitForRecvPacket();
+	static void SignalEvent();
 
 	virtual void Init() = 0;
 	virtual void Update() = 0;

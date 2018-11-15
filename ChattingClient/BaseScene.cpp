@@ -3,16 +3,16 @@
 
 static UINT gerID = 0;
 
+HANDLE BaseScene::m_Event = CreateEvent(NULL, FALSE, FALSE, NULL);
+
 BaseScene::BaseScene()
 	:m_Id(gerID++)
 {
-	m_Event = CreateEvent(NULL, FALSE, FALSE, NULL);
 }
 
 BaseScene::BaseScene(UINT id)
 	: m_Id(id)
 {
-	m_Event = CreateEvent(NULL, FALSE, FALSE, NULL);
 }
 
 BaseScene::~BaseScene()

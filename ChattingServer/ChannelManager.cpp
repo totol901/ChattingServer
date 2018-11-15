@@ -9,14 +9,14 @@ ChannelManager::~ChannelManager()
 {
 }
 
-bool ChannelManager::MakeChannel(string channelName)
+bool ChannelManager::MakeChannelWithChannelName(string channelName)
 {
 	auto iter = m_mapStringChannels.find(channelName);
 	if (iter == m_mapStringChannels.end())
 	{
 		Channel* channel = new Channel(channelName);
 		m_mapStringChannels.insert(make_pair(channelName, channel));
-		m_mapIDChannels.insert(make_pair(channel->GetID(), channel));
+		m_mapIDChannels.insert(make_pair(channel->GetChannelID(), channel));
 		
 		return true;
 	}
@@ -49,7 +49,7 @@ Channel * ChannelManager::FindChannelByID(UINT id)
 bool ChannelManager::DeleteChannelByName(const string & channelName)
 {
 	auto iterString = m_mapStringChannels.find(channelName);
-	auto iterID = m_mapIDChannels.find(iterString->second->GetID());
+	auto iterID = m_mapIDChannels.find(iterString->second->GetChannelID());
 
 	if (iterString == m_mapStringChannels.end())
 	{
@@ -100,6 +100,24 @@ bool ChannelManager::DeleteChannelByID(const UINT & id)
 	}
 
 	return true;
+}
+
+UINT ChannelManager::GetCanMakeMinimumChannelID()
+{
+	UINT ID = 0;
+	while (true)
+	{
+		auto iter = m_mapIDChannels.find(ID);
+		if (iter == m_mapIDChannels.end())
+		{
+			return ID;
+		}
+
+		ID++;
+		ASSERT(ID < UINT_MAX);
+	}
+
+	return UINT_MAX;
 }
 
 string ChannelManager::GetChannelList()

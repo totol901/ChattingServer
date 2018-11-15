@@ -15,10 +15,11 @@ public:
 	ChannelManager();
 	~ChannelManager();
 
-	bool		MakeChannel(string channelName);
+	bool		MakeChannelWithChannelName(string channelName);
 	Channel*	FindChannelByName(const string& channelName);
 	Channel*	FindChannelByID(UINT id);
 	bool		DeleteChannelByName(const string& channelName);
 	bool		DeleteChannelByID(const UINT& id);
+	UINT		GetCanMakeMinimumChannelID();
 	string		GetChannelList();
 };

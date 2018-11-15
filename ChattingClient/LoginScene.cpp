@@ -17,12 +17,13 @@ LoginScene::~LoginScene()
 
 void LoginScene::Init()
 {
-	cout << endl;
-	cout << "------로그인 창-----" << endl;
+	
 }
 
 void LoginScene::Update()
 {
+	cout << endl;
+	cout << "------로그인 창-----" << endl;
 	m_SendStream.clear();
 	int selectNum = 0;
 	bool roopOut = false;

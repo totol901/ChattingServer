@@ -4,7 +4,7 @@
 static UINT generateId = 0;
 
 Object::Object()
-	:m_id(generateId++)
+	:m_ObjectID(generateId++)
 {
 }
 

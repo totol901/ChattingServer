@@ -6,7 +6,10 @@ MainClass::MainClass()
 {
 	printf("--채팅 클라이언트--\n");
 
-	const char*	ServerIp = "27.117.200.221";
+
+	//TODO : 커맨드 창에서 직접 입력받고 서버 접속으로변환 
+	//패스워드 처리 암호화
+	const char*	ServerIp = "192.168.0.2";
 	u_short	ServerPort = 9000;
 
 	//클라이언트 네트워크 선언 및 초기화

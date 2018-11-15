@@ -160,10 +160,10 @@ void ServerSessionParser::RecvChannelMessage(T_PACKET * packet)
 	recvStream.read(nickname);
 	recvStream.read(message);
 
-	cout << nickname.c_str() << " : " << message.c_str() << endl;
+	cout << endl << nickname.c_str() << " : " << message.c_str() << endl;
 
-	SCENEAMANGER->ChangeCurrentScene(IN_CHANNEL);
-	SCENEAMANGER->GetBeforeScene()->SignalEvent();
+	//SCENEAMANGER->ChangeCurrentScene(IN_CHANNEL);
+	//SCENEAMANGER->GetBeforeScene()->SignalEvent();
 }
 
 void ServerSessionParser::AnsChannelOut(T_PACKET * packet)
@@ -174,13 +174,15 @@ void ServerSessionParser::AnsChannelOut(T_PACKET * packet)
 	SetRecvStream(packet);
 	recvStream.read(&IsSuccess, sizeof(IsSuccess));
 	recvStream.read(&errornum, sizeof(errornum));
-
+	
 	if (IsSuccess)
 	{
 		cout << "채널 나가기 성공" << endl;
 
+
 		SCENEAMANGER->ChangeCurrentScene(WAITTING_CHANNEL);
 		SCENEAMANGER->GetBeforeScene()->SignalEvent();
+
 		return;
 	}
 

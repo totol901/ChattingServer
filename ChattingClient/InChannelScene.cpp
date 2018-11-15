@@ -5,6 +5,7 @@ InChannelScene::InChannelScene()
 	:BaseScene()
 {
 }
+
 //기존 아이디 접속중이면 접속 못하게 처리
 InChannelScene::InChannelScene(UINT id)
 	:BaseScene(id)
@@ -17,12 +18,13 @@ InChannelScene::~InChannelScene()
 
 void InChannelScene::Init()
 {
-	cout << endl;
-	cout << "------채널-----" << endl;
+	
 }
 
 void InChannelScene::Update()
 {
+	cout << endl;
+	cout << "------채널-----" << endl;
 	m_SendStream.clear();
 	int selectNum = 0;
 	bool roopOut = false;
@@ -50,12 +52,13 @@ void InChannelScene::Update()
 		m_Packet.SetStream(m_SendStream);
 
 		CLIENTNETWORK->GetServerSession()->SendPacket(m_Packet);
+		return;
 	}
 	break;
 
 	case 2:
 	{
-		cout << "채널 나가기";
+		cout << "채널 나가기"<<endl;
 
 		m_Packet.Clear();
 		m_Packet.type = PK_REQ_CHANNAL_OUT;
@@ -67,7 +70,7 @@ void InChannelScene::Update()
 
 	case 3:
 	{
-		cout << "종료하기";
+		cout << "종료하기"<<endl;
 
 		//종료
 		m_Packet.Clear();
@@ -89,7 +92,9 @@ void InChannelScene::Update()
 
 	if (CLIENTNETWORK->IsOn())
 	{
+
 		WaitForRecvPacket();
+
 	}
 	cin.ignore();
 }

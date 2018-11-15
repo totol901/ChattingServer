@@ -197,8 +197,10 @@ void ClientSessionParser::ReqWaitingChannelCreateChannel(T_PACKET * packet)
 	SetRecvStream(packet);
 	recvStream.read(channelName);
 
-	if (CHANNELMANAGER->MakeChannel(channelName))
+	if (CHANNELMANAGER->MakeChannelWithChannelName(channelName))
 	{
+		SLogPrintAtFile("%s : 채널 생성 성공", m_ClientSession->GetPlayerData()->GetPlayerNickname().c_str());
+
 		//생성 완료됬다는 패킷 전송
 		bool isSucces = true;
 		int errNum = ERROR_NONE;
@@ -309,7 +311,7 @@ void ClientSessionParser::ReqChannelOut(T_PACKET * packet)
 	if (channel->DeleteClientSession(m_ClientSession))
 	{
 		//채널 나가기 성공
-		SLogPrintAtFile("%d : 채널 나가기 성공", m_ClientSession->GetPlayerData()->GetPlayerNickname().c_str());
+		SLogPrintAtFile("%s : 채널 나가기 성공", m_ClientSession->GetPlayerData()->GetPlayerNickname().c_str());
 		
 		bool isSucces = true;
 		int errNum = ERROR_NONE;
@@ -320,9 +322,8 @@ void ClientSessionParser::ReqChannelOut(T_PACKET * packet)
 		SendPacketWithSendStream(PK_ANS_CHANNAL_OUT);
 
 		//채널에 아무도 없다면 채널 삭제함
-		if (channel->IsChannelEmpty())
+		if (channel->ChannelErase())
 		{
-			CHANNELMANAGER->DeleteChannelByID(channel->GetID());
 			SAFE_DELETE(channel);
 		}
 		LeaveCriticalSection(&ChannelInOutCS);
@@ -347,7 +348,6 @@ void ClientSessionParser::ReqExit(T_PACKET * packet)
 	SendStream.write(&isSucces, sizeof(isSucces));
 	SendStream.write(&errNum, sizeof(errNum));
 	SendPacketWithSendStream(PK_ANS_EXIT);
-
 }
 
 bool ClientSessionParser::PacketParsing(T_PACKET * const packet)

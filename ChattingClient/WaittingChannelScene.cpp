@@ -17,12 +17,13 @@ WaittingChannelScene::~WaittingChannelScene()
 
 void WaittingChannelScene::Init()
 {
-	cout << endl;
-	cout << "------채널 대기방-----" << endl;
+	
 }
 
 void WaittingChannelScene::Update()
 {
+	cout << endl;
+	cout << "------채널 대기방-----" << endl;
 	m_SendStream.clear();
 	int selectNum = 0;
 	bool roopOut = false;
@@ -86,7 +87,7 @@ void WaittingChannelScene::Update()
 
 	case 4:
 	{
-		cout << "종료하기";
+		cout << "종료하기"<<endl;
 
 		m_Packet.Clear();
 		m_Packet.type = PK_REQ_EXIT;
