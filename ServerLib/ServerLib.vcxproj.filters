@@ -86,13 +86,13 @@
     <ClCompile Include="Logger.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Stream.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="RecvStream.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="SendStream.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Stream.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

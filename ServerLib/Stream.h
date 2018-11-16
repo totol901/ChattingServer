@@ -15,7 +15,7 @@ protected:
 public:
 	Stream();
 	Stream(CHAR *stream, size_t size);
-	~Stream();
+	virtual ~Stream();
 
 	void clear();
 	CHAR *data();

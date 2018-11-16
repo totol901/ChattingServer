@@ -6,12 +6,14 @@ static CRITICAL_SECTION ClientSessionThreadCS;
 ServerNetwork::ServerNetwork()
 	:m_Shutdown(false)
 {
+	InitializeCriticalSection(&ClientSessionThreadCS);
 	WSAWINSOCK->Init();
 }
 
 ServerNetwork::~ServerNetwork()
 {
 	m_Shutdown = true;
+	DeleteCriticalSection(&ClientSessionThreadCS);
 	CloseHandle(m_IOCP);
 	closesocket(m_ListenSock);
 }
@@ -19,7 +21,7 @@ ServerNetwork::~ServerNetwork()
 void ServerNetwork::Init()
 {
 	CreateIOCP();
-	CreateListen();
+	CreateListen();	
 }
 
 void ServerNetwork::CreateIOCP()
@@ -132,15 +134,12 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 	ClientSession*	pClientSession		= nullptr;
 	IOData*			pIOData				= nullptr;
 
-	InitializeCriticalSection(&ClientSessionThreadCS);
-
 	while (1)
 	{
 		BOOL ret = GetQueuedCompletionStatus(completionPort, &bytesTransferred,
 			(PULONG_PTR)&pClientSession,
 			(LPOVERLAPPED*)&pIOData,
-			INFINITE);
-		
+			INFINITE);		
 
 		if (!ret)
 		{
@@ -190,6 +189,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 
 		if (pClientSession == nullptr)
 		{
+			
 			SLogPrintAtFile("클라이언트 세션 삭제됨");
 			return 0;
 		}
@@ -253,8 +253,6 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			continue;
 		}
 	}
-
-	DeleteCriticalSection(&ClientSessionThreadCS);
 
 	return 0;
 }
