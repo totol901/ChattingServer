@@ -9,6 +9,23 @@ ChannelManager::~ChannelManager()
 {
 }
 
+bool ChannelManager::ClientJoinTheChannel(ClientSession* clientSession, string channelName)
+{
+	Channel* channel = CHANNELMANAGER->FindChannelByName(channelName);
+	if (channel)
+	{
+		//채널에 입장시킴
+		channel->InsertClientSession(clientSession);
+
+		//플레이어 데이터에 입장한 채널 세팅해줌
+		clientSession->GetPlayerData()->SetChannel(channel);
+		clientSession->GetPlayerData()->SetPlayerState(PLAYER_IN_CHANNEL);
+		return true;
+	}
+
+	return false;
+}
+
 bool ChannelManager::MakeChannelWithChannelName(string channelName)
 {
 	auto iter = m_mapStringChannels.find(channelName);

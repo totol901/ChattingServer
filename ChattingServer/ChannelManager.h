@@ -15,6 +15,7 @@ public:
 	ChannelManager();
 	~ChannelManager();
 
+	bool		ClientJoinTheChannel(ClientSession* clientSession, string channelName);
 	bool		MakeChannelWithChannelName(string channelName);
 	Channel*	FindChannelByName(const string& channelName);
 	Channel*	FindChannelByID(UINT id);

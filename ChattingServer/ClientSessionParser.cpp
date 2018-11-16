@@ -210,17 +210,9 @@ void ClientSessionParser::ReqWaitingChannelCreateChannel(T_PACKET * packet)
 		SendPacketWithSendStream(PK_ANS_WAITINGCHANNAL_CHREAT_CHANNAL);
 
 		//생성한 채널에 입장
-		Channel* channel = CHANNELMANAGER->FindChannelByName(channelName);
-		if (channel)
+		if (CHANNELMANAGER->ClientJoinTheChannel(m_ClientSession, channelName))
 		{
-			bool isSucces = true;
-			int errNum = ERROR_NONE;
-			//채널에 입장시킴
-			channel->InsertClientSession(m_ClientSession);
-
-			//플레이어 데이터에 입장한 채널 세팅해줌
-			m_ClientSession->GetPlayerData()->SetChannel(channel);
-			m_ClientSession->GetPlayerData()->SetPlayerState(PLAYER_IN_CHANNEL);
+			SLogPrint("채널 입장 성공");
 		}
 		else
 		{
