@@ -35,6 +35,11 @@ void ServerNetwork::CreateIOCP()
 	}
 	SLogPrint("IOCP 생성 성공!");
 	
+	CreateIOCPThreads();
+}
+
+void ServerNetwork::CreateIOCPThreads()
+{
 	SYSTEM_INFO SystemInfo;
 	memset(&SystemInfo, 0, sizeof(SYSTEM_INFO));
 	GetSystemInfo(&SystemInfo);
@@ -46,6 +51,15 @@ void ServerNetwork::CreateIOCP()
 			0, NULL);
 	}
 	SLogPrint("IOCP 스레드 생성");
+}
+
+void ServerNetwork::CreateAcceptThread()
+{
+	//acceptRoop 돌려줌
+	_beginthreadex(NULL, 0,
+		AcceptRoop,
+		this,
+		0, NULL);
 }
 
 void ServerNetwork::CreateListen()
@@ -62,11 +76,7 @@ void ServerNetwork::CreateListen()
 	listen(m_ListenSock, 5);
 	SLogPrintAtFile("Listen 시작!");
 
-	//acceptRoop 돌려줌
-	_beginthreadex(NULL, 0,
-		AcceptRoop,
-		this,
-		0, NULL);
+	CreateAcceptThread();
 }
 
 unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
@@ -217,7 +227,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 				DATABASE->InsertUserLogQuery(pClientSession->GetPlayerData()->GetPlayerID(),
 					"정상 접속 종료");
 			}
-	
+		
 			//파일 로그, 데이터 베이스 로그에 남김
 			SLogPrintAtFile("%s : 정상 접속 종료",
 				pClientSession->GetPlayerData()->GetPlayerID().c_str());

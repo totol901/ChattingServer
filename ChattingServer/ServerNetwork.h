@@ -17,11 +17,12 @@ private:
 	~ServerNetwork();
 
 	void CreateListen();
+	void CreateIOCP();
+	void CreateIOCPThreads();
+	void CreateAcceptThread();
 
 public:
 	void Init();
-
-	void CreateIOCP();
 	
 	static unsigned int WINAPI AcceptRoop(LPVOID sNetwork);
 	static unsigned int WINAPI CompletionClientSessionThread(LPVOID pComPort);
