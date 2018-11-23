@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="GameEngine">
+      <UniqueIdentifier>{a5d55193-3ab2-4569-8620-dd1a21f2dd5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Grapic">
+      <UniqueIdentifier>{5df97d2b-fbff-4005-96d4-d86b8b0b3c0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Resources">
+      <UniqueIdentifier>{9ade13d3-f95f-49f8-963e-95e26e7f7802}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Resources\Text">
+      <UniqueIdentifier>{51285895-f9ff-41cc-9ec6-7dff2e65c8e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Resources\Image">
+      <UniqueIdentifier>{f549bf00-7f4f-4367-ad37-62d93489b75b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Util">
+      <UniqueIdentifier>{6ad181b9-46a6-4510-b4e6-71f065b272f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Object">
+      <UniqueIdentifier>{11774f16-d75d-42c7-96c1-a71d5298bd97}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="D2DPrimitives.h">
+      <Filter>GameEngine\Grapic</Filter>
+    </ClInclude>
+    <ClInclude Include="Direct2D.h">
+      <Filter>GameEngine\Grapic</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine.h">
+      <Filter>GameEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="GameResource.h">
+      <Filter>GameEngine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Grapics.h">
+      <Filter>GameEngine\Grapic</Filter>
+    </ClInclude>
+    <ClInclude Include="Grapics2D.h">
+      <Filter>GameEngine\Grapic</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameImage.h">
+      <Filter>GameEngine\Resources\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>GameEngine\Resources\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageManager.h">
+      <Filter>GameEngine\Resources\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>GameEngine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="TextManager.h">
+      <Filter>GameEngine\Resources\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>GameEngine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>GameEngine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Well512Random.h">
+      <Filter>GameEngine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngineLib.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="D2DPrimitives.cpp">
+      <Filter>GameEngine\Grapic</Filter>
+    </ClCompile>
+    <ClCompile Include="Direct2D.cpp">
+      <Filter>GameEngine\Grapic</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine.cpp">
+      <Filter>GameEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="GameResource.cpp">
+      <Filter>GameEngine\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Grapics.cpp">
+      <Filter>GameEngine\Grapic</Filter>
+    </ClCompile>
+    <ClCompile Include="Grapics2D.cpp">
+      <Filter>GameEngine\Grapic</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameImage.cpp">
+      <Filter>GameEngine\Resources\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>GameEngine\Resources\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageManager.cpp">
+      <Filter>GameEngine\Resources\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>GameEngine\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="TextManager.cpp">
+      <Filter>GameEngine\Resources\Text</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
