@@ -30,6 +30,15 @@ MainClass::~MainClass()
 {
 }
 
+HRESULT MainClass::Init()
+{
+	return S_OK;
+}
+
+void MainClass::Release()
+{
+}
+
 void MainClass::Update()
 {
 	//신 업데이트
@@ -37,4 +46,13 @@ void MainClass::Update()
 	{
 		SCENEAMANGER->GetCurrentScene()->Update();
 	}
+}
+
+void MainClass::Render()
+{
+}
+
+LRESULT MainClass::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
+{
+	return LRESULT();
 }

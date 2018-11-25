@@ -159,6 +159,7 @@
     <ClInclude Include="RecvStream.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SendStream.h" />
+    <ClInclude Include="ServerLib.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="stdafx.h" />

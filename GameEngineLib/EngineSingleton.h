@@ -6,16 +6,16 @@
 #pragma once
 
 template<class T>
-class Singleton
+class EngineSingleton
 {
 protected:
-	Singleton(const Singleton&) = delete;
-	Singleton(const Singleton&&) = delete;
-	Singleton& operator = (const Singleton&) = delete;
-	Singleton& operator = (const Singleton&&) = delete;
+	EngineSingleton(const EngineSingleton&) = delete;
+	EngineSingleton(const EngineSingleton&&) = delete;
+	EngineSingleton& operator = (const EngineSingleton&) = delete;
+	EngineSingleton& operator = (const EngineSingleton&&) = delete;
 
-	Singleton() {}
-	virtual ~Singleton() {}
+	EngineSingleton() {}
+	virtual ~EngineSingleton() {}
 	
 public:
 	/****************************************************************************

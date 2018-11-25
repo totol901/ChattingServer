@@ -18,7 +18,7 @@
 using namespace std;
 
 extern HWND g_hWnd;
-extern HINSTANCE _hInstance;
+extern HINSTANCE g_hInstance;
 
 //D2D관련된 include
 #include <d2d1.h>
@@ -30,7 +30,7 @@ extern HINSTANCE _hInstance;
 #include <wincodec.h>
 #include <Dwrite.h>
 
-#include "Singleton.h"
+#include "EngineSingleton.h"
 #include "Util.h"
 #include "GameEngine.h"
 #include "Grapics.h"
@@ -43,8 +43,10 @@ extern HINSTANCE _hInstance;
 #include "ImageManager.h"
 #include "FrameImage.h"
 #include "TextManager.h"
+#include "BasicNode.h"
+#include "GameNode.h"
 
-
+//엔진 접근 매크로
 #define GAME_ENGINE GameEngine::GetInstance()
 
 #define D2D_FACTORY GameEngine::GetInstance()->GetGrapics()->GetGrapics2D()->GetDirect2D()->GetFactory()

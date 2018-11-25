@@ -39,8 +39,8 @@ HRESULT Direct2D::Init()
 		hr = m_pRenderTarget->CreateCompatibleRenderTarget(
 			D2D1::SizeF(m_pRenderTarget->GetSize().width*2.0f,
 				m_pRenderTarget->GetSize().height*2.0f),
-			D2D1::SizeU(m_pRenderTarget->GetSize().width,
-				m_pRenderTarget->GetSize().height),
+			D2D1::SizeU((UINT32)m_pRenderTarget->GetSize().width,
+			(UINT32)m_pRenderTarget->GetSize().height),
 			&m_pBitmapTarget);
 	}
 
@@ -90,8 +90,8 @@ void Direct2D::ResizeBackBufferTarget(D2D1_SIZE_U sizeU)
 	HRESULT hr = m_pRenderTarget->CreateCompatibleRenderTarget(
 		D2D1::SizeF(m_pRenderTarget->GetSize().width*2.0f,
 			m_pRenderTarget->GetSize().height*2.0f),
-		D2D1::SizeU(m_pRenderTarget->GetSize().width,
-			m_pRenderTarget->GetSize().height),
+		D2D1::SizeU((UINT32)m_pRenderTarget->GetSize().width,
+		(UINT32)m_pRenderTarget->GetSize().height),
 		&m_pBitmapTarget);
 
 	if (FAILED(hr))

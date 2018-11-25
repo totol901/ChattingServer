@@ -78,14 +78,20 @@
     <ClInclude Include="Util.h">
       <Filter>GameEngine\Util</Filter>
     </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>GameEngine\Util</Filter>
-    </ClInclude>
     <ClInclude Include="Well512Random.h">
       <Filter>GameEngine\Util</Filter>
     </ClInclude>
     <ClInclude Include="GameEngineLib.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicNode.h">
+      <Filter>GameEngine\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="GameNode.h">
+      <Filter>GameEngine\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineSingleton.h">
+      <Filter>GameEngine\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +130,12 @@
     </ClCompile>
     <ClCompile Include="TextManager.cpp">
       <Filter>GameEngine\Resources\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicNode.cpp">
+      <Filter>GameEngine\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="GameNode.cpp">
+      <Filter>GameEngine\Object</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

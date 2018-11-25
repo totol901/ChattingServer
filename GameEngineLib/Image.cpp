@@ -53,8 +53,8 @@ HRESULT Image::init(IWICImagingFactory* wicFactory, const TCHAR * fileName, floa
 	//스케일 해준다
 	UINT width, height = 0;
 	pFrame->GetSize(&width, &height);
-	m_pImageInfo->width = width;
-	m_pImageInfo->height = height; 
+	m_pImageInfo->width = (float)width;
+	m_pImageInfo->height = (float)height;
 	//IWICBitmapScaler* pIScaler = nullptr;
 	//hr = wicFactory->CreateBitmapScaler(&pIScaler);
 	//if (SUCCEEDED(hr))

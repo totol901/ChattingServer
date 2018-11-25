@@ -6,9 +6,9 @@
 
 class Grapics;
 class ResourceManager;
-class GameEngine : public Singleton<GameEngine>
+class GameEngine : public EngineSingleton<GameEngine>
 {
-	friend Singleton;
+	friend EngineSingleton;
 private:
 	GameEngine(const GameEngine&) = delete;
 	GameEngine(const GameEngine&&) = delete;
@@ -19,9 +19,12 @@ private:
 
 	Grapics* m_pGrapics;
 	ResourceManager* m_pResourceManager;
+
+	void UseLFH();
+	void SetWinDIP(int winWidth, int winHeight);
 	
 public:
-	HRESULT Init();
+	HRESULT Init(bool useLFH, int winWidth, int winHeight);
 	void Destroy();
 
 	//엔진 그래픽 객체리턴

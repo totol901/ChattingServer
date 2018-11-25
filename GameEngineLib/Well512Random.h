@@ -14,9 +14,9 @@
 *****************************************************************************/
 #define WELLRAND				Well512Random::GetInstance()
 
-class Well512Random : public Singleton<Well512Random>
+class Well512Random : public EngineSingleton<Well512Random>
 {
-	friend Singleton;
+	friend EngineSingleton;
 private:
 	enum
 	{

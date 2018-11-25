@@ -1,9 +1,15 @@
 #pragma once
 #include "Well512Random.h"
 
+#ifndef SAFE_DELETE
 #define SAFE_DELETE(p)			{if(p) { delete(p); (p) = NULL;}}
+#endif
+#ifndef SAFE_DELETE_ARRAY
 #define SAFE_DELETE_ARRAY(p)	{if(p) { delete[](p); (p) = NULL;}}
+#endif
+#ifndef SAFE_RELEASE
 #define SAFE_RELEASE(p)			{if(p) { (p)->Release(); (p) = NULL;}}
+#endif
 
 #ifndef Assert
 #if defined( DEBUG ) || defined( _DEBUG )
@@ -33,6 +39,20 @@ inline bool isOverFlower_unit(unsigned int original, unsigned int add)
 
 	return true;
 }
+
+//에러 출력해줌
+inline void err_display(const TCHAR *msg)
+{
+	LPVOID lpMsgBuf;
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+		NULL, GetLastError(),
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&lpMsgBuf, 0, NULL);
+	MessageBox(NULL, (LPTSTR)lpMsgBuf, msg, MB_ICONERROR);
+	LocalFree(lpMsgBuf);
+}
+
 
 /*char=>TCHAR 변환 함수*/
 inline void StrConvA2T(CHAR* src, TCHAR* dest, size_t destLen)
@@ -78,15 +98,3 @@ inline void StrConvW2A(WCHAR* src, CHAR* dest, size_t destLen)
 	WideCharToMultiByte(CP_ACP, 0, src, -1, dest, (int)destLen, NULL, FALSE);
 }
 
-//에러 출력해줌
-inline void err_display(const TCHAR *msg)
-{
-	LPVOID lpMsgBuf;
-	FormatMessage(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL, GetLastError(),
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(LPTSTR)&lpMsgBuf, 0, NULL);
-	MessageBox(NULL, (LPTSTR)lpMsgBuf, msg, MB_ICONERROR);
-	LocalFree(lpMsgBuf);
-}
