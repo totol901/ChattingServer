@@ -7,11 +7,10 @@
 class InChannelScene : public BaseScene
 {
 public:
-	InChannelScene();
-	InChannelScene(UINT id);
+	InChannelScene(const WCHAR* nodeName, UINT nodeNum);
 	~InChannelScene();
 
-	void Init();
+	HRESULT Init();
 	void Update();
 };
 

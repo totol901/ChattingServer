@@ -7,12 +7,17 @@
 class LoginScene : public BaseScene
 {
 private:
+	UINode* m_pLoginUI;
+	TextBoxUI* m_pIDTextBoxUI;
+	TextBoxUI* m_pPassTextBoxUI;
 
 public:
-	LoginScene();
-	LoginScene(UINT id);
+	LoginScene(const WCHAR* nodeName, UINT nodeNum);
 	~LoginScene();
 
-	void Init();
+	HRESULT Init();
+	void Release();
 	void Update();
+	void Render();
+	LRESULT MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 };

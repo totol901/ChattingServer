@@ -21,6 +21,8 @@ private:
 	ID2D1GdiInteropRenderTarget* m_pGDIRendertarget;
 	ID2D1DCRenderTarget* m_pDCRenderTarget;
 
+	D2D1_SIZE_F m_Size;
+
 	HRESULT CreateFactory();
 	HRESULT CreateRenderTarget();
 

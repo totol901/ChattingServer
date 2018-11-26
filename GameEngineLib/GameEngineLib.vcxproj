@@ -156,6 +156,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BasicNode.h" />
+    <ClInclude Include="ButtonUI.h" />
+    <ClInclude Include="CameraManager.h" />
     <ClInclude Include="D2DPrimitives.h" />
     <ClInclude Include="Direct2D.h" />
     <ClInclude Include="FrameImage.h" />
@@ -171,12 +173,16 @@
     <ClInclude Include="EngineSingleton.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TextBoxUI.h" />
     <ClInclude Include="TextManager.h" />
+    <ClInclude Include="UINode.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Well512Random.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BasicNode.cpp" />
+    <ClCompile Include="ButtonUI.cpp" />
+    <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="D2DPrimitives.cpp" />
     <ClCompile Include="Direct2D.cpp" />
     <ClCompile Include="FrameImage.cpp" />
@@ -194,7 +200,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TextBoxUI.cpp" />
     <ClCompile Include="TextManager.cpp" />
+    <ClCompile Include="UINode.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

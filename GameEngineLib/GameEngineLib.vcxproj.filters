@@ -34,6 +34,12 @@
     <Filter Include="GameEngine\Object">
       <UniqueIdentifier>{11774f16-d75d-42c7-96c1-a71d5298bd97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine\Object\UI">
+      <UniqueIdentifier>{a723557f-3b50-4356-9d37-7f23a701bcbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\Object\UI\FunctionUI">
+      <UniqueIdentifier>{2d1f3de6-05a0-4800-ba2b-e635e16ce81e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -93,6 +99,18 @@
     <ClInclude Include="EngineSingleton.h">
       <Filter>GameEngine\Util</Filter>
     </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>GameEngine\Grapic</Filter>
+    </ClInclude>
+    <ClInclude Include="UINode.h">
+      <Filter>GameEngine\Object\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextBoxUI.h">
+      <Filter>GameEngine\Object\UI\FunctionUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonUI.h">
+      <Filter>GameEngine\Object\UI\FunctionUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -136,6 +154,18 @@
     </ClCompile>
     <ClCompile Include="GameNode.cpp">
       <Filter>GameEngine\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>GameEngine\Grapic</Filter>
+    </ClCompile>
+    <ClCompile Include="UINode.cpp">
+      <Filter>GameEngine\Object\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TextBoxUI.cpp">
+      <Filter>GameEngine\Object\UI\FunctionUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonUI.cpp">
+      <Filter>GameEngine\Object\UI\FunctionUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

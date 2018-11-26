@@ -18,6 +18,7 @@
 using namespace std;
 
 extern HWND g_hWnd;
+extern HWND g_hChat;
 extern HINSTANCE g_hInstance;
 
 //D2D관련된 include
@@ -29,6 +30,7 @@ extern HINSTANCE g_hInstance;
 #include <d2d1effecthelpers.h>
 #include <wincodec.h>
 #include <Dwrite.h>
+#include <functional>
 
 #include "EngineSingleton.h"
 #include "Util.h"
@@ -45,6 +47,10 @@ extern HINSTANCE g_hInstance;
 #include "TextManager.h"
 #include "BasicNode.h"
 #include "GameNode.h"
+#include "CameraManager.h"
+#include "UINode.h"
+#include "TextBoxUI.h"
+#include "ButtonUI.h"
 
 //엔진 접근 매크로
 #define GAME_ENGINE GameEngine::GetInstance()
@@ -53,3 +59,5 @@ extern HINSTANCE g_hInstance;
 #define DIRECT2D GameEngine::GetInstance()->GetGrapics()->GetGrapics2D()->GetDirect2D()
 #define D2D_RENDERTARGET GameEngine::GetInstance()->GetGrapics()->GetGrapics2D()->GetDirect2D()->GetRenderTarget()
 #define D2D_PRIMITEVS GameEngine::GetInstance()->GetGrapics()->GetGrapics2D()->Get2DPrimitives()
+#define D2D_TEXTMANAGER GameEngine::GetInstance()->GetResourceManager()->GetTextManager()
+#define D2D_CAMERA GameEngine::GetInstance()->GetGrapics()->GetGrapics2D()->GetCamera()

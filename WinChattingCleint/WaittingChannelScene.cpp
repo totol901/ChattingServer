@@ -1,13 +1,9 @@
 #include "stdafx.h"
 #include "WaittingChannelScene.h"
 
-WaittingChannelScene::WaittingChannelScene()
-	:BaseScene()
-{
-}
 
-WaittingChannelScene::WaittingChannelScene(UINT id)
-	:BaseScene(id)
+WaittingChannelScene::WaittingChannelScene(const WCHAR * nodeName, UINT nodeNum)
+	:BaseScene(nodeName, nodeNum)
 {
 }
 
@@ -15,9 +11,9 @@ WaittingChannelScene::~WaittingChannelScene()
 {
 }
 
-void WaittingChannelScene::Init()
+HRESULT WaittingChannelScene::Init()
 {
-	
+	return S_OK;
 }
 
 void WaittingChannelScene::Update()

@@ -7,7 +7,7 @@ private:
 	UINT m_NodeNum;
 
 public:
-	BasicNode(const WCHAR* nodeName, UINT nodeNum);
+	BasicNode(const WCHAR* nodeName);
 	virtual ~BasicNode();
 
 	inline void SetNodeName(const wstring& nodeName) { m_NodeName = nodeName; }

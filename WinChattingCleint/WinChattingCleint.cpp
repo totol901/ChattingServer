@@ -5,6 +5,7 @@
 //전역변수
 HINSTANCE g_hInstance = NULL;
 HWND g_hWnd = NULL;
+HWND g_hChat = NULL;
 const TCHAR* g_lpszClass = TEXT("ChattingClient_v0.01");
 const TCHAR* g_ClientName = TEXT("채팅 클라");
 
@@ -31,7 +32,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 		wndClass.cbClsExtra = 0;											//클래스 여분 메모리
 		wndClass.cbWndExtra = 0;											//윈도우 여분 메모리
-		wndClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);		//윈도우 백그라운드 색상
+		wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);		//윈도우 백그라운드 색상
 		wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);					//윈도우 커서 모양
 		wndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);					//윈도우 아이콘 모양
 		wndClass.hInstance = hInstance;										//윈도우 인스턴스
@@ -92,8 +93,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 				WS_OVERLAPPEDWINDOW,	//윈도우 스타일
 				CW_USEDEFAULT,			//윈도우 창 시작 X좌표
 				CW_USEDEFAULT,			//윈도우 창 시작 Y좌표
-				g_pMainClass->GetConfig()->GetScreenWidth(),					//윈도우 창 가로크기
-				g_pMainClass->GetConfig()->GetScreenHeight(),					//윈도우 창 세로크기
+				static_cast<UINT>(ceil(640.f * 96.0f / 96.f)),					//윈도우 창 가로크기
+				static_cast<UINT>(ceil(480.f * 96.0f / 96.f)),					//윈도우 창 세로크기
 				NULL,					//부모 윈도우 유무
 				(HMENU)NULL,			//메뉴 핸들
 				hInstance,				//인스턴스 윈도우 지정
@@ -102,12 +103,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 			//#endif
 		}
 
+		g_hChat = CreateWindow(L"Edit", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 2000, 2000, 300, 30, g_hWnd, (HMENU)100, g_hInstance, NULL);
+		PostMessage(g_hWnd, EM_LIMITTEXT, (WPARAM)30, 0);
+
 		//게임 엔진 초기화
-		if (SUCCEEDED(GAME_ENGINE->Init(true, WINDOWX, WINDOWY)))
+		if (SUCCEEDED(GAME_ENGINE->Init(true, g_pMainClass->GetConfig()->GetScreenWidth(), g_pMainClass->GetConfig()->GetScreenHeight())))
 		{
 			//화면에 윈도우 창을 보여준다
 			ShowWindow(g_hWnd, cmdShow);
-
 
 			//메인게임 초기화 실패면
 			if (FAILED(g_pMainClass->Init()))

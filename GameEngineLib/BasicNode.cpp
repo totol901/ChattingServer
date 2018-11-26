@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "BasicNode.h"
 
-BasicNode::BasicNode(const WCHAR* nodeName, UINT nodeNum)
+static UINT NodeNum = 0;
+
+BasicNode::BasicNode(const WCHAR* nodeName)
 	:m_NodeName(nodeName),
-	m_NodeNum(nodeNum)
+	m_NodeNum(NodeNum)
 {
+	NodeNum++;
 }
 
 BasicNode::~BasicNode()

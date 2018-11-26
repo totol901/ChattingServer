@@ -61,6 +61,7 @@ HRESULT Direct2D::Init()
 		hr = m_pFactory->CreateDCRenderTarget(&props, &m_pDCRenderTarget);
 	}
 
+	m_Size = m_pRenderTarget->GetSize();
 
 	return hr;
 }
@@ -88,8 +89,7 @@ void Direct2D::ResizeBackBufferTarget(D2D1_SIZE_U sizeU)
 	SAFE_RELEASE(m_pBitmapTarget);
 
 	HRESULT hr = m_pRenderTarget->CreateCompatibleRenderTarget(
-		D2D1::SizeF(m_pRenderTarget->GetSize().width*2.0f,
-			m_pRenderTarget->GetSize().height*2.0f),
+		D2D1::SizeF(m_Size.width, m_Size.height),
 		D2D1::SizeU((UINT32)m_pRenderTarget->GetSize().width,
 		(UINT32)m_pRenderTarget->GetSize().height),
 		&m_pBitmapTarget);
@@ -129,11 +129,11 @@ HRESULT Direct2D::CreateRenderTarget()
 	RECT rc;
 	GetClientRect(g_hWnd, &rc);
 
-	D2D1_RENDER_TARGET_PROPERTIES rtProps = D2D1::RenderTargetProperties();
-	rtProps.usage = D2D1_RENDER_TARGET_USAGE_GDI_COMPATIBLE;
+	//D2D1_RENDER_TARGET_PROPERTIES rtProps = D2D1::RenderTargetProperties();
+	//rtProps.usage = D2D1_RENDER_TARGET_USAGE_GDI_COMPATIBLE;
 
 	return m_pFactory->CreateHwndRenderTarget(
-		rtProps,
-		HwndRenderTargetProperties(g_hWnd, SizeU(rc.right, rc.bottom)),
+		D2D1::RenderTargetProperties(),
+		HwndRenderTargetProperties(g_hWnd, SizeU(rc.right - rc.left, rc.bottom - rc.top)),
 		&m_pRenderTarget);
 }

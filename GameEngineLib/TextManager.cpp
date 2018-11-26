@@ -26,6 +26,11 @@ HRESULT TextManager::Init()
 			&m_pTextColorBrush);
 	}
 
+	if (SUCCEEDED(hr))
+	{
+		hr = CreatTextFontAndInsertMap(TEXT("±¼¸²_15"), 15, TEXT("¸¼Àº °íµñ"));
+	}
+	
 	return hr;
 }
 
@@ -51,7 +56,7 @@ HRESULT TextManager::CreatTextFontAndInsertMap(wstring fontName, float fontSize,
 	HRESULT hr = m_pWirteFactory->CreateTextFormat(
 		fileName,					//±Û°ñ
 		NULL,							//ÆùÆ® ÄÃ·¢¼Ç (NULL ->½Ã½ºÅÛ ±Û°ñ)
-		DWRITE_FONT_WEIGHT_NORMAL,		//±½±â
+		DWRITE_FONT_WEIGHT_REGULAR,		//±½±â
 		DWRITE_FONT_STYLE_NORMAL,		//½ºÅ¸ÀÏ(±â¿ï±â)
 		DWRITE_FONT_STRETCH_NORMAL,		//Æø
 		fontSize,					//¹®ÀÚ Å©±â
@@ -92,12 +97,12 @@ void TextManager::TextRender(wstring str, const TCHAR * fontName, D2D1_RECT_F te
 
 	m_pTextColorBrush->SetColor(fontColor);
 
-	
 	DIRECT2D->GetBackBufferTarget()->DrawText(
 		str.c_str(),
 		(UINT)str.length(),
 		textFormat,
 		textRC,
 		m_pTextColorBrush
+		
 	);
 }

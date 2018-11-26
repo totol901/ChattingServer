@@ -3,15 +3,13 @@
 
 MainClass::MainClass()
 	:isOn(true),
-	GameNode(TEXT("MainClass"), 0),
+	GameNode(TEXT("MainClass")),
 	m_pConfig(nullptr)
 {
-	MakeConsole();
-
 	m_pConfig = new Config;
 	m_pConfig->Init();
 
-	printf("--채팅 클라이언트--\n");
+	//printf("--채팅 클라이언트--\n");
 
 	//TODO : 커맨드 창에서 직접 입력받고 서버 접속으로변환 
 	//패스워드 처리 암호화
@@ -22,21 +20,10 @@ MainClass::MainClass()
 	//클라이언트 네트워크 선언 및 초기화
 	CLIENTNETWORK->Init(ServerIp, ServerPort);
 	CLIENTNETWORK->SetLinkIsOn(&isOn);
-
-	//신 만들고 신매니저에 넣어줌
-	LoginScene* loginScene = new LoginScene(LOGIN);
-	WaittingChannelScene* waittingChannelScene = new WaittingChannelScene(WAITTING_CHANNEL);
-	InChannelScene* inChannelScene = new InChannelScene(IN_CHANNEL);
-	SCENEAMANGER->InsertScene(loginScene);
-	SCENEAMANGER->InsertScene(waittingChannelScene);
-	SCENEAMANGER->InsertScene(inChannelScene);
-	SCENEAMANGER->ChangeCurrentScene(LOGIN);
 }
 
 MainClass::~MainClass()
 {
-	ReleaseConsole();
-
 	SAFE_DELETE(m_pConfig);
 }
 
@@ -64,24 +51,64 @@ void MainClass::ReleaseConsole()
 
 HRESULT MainClass::Init()
 {
+	MakeConsole();
+
+	//float x, y = 0.0f;
+	//D2D_RENDERTARGET->GetDpi(&x, &y);
+	////벡버퍼 비트맵에 그려줌
+	//DIRECT2D->GetBackBufferTarget()->SetDpi(x, y);
+
+	//신 만들고 신매니저에 넣어줌
+	LoginScene* loginScene = new LoginScene(TEXT("LOGIN"), LOGIN);
+	WaittingChannelScene* waittingChannelScene = new WaittingChannelScene(TEXT("WAITTING_CHANNEL"), WAITTING_CHANNEL);
+	InChannelScene* inChannelScene = new InChannelScene(TEXT("IN_CHANNEL"), IN_CHANNEL);
+	SCENEAMANGER->InsertScene(loginScene);
+	SCENEAMANGER->InsertScene(waittingChannelScene);
+	SCENEAMANGER->InsertScene(inChannelScene);
+	SCENEAMANGER->ChangeCurrentScene(LOGIN);
+
 	return S_OK;
 }
 
 void MainClass::Release()
 {
+	ReleaseConsole();
 }
 
 void MainClass::Update()
 {
-	//신 업데이트
-	while (isOn)
-	{
-		SCENEAMANGER->GetCurrentScene()->Update();
-	}
+	SCENEAMANGER->GetCurrentScene()->Update();
 }
 
 void MainClass::Render()
 {
+	ID2D1Bitmap* pBitmap = nullptr;
+	DIRECT2D->GetBackBufferTarget()->BeginDraw();
+	DIRECT2D->GetBackBufferTarget()->Clear(D2D1::ColorF(D2D1::ColorF::Blue));
+	SCENEAMANGER->GetCurrentScene()->Render();
+	DIRECT2D->GetBackBufferTarget()->EndDraw();
+	DIRECT2D->GetBackBufferTarget()->GetBitmap(&pBitmap);
+	
+	//백버퍼를 랜더 타겟에 그려줌
+	D2D1_SIZE_F size = D2D_RENDERTARGET->GetSize();
+	D2D1_RECT_F desArea = D2D1::RectF(0.0f, 0.0f, size.width, size.height);
+	D2D1_RECT_F sourArea = D2D1::RectF(
+		D2D_CAMERA->getCameraLeft(),
+		D2D_CAMERA->getCameraTop(),
+		D2D_CAMERA->getCameraRight(),
+		D2D_CAMERA->getCameraBottom());
+
+	D2D_RENDERTARGET->BeginDraw();
+	
+	D2D_RENDERTARGET->SetTransform(D2D1::Matrix3x2F::Identity());	//기본 행렬로 세팅
+	D2D_RENDERTARGET->Clear(D2D1::ColorF(D2D1::ColorF::Blue));	//뒷배경 깔아줌
+	D2D_RENDERTARGET->DrawBitmap(pBitmap,
+		desArea, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR,
+		sourArea);
+
+	D2D_RENDERTARGET->EndDraw();
+
+	SAFE_RELEASE(pBitmap);
 }
 
 LRESULT MainClass::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
@@ -92,15 +119,22 @@ LRESULT MainClass::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPar
 	{
 		UINT width = LOWORD(lParam);
 		UINT height = HIWORD(lParam);
+
+		D2D1_SIZE_U size = D2D1::SizeU(width, height);
 		if (D2D_RENDERTARGET)
 		{
-			DIRECT2D->ResizeRenderTarget(D2D1::SizeU(width, height));
-			DIRECT2D->ResizeBackBufferTarget(D2D1::SizeU(width, height));
-			DIRECT2D->ResizeDCRenderTarget(D2D1::SizeU(width, height));
+			DIRECT2D->ResizeRenderTarget(size);
+			DIRECT2D->ResizeBackBufferTarget(size);
+			DIRECT2D->ResizeDCRenderTarget(size);
 		}
 	}
 	break;
 	}
 
-	return GameNode::MainProc(hWnd, iMessage, wParam, lParam);
+	if (SCENEAMANGER->GetCurrentScene())
+	{
+		return SCENEAMANGER->GetCurrentScene()->MainProc(hWnd, iMessage, wParam, lParam);
+	}
+
+	return DefWindowProc(hWnd, iMessage, wParam, lParam);
 }

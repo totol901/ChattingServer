@@ -12,6 +12,7 @@ SceneManager::~SceneManager()
 	for (auto iter = m_mapScenes.begin();
 		iter != m_mapScenes.end(); iter++)
 	{
+		SAFE_RELEASE(iter->second);
 		SAFE_DELETE(iter->second);
 	}
 }
@@ -50,6 +51,7 @@ bool SceneManager::DeleteScene(BaseScene * Scene)
 		return false;
 	}
 
+	SAFE_RELEASE(iter->second);
 	SAFE_DELETE(iter->second);
 	m_mapScenes.erase(iter);
 	return true;

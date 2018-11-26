@@ -1,17 +1,11 @@
 #include "stdafx.h"
 #include "BaseScene.h"
 
-static UINT gerID = 0;
-
 HANDLE BaseScene::m_Event = CreateEvent(NULL, FALSE, FALSE, NULL);
 
-BaseScene::BaseScene()
-	:m_Id(gerID++)
-{
-}
-
-BaseScene::BaseScene(UINT id)
-	: m_Id(id)
+BaseScene::BaseScene(const WCHAR * nodeName, UINT SceneNum)
+	:GameNode(nodeName),
+	m_Id(SceneNum)
 {
 }
 
@@ -28,5 +22,30 @@ void BaseScene::WaitForRecvPacket()
 void BaseScene::SignalEvent()
 {
 	SetEvent(m_Event);
+}
+
+HRESULT BaseScene::Init()
+{
+	return GameNode::Init();
+}
+
+void BaseScene::Release()
+{
+	GameNode::Release();
+}
+
+void BaseScene::Update()
+{
+	GameNode::Update();
+}
+
+void BaseScene::Render()
+{
+	GameNode::Render();
+}
+
+LRESULT BaseScene::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
+{
+	return GameNode::MainProc(hWnd, iMessage, wParam, lParam);
 }
 

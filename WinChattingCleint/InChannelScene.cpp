@@ -1,14 +1,10 @@
 #include "stdafx.h"
 #include "InChannelScene.h"
 
-InChannelScene::InChannelScene()
-	:BaseScene()
-{
-}
-
 //기존 아이디 접속중이면 접속 못하게 처리
-InChannelScene::InChannelScene(UINT id)
-	:BaseScene(id)
+
+InChannelScene::InChannelScene(const WCHAR * nodeName, UINT nodeNum)
+	:BaseScene(nodeName, nodeNum)
 {
 }
 
@@ -16,9 +12,9 @@ InChannelScene::~InChannelScene()
 {
 }
 
-void InChannelScene::Init()
+HRESULT InChannelScene::Init()
 {
-	
+	return S_OK;
 }
 
 void InChannelScene::Update()

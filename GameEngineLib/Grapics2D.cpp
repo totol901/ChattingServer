@@ -3,12 +3,14 @@
 
 Grapics2D::Grapics2D()
 	:m_pDirect2D(nullptr),
-	m_pD2DPrimitive(nullptr)
+	m_pD2DPrimitive(nullptr),
+	m_pD2DCameraManager(nullptr)
 {
 }
 
 Grapics2D::~Grapics2D()
 {
+	SAFE_DELETE(m_pD2DCameraManager);
 	SAFE_DELETE(m_pD2DPrimitive);
 	SAFE_DELETE(m_pDirect2D);
 }
@@ -17,6 +19,7 @@ HRESULT Grapics2D::Init()
 {
 	m_pDirect2D = new Direct2D;
 	m_pD2DPrimitive = new D2DPrimitives;
+	m_pD2DCameraManager = new CameraManager;
 
 	HRESULT hr = m_pDirect2D->Init();
 	if (SUCCEEDED(hr))
@@ -24,11 +27,17 @@ HRESULT Grapics2D::Init()
 		m_pD2DPrimitive->Init();
 	}
 
+	if (SUCCEEDED(hr))
+	{
+		hr = m_pD2DCameraManager->Init();
+	}
+
 	return hr;
 }
 
 void Grapics2D::Destroy()
 {
+	SAFE_RELEASE(m_pD2DCameraManager);
 	m_pD2DPrimitive->Destroy();
 	m_pDirect2D->Destroy();
 }

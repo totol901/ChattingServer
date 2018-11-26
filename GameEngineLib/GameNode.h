@@ -10,6 +10,7 @@ private:
 	static BOOL m_LeftDoubleClick;
 	static int m_WheelValue;
 
+private:
 	GameNode* m_pSelf;			//나 자신
 	GameNode* m_pParent;		//현재 노드가 자식노드로 등록되어 있을 때 젤 상위 == 부모
 	GameNode* m_pPrev;			//현재 노드가 자식노드로 등록되어 있을 때 내 앞 노드(씬) == 형
@@ -20,7 +21,7 @@ private:
 	GameNode* m_pCurrent;		//현재 노드의 자식으로 등록되어 있는 노드중에 현재 자식(씬)
 
 public:
-	GameNode(const WCHAR* nodeName, UINT nodeNum);
+	GameNode(const WCHAR* nodeName);
 	virtual ~GameNode();
 
 	virtual HRESULT Init();

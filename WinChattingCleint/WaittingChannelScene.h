@@ -7,11 +7,10 @@
 class WaittingChannelScene : public BaseScene
 {
 public:
-	WaittingChannelScene();
-	WaittingChannelScene(UINT id);
+	WaittingChannelScene(const WCHAR* nodeName, UINT nodeNum);
 	~WaittingChannelScene();
 
-	void Init();
+	HRESULT Init();
 	void Update();
 };
 

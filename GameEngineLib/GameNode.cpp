@@ -8,8 +8,8 @@ BOOL GameNode::m_RightButtonDown = FALSE;
 BOOL GameNode::m_LeftDoubleClick = FALSE;
 int GameNode::m_WheelValue = 0;
 
-GameNode::GameNode(const WCHAR* nodeName, UINT nodeNum)
-	:BasicNode(nodeName, nodeNum),
+GameNode::GameNode(const WCHAR* nodeName)
+	:BasicNode(nodeName),
 	m_pSelf(this),
 	m_pParent(nullptr),
 	m_pPrev(nullptr),

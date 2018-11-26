@@ -18,31 +18,36 @@ Config::~Config()
 
 HRESULT Config::Init()
 {
-	TCHAR* strINIPath = const_cast<TCHAR*>(TEXT("./config.ini"));
-	//서버 관련
-	TCHAR* strSection = const_cast<TCHAR*>(TEXT("Server"));
-	TCHAR* strKey = const_cast<TCHAR*>(TEXT("IP"));
-	TCHAR* strValue = const_cast<TCHAR*>(TEXT("192.168.0.2"));
-	//IP
-	WritePrivateProfileString(strSection, strKey, strValue, strINIPath);
-	//Port
-	strKey = const_cast<TCHAR*>(TEXT("PORT"));
-	strValue = const_cast<TCHAR*>(TEXT("9000"));
-	WritePrivateProfileString(strSection, strKey, strValue, strINIPath);
-	
-	//클라이언트 관련
-	//화면 크기
-	int screenWidth = (int)(GetSystemMetrics(SM_CXSCREEN) * 0.25f);
-	int screenHeight = (int)(GetSystemMetrics(SM_CYSCREEN) * 0.25f);
-	strSection = const_cast<TCHAR*>(TEXT("Client"));
-	strKey = const_cast<TCHAR*>(TEXT("Screen"));
-	TCHAR str[128] = { 0, };
-	swprintf_s(str, TEXT("%d*%d"), screenWidth, screenHeight);
-	WritePrivateProfileString(strSection, strKey, str, strINIPath);
-	//풀스크린
-	strKey = const_cast<TCHAR*>(TEXT("FullScreen"));
-	strValue = const_cast<TCHAR*>(TEXT("0"));
-	WritePrivateProfileString(strSection, strKey, strValue, strINIPath);
+	fopen_s(&m_pFile, "config.ini", "r");
+	if (!m_pFile)
+	{
+		TCHAR* strINIPath = const_cast<TCHAR*>(TEXT("./config.ini"));
+		//서버 관련
+		TCHAR* strSection = const_cast<TCHAR*>(TEXT("Server"));
+		TCHAR* strKey = const_cast<TCHAR*>(TEXT("IP"));
+		TCHAR* strValue = const_cast<TCHAR*>(TEXT("192.168.0.2"));
+		//IP
+		WritePrivateProfileString(strSection, strKey, strValue, strINIPath);
+		//Port
+		strKey = const_cast<TCHAR*>(TEXT("PORT"));
+		strValue = const_cast<TCHAR*>(TEXT("9000"));
+		WritePrivateProfileString(strSection, strKey, strValue, strINIPath);
+
+		//클라이언트 관련
+		//화면 크기
+		int screenWidth = (int)(GetSystemMetrics(SM_CXSCREEN) * 0.5f);
+		int screenHeight = (int)(GetSystemMetrics(SM_CYSCREEN) * 0.5f);
+		strSection = const_cast<TCHAR*>(TEXT("Client"));
+		strKey = const_cast<TCHAR*>(TEXT("Screen"));
+		TCHAR str[128] = { 0, };
+		swprintf_s(str, TEXT("%d*%d"), screenWidth, screenHeight);
+		WritePrivateProfileString(strSection, strKey, str, strINIPath);
+		//풀스크린
+		strKey = const_cast<TCHAR*>(TEXT("FullScreen"));
+		strValue = const_cast<TCHAR*>(TEXT("0"));
+		WritePrivateProfileString(strSection, strKey, strValue, strINIPath);
+	}
+	fclose(m_pFile);
 
 	InputConfigData();
 
