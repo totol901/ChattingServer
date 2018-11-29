@@ -74,6 +74,18 @@ public:
 
 		SAFE_RELEASE(pSolidBrush);
 	}
+
+	inline void DrawFillRect(const D2D_RECT_F &rc, const D2D1::ColorF& _color)
+	{
+		ID2D1SolidColorBrush* pSolidBrush = nullptr;
+
+		//브러쉬 생성
+		D2D_RENDERTARGET->CreateSolidColorBrush(_color, &pSolidBrush);
+
+		DIRECT2D->GetBackBufferTarget()->FillRectangle(rc, pSolidBrush);
+
+		SAFE_RELEASE(pSolidBrush);
+	}
 	
 	/****************************************************************************
 	함수명	: DrawRectCenter

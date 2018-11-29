@@ -18,7 +18,6 @@
 using namespace std;
 
 extern HWND g_hWnd;
-extern HWND g_hChat;
 extern HINSTANCE g_hInstance;
 
 //D2D관련된 include
@@ -51,6 +50,7 @@ extern HINSTANCE g_hInstance;
 #include "UINode.h"
 #include "TextBoxUI.h"
 #include "ButtonUI.h"
+#include "StaticTextUI.h"
 
 //엔진 접근 매크로
 #define GAME_ENGINE GameEngine::GetInstance()

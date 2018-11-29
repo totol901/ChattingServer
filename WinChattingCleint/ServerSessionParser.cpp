@@ -2,13 +2,61 @@
 #include "ServerSessionParser.h"
 
 ServerSessionParser::ServerSessionParser(IOCPServerSession* clientSession)
-	:m_ClientSession(clientSession)
+	:m_ClientSession(clientSession),
+	m_pErrorUI(nullptr),
+	m_pStaticTextUI(nullptr)
 {
 }
 
 ServerSessionParser::~ServerSessionParser()
 {
+	SAFE_DELETE(m_pErrorUI);
 	m_ClientSession = nullptr;
+}
+
+void ServerSessionParser::Init()
+{
+	D2D_SIZE_F size = DIRECT2D->GetBackBufferTarget()->GetSize();
+	m_pErrorUI = new UINode(TEXT("ErrorUI"));
+	m_pErrorUI->Init(
+		D2D_PRIMITEVS->RectFMakeCenter(
+			size.width * 0.5f,
+			size.height * 0.5f,
+			size.width * 0.5f,
+			size.height * 0.4f)
+	);
+
+	m_pErrorUI->AddChildStaticTextUI(TEXT("ErrorUIText"),
+		D2D_PRIMITEVS->RectFMake(
+			100,
+			10,
+			150.0f,
+			300.0f),
+		TEXT(""),
+		D2D1::ColorF(0.0f, 0.3f, 0.0f),
+		false
+	);
+
+	m_pErrorUI->AddChildButtonUI(TEXT("ErrorUIButton"),
+		D2D_PRIMITEVS->RectFMake(
+			100,
+			50,
+			80.0f,
+			30.0f),
+		std::bind(&ServerSessionParser::ErrorOK, this),
+		TEXT("Ok")
+	);
+	m_pErrorUI->SetOn(true);
+
+	m_pStaticTextUI = (StaticTextUI*)m_pErrorUI->FindUI(TEXT("ErrorUIText"));
+}
+
+void ServerSessionParser::ErrorOK()
+{
+	//로그인 신의 플레이어 데이터 갱신
+	LoginScene* pLoginScene = (LoginScene*)SCENEAMANGER->GetCurrentScene();
+	pLoginScene->SetState(LOGIN_COMMON);
+	m_pErrorUI->SetOn(false);
 }
 
 void ServerSessionParser::SetRecvStream(T_PACKET * packet)
@@ -32,15 +80,23 @@ void ServerSessionParser::AnsLogin(T_PACKET * packet)
 	//로그인 성공 유무
 	if (IsSuccess)
 	{
-		cout << "로그인 성공" << endl;
-		cout << "닉네임 : " << nickname.c_str() << endl << endl;
+		//cout << "로그인 성공" << endl;
+		//cout << "닉네임 : " << nickname.c_str() << endl << endl;
 		
+		//로그인 신의 플레이어 데이터 갱신
+		LoginScene* pLoginScene = (LoginScene*)SCENEAMANGER->GetCurrentScene();
+		pLoginScene->GetPlayer()->SetPlayerNickname(nickname);
+		pLoginScene->GetPlayer()->SetPlayerState(PLAYER_LOGIN);
+		pLoginScene->SetState(LOGIN_COMMON);
+
+		//웨이팅 채널 신으로 바꿔줌
 		SCENEAMANGER->ChangeCurrentScene(WAITTING_CHANNEL);
 		SCENEAMANGER->GetBeforeScene()->SignalEvent();
 		return;
 	}
 
-	cout << "로그인 실패 " << endl;
+	LoginScene* pLoginScene = (LoginScene*)SCENEAMANGER->GetCurrentScene();
+	//cout << "로그인 실패 " << endl;
 	//cout << "오류 번호 :" << errorNum << endl;
 	ErrorPrint(errorNum);
 
@@ -70,6 +126,7 @@ void ServerSessionParser::AnsCreateId(T_PACKET * packet)
 	ErrorPrint(errorNum);
 
 	SCENEAMANGER->ChangeCurrentScene(LOGIN);
+	//SCENEAMANGER->GetCurrentScene()->
 	SCENEAMANGER->GetBeforeScene()->SignalEvent();
 }
 
@@ -273,27 +330,57 @@ void ServerSessionParser::ErrorPrint(UINT errorNum)
 	switch (errorNum)
 	{
 	case LOGIN_ERROR_WRONG:
-		cout << "!아이디 없음" << endl;
+	{
+		m_pStaticTextUI->SetTextStr(TEXT("!아이디, 비밀번호 오류"));
+		LoginScene* pLoginScene = (LoginScene*)SCENEAMANGER->GetCurrentScene();
+		m_pErrorUI->SetOn(true);
+		WSAERROR->SetPopupErrorUI(m_pErrorUI);
+		
+		//cout << "!아이디 없음" << endl;
+	}
 		break;
 	case LOGIN_ERROR_ALREADY_LOGIN:
-		cout << "!이미 로그인 중" << endl;
+	{
+		m_pStaticTextUI->SetTextStr(TEXT("!이미 로그인 중"));
+		LoginScene* pLoginScene = (LoginScene*)SCENEAMANGER->GetCurrentScene();
+		m_pErrorUI->SetOn(true);
+		WSAERROR->SetPopupErrorUI(m_pErrorUI);
+		//cout << "!이미 로그인 중" << endl;
+	}
 		break;
 	case LOGIN_ERROR_CREATEID_ID_ALREADY_EXE:
-		cout << "!만드려는 아이디 이미 존재함" << endl;
+	{
+		m_pStaticTextUI->SetTextStr(TEXT("!만드려는 아이디 이미 존재함"));
+		LoginScene* pLoginScene = (LoginScene*)SCENEAMANGER->GetCurrentScene();
+		m_pErrorUI->SetOn(true);
+		WSAERROR->SetPopupErrorUI(m_pErrorUI);
+		//cout << "!만드려는 아이디 이미 존재함" << endl;
+	}
 		break;
 	case CREATE_CHANNEL_ALREADY_EXE:
-		cout << "!만드려는 채널 이미 존재함" << endl;
+		//m_pStaticTextUI->SetTextStr(TEXT("!만드려는 채널 이미 존재함"));
+		//LoginScene* pLoginScene = (LoginScene*)SCENEAMANGER->GetCurrentScene();
+		//pLoginScene->SetPopupErrorUI(m_pErrorUI);
+		//cout << "!만드려는 채널 이미 존재함" << endl;
 		break;
 	case ENTER_CHANNEL_CANT_FIND:
-		cout << "!들어가려는 채널 없음" << endl;
+		//m_pStaticTextUI->SetTextStr(TEXT("!들어가려는 채널 없음"));
+		//LoginScene* pLoginScene = (LoginScene*)SCENEAMANGER->GetCurrentScene();
+		//pLoginScene->SetPopupErrorUI(m_pErrorUI);
+		//cout << "!들어가려는 채널 없음" << endl;
 		break;
 	case LEAVE_CHANNEL_CANT_FIND:
-		cout << "!나가려는 채널 없음" << endl;
+		//m_pStaticTextUI->SetTextStr(TEXT("!나가려는 채널 없음"));
+		//LoginScene* pLoginScene = (LoginScene*)SCENEAMANGER->GetCurrentScene();
+		//pLoginScene->SetPopupErrorUI(m_pErrorUI);
+		//cout << "!나가려는 채널 없음" << endl;
 		break;
-	
 	default:
-		cout << "로그인 오류번호 이상" << endl;
+		m_pStaticTextUI->SetTextStr(TEXT("로그인 오류번호 이상"));
+		LoginScene* pLoginScene = (LoginScene*)SCENEAMANGER->GetCurrentScene();
+		m_pErrorUI->SetOn(true);
+		WSAERROR->SetPopupErrorUI(m_pErrorUI);
+		//cout << "로그인 오류번호 이상" << endl;
 		ASSERT(false);
 	}
 }
-

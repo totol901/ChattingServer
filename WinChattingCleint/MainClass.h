@@ -5,11 +5,13 @@
 #pragma once
 
 class Config;
+class Player;
 class MainClass : public GameNode
 {
 private:
 	bool isOn;
 	Config* m_pConfig;
+	Player* m_pPlayer;
 
 	void MakeConsole();
 	void ReleaseConsole();

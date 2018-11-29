@@ -24,6 +24,7 @@ MainClass::MainClass()
 
 MainClass::~MainClass()
 {
+	SAFE_DELETE(m_pPlayer);
 	SAFE_DELETE(m_pConfig);
 }
 
@@ -53,20 +54,30 @@ HRESULT MainClass::Init()
 {
 	MakeConsole();
 
+	CLIENTNETWORK->GetServerSession()->GetServerSessionParser()->Init();
+
 	//float x, y = 0.0f;
 	//D2D_RENDERTARGET->GetDpi(&x, &y);
 	////벡버퍼 비트맵에 그려줌
 	//DIRECT2D->GetBackBufferTarget()->SetDpi(x, y);
 
 	//신 만들고 신매니저에 넣어줌
+	m_pPlayer = new Player(TEXT("Player"));
+	m_pPlayer->Init();
+
 	LoginScene* loginScene = new LoginScene(TEXT("LOGIN"), LOGIN);
+	loginScene->SetMemoryLinkPlayer(m_pPlayer);
 	WaittingChannelScene* waittingChannelScene = new WaittingChannelScene(TEXT("WAITTING_CHANNEL"), WAITTING_CHANNEL);
+	waittingChannelScene->SetMemoryLinkPlayer(m_pPlayer);
 	InChannelScene* inChannelScene = new InChannelScene(TEXT("IN_CHANNEL"), IN_CHANNEL);
+	inChannelScene->SetMemoryLinkPlayer(m_pPlayer);
 	SCENEAMANGER->InsertScene(loginScene);
 	SCENEAMANGER->InsertScene(waittingChannelScene);
 	SCENEAMANGER->InsertScene(inChannelScene);
 	SCENEAMANGER->ChangeCurrentScene(LOGIN);
 
+	WSAERROR->Init();
+	
 	return S_OK;
 }
 

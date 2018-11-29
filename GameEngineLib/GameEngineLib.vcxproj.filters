@@ -111,6 +111,9 @@
     <ClInclude Include="ButtonUI.h">
       <Filter>GameEngine\Object\UI\FunctionUI</Filter>
     </ClInclude>
+    <ClInclude Include="StaticTextUI.h">
+      <Filter>GameEngine\Object\UI\FunctionUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -165,6 +168,9 @@
       <Filter>GameEngine\Object\UI\FunctionUI</Filter>
     </ClCompile>
     <ClCompile Include="ButtonUI.cpp">
+      <Filter>GameEngine\Object\UI\FunctionUI</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticTextUI.cpp">
       <Filter>GameEngine\Object\UI\FunctionUI</Filter>
     </ClCompile>
   </ItemGroup>

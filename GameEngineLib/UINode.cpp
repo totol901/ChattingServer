@@ -5,7 +5,8 @@ UINode::UINode(const TCHAR* nodeName)
 	:GameNode(nodeName),
 	m_UIRect(D2D1::RectF()),
 	m_bActive(false),
-	m_bRectRender(true)
+	m_bRectRender(true),
+	m_bOn(false)
 {
 }
 
@@ -28,6 +29,18 @@ UINode::~UINode()
 	}
 }
 
+void UINode::AddChildButtonUI(const TCHAR* ButtonName, D2D1_RECT_F ButtonRect, CALLBACK_FUNCTION_BUTTON func, const TCHAR * staticStr, D2D1_RECT_F StaticStrRect, D2D1::ColorF TextColor)
+{
+	ButtonUI* pButtonUI = nullptr;
+	pButtonUI = new ButtonUI(ButtonName);
+	ButtonRect.left += m_UIRect.left;
+	ButtonRect.top += m_UIRect.top;
+	ButtonRect.right += m_UIRect.left;
+	ButtonRect.bottom += m_UIRect.top;
+	pButtonUI->Init(ButtonRect, func, staticStr, StaticStrRect, TextColor);
+	AddChild(pButtonUI);
+}
+
 void UINode::AddChildTextBoxUI(const TCHAR* TextBoxName, D2D1_RECT_F TextBoxRect, UINT MaxTextLen, D2D1::ColorF TextColor)
 {
 	TextBoxUI* pTextBox = nullptr;
@@ -38,6 +51,19 @@ void UINode::AddChildTextBoxUI(const TCHAR* TextBoxName, D2D1_RECT_F TextBoxRect
 	TextBoxRect.bottom += m_UIRect.top;
 	pTextBox->Init(TextBoxRect, MaxTextLen, TextColor);
 	AddChild(pTextBox);
+}
+
+void UINode::AddChildStaticTextUI(const TCHAR * StaticTextName, D2D1_RECT_F UIRect, const TCHAR * staticText, D2D1::ColorF TextColor, bool isUIBoxRender)
+{
+	StaticTextUI* pStaticText = nullptr;
+	pStaticText = new StaticTextUI(StaticTextName);
+	UIRect.left += m_UIRect.left;
+	UIRect.top += m_UIRect.top;
+	UIRect.right += m_UIRect.left;
+	UIRect.bottom += m_UIRect.top;
+	pStaticText->Init(UIRect, staticText, TextColor);
+	pStaticText->SetRectRender(isUIBoxRender);
+	AddChild(pStaticText);
 }
 
 UINode * UINode::FindUI(const TCHAR * UIName)
@@ -80,6 +106,7 @@ void UINode::OnActive()
 		{
 			m_bActive = true;
 		}
+		
 	}
 }
 
@@ -117,17 +144,20 @@ void UINode::Update()
 {
 	GameNode::Update();
 
-	UINode* temp = (UINode*)this->GetChildrenHead();
-	while (1)
+	if (IsOn())
 	{
-		if (temp != nullptr)
+		UINode* temp = (UINode*)this->GetChildrenHead();
+		while (1)
 		{
-			temp->Update();
-			temp = (UINode*)temp->GetNext();
-		}
-		else
-		{
-			break;
+			if (temp != nullptr)
+			{
+				temp->Update();
+				temp = (UINode*)temp->GetNext();
+			}
+			else
+			{
+				break;
+			}
 		}
 	}
 }
@@ -136,20 +166,28 @@ void UINode::Render()
 {
 	GameNode::Render();
 
-	//자식 랜더
-	if (m_bRectRender)
+	if (IsOn())
 	{
-		UINode* temp = (UINode*)this->GetChildrenHead();
-		while (1)
+		D2D_PRIMITEVS->DrawFillRect(
+			m_UIRect,
+			D2D1::ColorF(0.5, 0.25, 0)
+		);
+
+		//자식 랜더
+		if (m_bRectRender)
 		{
-			if (temp != nullptr)
+			UINode* temp = (UINode*)this->GetChildrenHead();
+			while (1)
 			{
-				temp->Render();
-				temp = (UINode*)temp->GetNext();
-			}
-			else
-			{
-				break;
+				if (temp != nullptr)
+				{
+					temp->Render();
+					temp = (UINode*)temp->GetNext();
+				}
+				else
+				{
+					break;
+				}
 			}
 		}
 	}

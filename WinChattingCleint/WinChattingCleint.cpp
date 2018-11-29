@@ -5,7 +5,6 @@
 //전역변수
 HINSTANCE g_hInstance = NULL;
 HWND g_hWnd = NULL;
-HWND g_hChat = NULL;
 const TCHAR* g_lpszClass = TEXT("ChattingClient_v0.01");
 const TCHAR* g_ClientName = TEXT("채팅 클라");
 
@@ -102,9 +101,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 			//#endif
 		}
-
-		g_hChat = CreateWindow(L"Edit", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP, 2000, 2000, 300, 30, g_hWnd, (HMENU)100, g_hInstance, NULL);
-		PostMessage(g_hWnd, EM_LIMITTEXT, (WPARAM)30, 0);
 
 		//게임 엔진 초기화
 		if (SUCCEEDED(GAME_ENGINE->Init(true, g_pMainClass->GetConfig()->GetScreenWidth(), g_pMainClass->GetConfig()->GetScreenHeight())))

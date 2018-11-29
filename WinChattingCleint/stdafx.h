@@ -16,7 +16,7 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
-
+#include <queue>
 
 // 여기서 프로그램에 필요한 추가 헤더를 참조합니다.
 #include "../ServerLib/stdafx.h"
@@ -36,6 +36,9 @@
 #include "InChannelScene.h"
 #include "SceneManager.h"
 #include "Config.h"
+#include "Player.h"
+
 
 #define WSAERROR Error::GetInstance()
 #define SCENEAMANGER SceneManager::GetInstance()
+#define PACKETMANAGER PacketManager::GetInstance()

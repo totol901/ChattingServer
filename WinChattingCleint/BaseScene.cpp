@@ -10,13 +10,13 @@ BaseScene::BaseScene(const WCHAR * nodeName, UINT SceneNum)
 }
 
 BaseScene::~BaseScene()
-{
+{	
 	CloseHandle(m_Event);
 }
 
-void BaseScene::WaitForRecvPacket()
+DWORD BaseScene::WaitForRecvPacket()
 {
-	WaitForSingleObject(m_Event, INFINITE);
+	return WaitForSingleObject(m_Event, 2000);
 }
 
 void BaseScene::SignalEvent()

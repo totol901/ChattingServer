@@ -88,9 +88,7 @@ void InChannelScene::Update()
 
 	if (CLIENTNETWORK->IsOn())
 	{
-
 		WaitForRecvPacket();
-
 	}
 	cin.ignore();
 }

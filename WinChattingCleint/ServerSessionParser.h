@@ -13,6 +13,11 @@ private:
 	RecvStream recvStream;
 	SendStream SendStream;
 
+	UINode* m_pErrorUI;	//서버에서 보낸 오류 띄울 UI
+	StaticTextUI* m_pStaticTextUI;
+
+	void ErrorOK();
+
 	void SetRecvStream(T_PACKET* packet);
 
 	//로그인 답장
@@ -35,6 +40,8 @@ private:
 public:
 	ServerSessionParser(IOCPServerSession* ServerSession);
 	~ServerSessionParser();
+
+	void Init();
 
 	/****************************************************************************
 	함수명	: PacketParsing

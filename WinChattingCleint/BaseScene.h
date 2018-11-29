@@ -10,12 +10,18 @@ protected:
 	UINT		m_Id;
 	string		m_Name;
 	SendStream	m_SendStream;
+	RecvStream m_recvStream;
 	T_PACKET	m_Packet;
 	static HANDLE m_Event;
+
+	Player* m_pPlayer;
 
 public:
 	BaseScene(const WCHAR* nodeName, UINT SceneNum);
 	virtual ~BaseScene();
+
+	void SetMemoryLinkPlayer(Player* player) { m_pPlayer = player; }
+	Player* GetPlayer() { return m_pPlayer; }
 
 	//ID, Name 관련 함수
 	UINT GetID() { return m_Id; }
@@ -23,7 +29,7 @@ public:
 	void SetName(string name) { m_Name = name; }
 
 	//Event관련 함수
-	static void WaitForRecvPacket();
+	static DWORD WaitForRecvPacket();
 	static void SignalEvent();
 
 	virtual HRESULT Init();

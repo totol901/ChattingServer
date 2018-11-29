@@ -21,6 +21,9 @@ private:
 public:
 	IOCPServerSession();
 	~IOCPServerSession();
+
+	ServerSessionParser* GetServerSessionParser() { return m_pServerSessionParser; }
+	
 	//ison 변수 메모리링크 함수
 	void SetLinkIsOn(bool* ison);
 

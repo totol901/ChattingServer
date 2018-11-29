@@ -22,6 +22,12 @@
     <Filter Include="Util">
       <UniqueIdentifier>{39ef2542-8038-464b-a702-3fb9af2904be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{d8dd9cb1-5d82-4449-809d-c7f688754f6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{786ad6a2-48ff-4e46-a448-446cab9357b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -35,9 +41,6 @@
     </ClInclude>
     <ClInclude Include="WinChattingCleint.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ClientNetWork.h">
-      <Filter>Network</Filter>
     </ClInclude>
     <ClInclude Include="IOCPServerSession.h">
       <Filter>Network</Filter>
@@ -54,9 +57,6 @@
     <ClInclude Include="LoginScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="WaittingChannelScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -69,6 +69,15 @@
     <ClInclude Include="Config.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ClientNetWork.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -76,9 +85,6 @@
     </ClCompile>
     <ClCompile Include="WinChattingCleint.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ClientNetWork.cpp">
-      <Filter>Network</Filter>
     </ClCompile>
     <ClCompile Include="IOCPServerSession.cpp">
       <Filter>Network</Filter>
@@ -95,9 +101,6 @@
     <ClCompile Include="LoginScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="WaittingChannelScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -109,6 +112,15 @@
     </ClCompile>
     <ClCompile Include="Config.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientNetWork.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

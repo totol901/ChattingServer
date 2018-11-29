@@ -3,7 +3,8 @@
 
 ButtonUI::ButtonUI(const TCHAR* nodeName)
 	:UINode(nodeName),
-	m_Color(D2D1::ColorF(1.0, 1.0, 1.0))
+	m_Color(D2D1::ColorF(1.0, 1.0, 1.0)),
+	m_Clicked(false)
 {
 }
 
@@ -43,15 +44,39 @@ void ButtonUI::Update()
 	//Active 됬는지 확인
 	OnActive();
 
-	//Active됬다면 키값 받기위해 텍스트 에디트에 포커싱함
+	//Active됬다면 눌림 표기
 	if (IsActive())
 	{
-		
+		m_Clicked = true;
 	}
-	//아니면 포커싱 메인으로 변경
-	else
+	//active 상태에서 해당 버튼위치에서 마우스 땐다면 콜백 처리
+	if(!IsLeftButtonDown())
 	{
+		if (m_Clicked)
+		{
+			D2D1_SIZE_F RenderTGsize = D2D_RENDERTARGET->GetSize();
+			D2D1_SIZE_F BitTGSize = DIRECT2D->GetBackBufferTarget()->GetSize();
 
+			float ratioWidth = BitTGSize.width / RenderTGsize.width;
+			float ratioHeight = BitTGSize.height / RenderTGsize.height;
+
+			RECT rc = { (int)(m_ButtonRect.left),
+				(int)(m_ButtonRect.top),
+				(int)(m_ButtonRect.right),
+				(int)(m_ButtonRect.bottom)
+			};
+
+			POINT pt = GetptMouse();
+			pt.x = (LONG)(pt.x * ratioWidth);
+			pt.y = (LONG)(pt.y * ratioHeight);
+
+			if (PtInRect(&rc, pt))
+			{
+				m_CallBackFuntion();
+			}
+		}
+		m_bActive = false;
+		m_Clicked = false;
 	}
 }
 
@@ -59,17 +84,20 @@ void ButtonUI::Render()
 {
 	if (IsRectRender())
 	{
-		D2D_PRIMITEVS->DrawRect(
+		D2D_PRIMITEVS->DrawFillRect(
 			m_ButtonRect,
-			D2D1::ColorF(1, 0, 0),
-			1);
+			D2D1::ColorF(1, 0, 0)
+		);
 	}
 
 	//TODO : 구현 해야함
 	//UI 활동중이면 눌린 이미지나 rect 그려줌
 	if (IsActive())
 	{
-		
+		D2D_PRIMITEVS->DrawFillRect(
+			m_ButtonRect,
+			D2D1::ColorF(1.0f, 0.0f, 0.6f)
+		);
 	}
 
 	if (m_pStaticStr.length() != 0)

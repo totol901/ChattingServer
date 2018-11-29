@@ -13,7 +13,6 @@ ClientNetwork::~ClientNetwork()
 
 void ClientNetwork::Init(char * serverIp, u_short serverPort)
 {
-	WSAERROR->Init();
 	WSAInit();
 
 	ConnectServer(serverIp, serverPort);

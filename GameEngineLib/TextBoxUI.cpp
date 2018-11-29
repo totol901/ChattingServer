@@ -6,14 +6,56 @@ TextBoxUI::TextBoxUI(const TCHAR* nodeName)
 	m_bChattingFocusSwitch(false),
 	m_Color(D2D1::ColorF(1.0, 1.0, 1.0)),
 	m_MaxTextSize(0),
-	m_pTextStr(nullptr)
+	m_pTextStr(nullptr),
+	m_CurrentTextPos(0),
+	m_bCharToStar(false)
 {
 }
 
 TextBoxUI::~TextBoxUI()
 {
-	SetFocus(g_hWnd);
 	SAFE_DELETE_ARRAY(m_pTextStr);
+}
+
+void TextBoxUI::SetCharToStar(bool isStar)
+{
+	m_bCharToStar = isStar;
+}
+
+void TextBoxUI::OnActive()
+{
+	if (IsLeftButtonDown())
+	{
+		D2D1_SIZE_F RenderTGsize = D2D_RENDERTARGET->GetSize();
+		D2D1_SIZE_F BitTGSize = DIRECT2D->GetBackBufferTarget()->GetSize();
+
+		float ratioWidth = BitTGSize.width / RenderTGsize.width;
+		float ratioHeight = BitTGSize.height / RenderTGsize.height;
+
+		RECT rc = { (int)(m_TextBoxRect.left),
+			(int)(m_TextBoxRect.top),
+			(int)(m_TextBoxRect.right),
+			(int)(m_TextBoxRect.bottom)
+		};
+
+		POINT pt = GetptMouse();
+		pt.x = (LONG)(pt.x * ratioWidth);
+		pt.y = (LONG)(pt.y * ratioHeight);
+
+		if (PtInRect(&rc, pt))
+		{
+			m_bActive = true;
+		}
+		//¾Æ´Ï¸é Æ÷Ä¿½Ì ¸ÞÀÎÀ¸·Î º¯°æ
+		else
+		{
+			m_bActive = false;
+			m_bChattingFocusSwitch = false;
+
+			HideCaret(g_hWnd);
+			DestroyCaret();
+		}
+	}
 }
 
 HRESULT TextBoxUI::Init(D2D1_RECT_F TextBoxRect, UINT MaxTextSize, D2D1::ColorF TextColor)
@@ -24,7 +66,7 @@ HRESULT TextBoxUI::Init(D2D1_RECT_F TextBoxRect, UINT MaxTextSize, D2D1::ColorF 
 
 	m_MaxTextSize = MaxTextSize;
 	m_pTextStr = new TCHAR[m_MaxTextSize + 1];
-	memset(m_pTextStr, 0, m_MaxTextSize + 1);
+	memset(m_pTextStr, 0x00, m_MaxTextSize + 1);
 	
 	m_Color = TextColor;
 
@@ -33,7 +75,7 @@ HRESULT TextBoxUI::Init(D2D1_RECT_F TextBoxRect, UINT MaxTextSize, D2D1::ColorF 
 
 void TextBoxUI::Release()
 {
-	memset(m_pTextStr, 0, m_MaxTextSize);
+	memset(m_pTextStr, 0x00, m_MaxTextSize);
 }
 
 void TextBoxUI::Update()
@@ -47,15 +89,7 @@ void TextBoxUI::Update()
 		if (!m_bChattingFocusSwitch)
 		{
 			m_bChattingFocusSwitch = true;
-			SetWindowText(g_hChat, m_pTextStr);
 		}
-		SetFocus(g_hChat);
-	}
-	//¾Æ´Ï¸é Æ÷Ä¿½Ì ¸ÞÀÎÀ¸·Î º¯°æ
-	else
-	{
-		m_bChattingFocusSwitch = false;
-		SetFocus(g_hWnd);
 	}
 }
 
@@ -63,22 +97,20 @@ void TextBoxUI::Render()
 {
 	if (IsRectRender())
 	{
-		D2D_PRIMITEVS->DrawRect(
+		D2D_PRIMITEVS->DrawFillRect(
 			m_TextBoxRect,
-			D2D1::ColorF(1, 0, 0),
-			1);
+			D2D1::ColorF(1, 0.5, 0)
+		);
 	}
 
 	//UI È°µ¿ÁßÀÌ¸é Text °è¼Ó ¹Þ¾Æ¿È
 	if (IsActive())
 	{
-		GetWindowText(g_hChat, m_pTextStr, m_MaxTextSize);
-
 		// TODO : Ä¿¼­ ²­»¶ÀÓ ±¸ÇöÇØ¾ßÇÔ
 		//int Start_sel;
 		//int End_sel;
-		//SendMessage(hChat, EM_GETSEL, (WPARAM)&Start_sel, (LPARAM)&End_sel);
-		//Chatting[End_sel] = L'\0';
+		//SendMessage(m_hChattingExitBox, EM_GETSEL, (WPARAM)&Start_sel, (LPARAM)&End_sel);
+		//m_pTextStr[End_sel] = L'\0';
 		//RECT rt = { 0, };
 		//// D3DXFont¸¦ ¾²¼ÅµµµÅ°í, WINAPIÀÇ DrawText¸¦ ¾²¼Åµµ µÅ¿ä ¤¾  
 		//Font->DrawText(Sprite, chat, -1, &rt, DT_CALCRECT, ORG_DX_RGBA(255, 255, 255, 255));
@@ -89,13 +121,68 @@ void TextBoxUI::Render()
 		//}
 	}
 
-	//¹Þ¾Æ¿Â Text ±×·ÁÁÜ
-	D2D_TEXTMANAGER->TextRender(m_pTextStr, TEXT("±¼¸²_15"),
-		m_TextBoxRect,
-		m_Color);
+	if (m_bCharToStar)
+	{
+		TCHAR str[15] = {0, };
+		
+		for (int i = 0; i < m_CurrentTextPos; i++)
+		{
+			str[i] = L'*';
+		}
+		
+		//¹Þ¾Æ¿Â Text ±×·ÁÁÜ
+		D2D_TEXTMANAGER->TextRender(str, TEXT("±¼¸²_15"),
+			m_TextBoxRect,
+			m_Color);
+	}
+	else
+	{
+		D2D_TEXTMANAGER->TextRender(m_pTextStr, TEXT("±¼¸²_15"),
+			m_TextBoxRect,
+			m_Color);
+	}
 }
 
 LRESULT TextBoxUI::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
-	return UINode::MainProc(hWnd, iMessage, wParam, lParam);
+	if (m_bChattingFocusSwitch)
+	{
+		switch (iMessage)
+		{
+		case WM_CHAR:
+			switch (wParam)
+			{
+			case VK_BACK:
+				if (m_CurrentTextPos > 0)
+				{
+					m_CurrentTextPos--;
+					m_pTextStr[m_CurrentTextPos] = 0x00;
+				}
+				break;
+
+			case VK_SPACE:
+				m_pTextStr[m_CurrentTextPos] = TEXT(' ');
+				if (m_CurrentTextPos < m_MaxTextSize-1)
+				{
+					m_CurrentTextPos++;
+					m_pTextStr[m_CurrentTextPos] = 0x00;
+				}
+				break;
+
+			default:
+				if (m_CurrentTextPos < m_MaxTextSize-1)
+				{
+					m_pTextStr[m_CurrentTextPos] = wParam;
+					m_CurrentTextPos++;
+					m_pTextStr[m_CurrentTextPos] = 0x00;
+				}
+				break;
+			}
+			
+			break;
+		
+		}
+	}
+
+	return 0;
 }
