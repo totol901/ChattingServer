@@ -37,7 +37,7 @@
 #include "SceneManager.h"
 #include "Config.h"
 #include "Player.h"
-
+#include "ChattingUI.h"
 
 #define WSAERROR Error::GetInstance()
 #define SCENEAMANGER SceneManager::GetInstance()

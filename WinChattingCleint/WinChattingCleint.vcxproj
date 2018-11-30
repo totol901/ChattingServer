@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
+    <ClInclude Include="ChattingUI.h" />
     <ClInclude Include="ClientNetWork.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Error.h" />
@@ -171,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseScene.cpp" />
+    <ClCompile Include="ChattingUI.cpp" />
     <ClCompile Include="ClientNetWork.cpp" />
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="Error.cpp" />

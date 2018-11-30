@@ -13,9 +13,9 @@ class UINode : public GameNode
 protected:
 	bool m_bActive;
 
-private:
 	D2D1_RECT_F m_UIRect;
-	
+
+private:
 	bool m_bRectRender;
 
 	bool m_bOn;
@@ -30,6 +30,8 @@ public:
 	UINode* FindUI(const TCHAR* UIName);
 	bool IsOn() { return m_bOn; }
 	void SetOn(const bool& On) { m_bOn = On; }
+
+	D2D1_RECT_F& GetUIRect() { return m_UIRect; }
 
 	/****************************************************************************
 	ÇÔ¼ö¸í	: OnActive

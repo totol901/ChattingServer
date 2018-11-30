@@ -30,6 +30,7 @@ extern HINSTANCE g_hInstance;
 #include <wincodec.h>
 #include <Dwrite.h>
 #include <functional>
+#include <list>
 
 #include "EngineSingleton.h"
 #include "Util.h"
@@ -51,6 +52,7 @@ extern HINSTANCE g_hInstance;
 #include "TextBoxUI.h"
 #include "ButtonUI.h"
 #include "StaticTextUI.h"
+#include "ScrollBoxUI.h"
 
 //엔진 접근 매크로
 #define GAME_ENGINE GameEngine::GetInstance()

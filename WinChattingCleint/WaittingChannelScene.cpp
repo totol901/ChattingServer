@@ -1,23 +1,57 @@
 #include "stdafx.h"
 #include "WaittingChannelScene.h"
 
-
 WaittingChannelScene::WaittingChannelScene(const WCHAR * nodeName, UINT nodeNum)
-	:BaseScene(nodeName, nodeNum)
+	:BaseScene(nodeName, nodeNum),
+	m_pWaittingChannelUI(nullptr)
 {
 }
 
 WaittingChannelScene::~WaittingChannelScene()
 {
+	SAFE_DELETE(m_pWaittingChannelUI);
 }
 
 HRESULT WaittingChannelScene::Init()
 {
-	return S_OK;
+	HRESULT hr = BaseScene::Init();
+
+	m_pWaittingChannelUI = new UINode(TEXT("WaittingChannelUI"));
+	D2D_SIZE_F size = DIRECT2D->GetBackBufferTarget()->GetSize();
+	HRESULT hr = m_pWaittingChannelUI->Init(
+		D2D_PRIMITEVS->RectFMakeCenter(
+			size.width*0.5f,
+			size.height*0.5f,
+			size.width*0.5f,
+			size.height*0.5f)
+	);
+
+	//UI 자식 초기화
+	m_pWaittingChannelUI->AddChildTextBoxUI(
+		TEXT("IDTextBox"),
+		D2D_PRIMITEVS->RectFMake(
+			100,
+			10,
+			150.0f,
+			30.0f),
+		15,
+		D2D1::ColorF(1.0f, 1.0f, 1.0f)
+	);
+
+	return hr;
+}
+
+void WaittingChannelScene::Release()
+{
+	BaseScene::Release();
+
+	m_pWaittingChannelUI->Release();
 }
 
 void WaittingChannelScene::Update()
 {
+	BaseScene::Update();
+
 	cout << endl;
 	cout << "------채널 대기방-----" << endl;
 	m_SendStream.clear();
@@ -107,4 +141,14 @@ void WaittingChannelScene::Update()
 		WaitForRecvPacket();
 	}
 	cin.ignore();
+}
+
+void WaittingChannelScene::Render()
+{
+	BaseScene::Render();
+}
+
+LRESULT WaittingChannelScene::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
+{
+	return BaseScene::MainProc(hWnd, iMessage, wParam, lParam);
 }

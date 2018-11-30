@@ -109,6 +109,8 @@ HRESULT LoginScene::InitLoginUI()
 
 	m_pLoginUI->SetOn(true);
 
+	//UINode에서 FindUI 매서드로 TextBox를 사용할 수 있으나,
+	//속도 측면에서 바람직 하지 않다 생각하여 TextBox만 포인터로 따로 받았음
 	m_pIDTextBoxUI = (TextBoxUI*)m_pLoginUI->FindUI(TEXT("IDTextBox"));
 	m_pPassTextBoxUI = (TextBoxUI*)m_pLoginUI->FindUI(TEXT("PassTextBox"));
 	m_pPassTextBoxUI->SetCharToStar(true);
@@ -148,7 +150,8 @@ void LoginScene::SendLogin()
 				NULL,
 				0,
 				LoginRecvThread,
-				&m_eLoginState, 0, NULL);
+				&m_eLoginState, 0, NULL
+			);
 		}
 	}
 }
@@ -186,7 +189,8 @@ void LoginScene::SendCreateID()
 				NULL,
 				0,
 				LoginRecvThread,
-				&m_eLoginState, 0, NULL);
+				&m_eLoginState, 0, NULL
+			);
 		}
 	}
 }
@@ -223,8 +227,6 @@ unsigned int __stdcall LoginScene::LoginRecvThread(LPVOID param)
 HRESULT LoginScene::Init()
 {
 	HRESULT hr = BaseScene::Init();
-
-	//m_SendLoginPacket = ;
 
 	//UI 초기화
 	if (SUCCEEDED(hr))
@@ -372,5 +374,6 @@ LRESULT LoginScene::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPa
 	{
 		m_pPassTextBoxUI->MainProc(hWnd, iMessage, wParam, lParam);
 	}
+
 	return BaseScene::MainProc(hWnd, iMessage, wParam, lParam);
 }
