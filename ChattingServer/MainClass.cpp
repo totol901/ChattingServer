@@ -10,6 +10,7 @@ MainClass::MainClass()
 	SERVERNETWORK->Init();
 	//데이터베이스 초기화
 	DATABASE->InitDB();
+	MEMORYMANAGER->Init();
 
 	//모니터링 용 스래드 생성
 	_beginthreadex(NULL, 0,
@@ -20,6 +21,7 @@ MainClass::MainClass()
 
 MainClass::~MainClass()
 {
+	MEMORYMANAGER->Release();
 }
 
 void MainClass::Update()
@@ -58,6 +60,8 @@ unsigned int __stdcall MainClass::MoniteringThread(LPVOID param)
 				CLIENTSESSIONMANAGER->GetCCU());
 		}
 	}
+
+	OutputDebugStringA("모니터링 스레드 종료");
 
 	return 0;
 }

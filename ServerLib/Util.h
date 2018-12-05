@@ -34,3 +34,49 @@ inline bool isInRange(const T& minimum, const T& x, const T& maximum)
 {
 	return (x == fixInRange(minimum, x, maximum)) ? true : false;
 }
+
+
+/*char=>TCHAR 변환 함수*/
+inline void StrConvA2T(CHAR* src, TCHAR* dest, size_t destLen)
+{
+#ifdef UNICODE						//r_winnt
+	if (destLen < 1)
+	{
+		return;
+	}
+	MultiByteToWideChar(CP_ACP, 0, src, -1, dest, (int)destLen - 1);
+#endif
+}
+
+/*TCHAR=>char 변환 함수*/
+inline void StrConvT2A(TCHAR* src, CHAR* dest, size_t destLen)
+{
+#ifdef UNICODE						//r_winnt
+	if (destLen < 1)
+	{
+		return;
+	}
+	WideCharToMultiByte(CP_ACP, 0, src, -1, dest, (int)destLen, NULL, FALSE);
+#endif
+}
+
+/*char=>wchar 변환 함수*/
+inline void StrConvA2W(CHAR* src, WCHAR* dest, size_t destLen)
+{
+	if (destLen < 1)
+	{
+		return;
+	}
+	MultiByteToWideChar(CP_ACP, 0, src, -1, dest, (int)destLen - 1);
+}
+
+/*wchar=>char 변환 함수*/
+inline void StrConvW2A(WCHAR* src, CHAR* dest, size_t destLen)
+{
+	if (destLen < 1)
+	{
+		return;
+	}
+	WideCharToMultiByte(CP_ACP, 0, src, -1, dest, (int)destLen, NULL, FALSE);
+}
+

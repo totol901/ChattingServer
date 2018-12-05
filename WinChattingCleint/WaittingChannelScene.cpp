@@ -18,7 +18,7 @@ HRESULT WaittingChannelScene::Init()
 
 	m_pWaittingChannelUI = new UINode(TEXT("WaittingChannelUI"));
 	D2D_SIZE_F size = DIRECT2D->GetBackBufferTarget()->GetSize();
-	HRESULT hr = m_pWaittingChannelUI->Init(
+	hr = m_pWaittingChannelUI->Init(
 		D2D_PRIMITEVS->RectFMakeCenter(
 			size.width*0.5f,
 			size.height*0.5f,

@@ -2,29 +2,32 @@
 #include "ClientSession.h"
 #include "Player.h"
 
+UINT ClientSession::m_AllocatorID = 0;
+
 ClientSession::ClientSession()
-	:Session()
+	:Session(),
+	m_SessionParser(this)
 {
 	m_Type = SESSION_TYPE_CLIENT;
-	m_pSessionParser = new ClientSessionParser(this);
-	m_pPlayerData = new Player();
+	//m_pSessionParser = new ClientSessionParser(this);
+	//m_pPlayerData = new Player();
 }
 
 ClientSession::~ClientSession()
 {
 	Clear();
-	SAFE_DELETE(m_pPlayerData);
-	SAFE_DELETE(m_pSessionParser);
+	//SAFE_DELETE(m_pPlayerData);
+	//SAFE_DELETE(m_pSessionParser);
 	closesocket(m_Socket);
 }
 
 void ClientSession::Clear()
 {
 	//채널에 있을수 있으니 있다면 빠져나옴
-	if (m_pPlayerData->GetChannel())
+	if (m_PlayerData.GetChannel())
 	{
-		m_pPlayerData->GetChannel()->DeleteClientSession(this);
-		m_pPlayerData->GetChannel()->ChannelErase();
+		m_PlayerData.GetChannel()->DeleteClientSession(this);
+		m_PlayerData.GetChannel()->ChannelErase();
 	}
 }
 
@@ -73,7 +76,7 @@ bool ClientSession::IsRecving(const size_t& transferSize)
 
  const bool ClientSession::PacketParsing(T_PACKET * const packet)
  {
-	 if (m_pSessionParser->PacketParsing(packet))
+	 if (m_SessionParser.PacketParsing(packet))
 	 {
 		 return true;
 	 }
@@ -91,7 +94,7 @@ bool ClientSession::IsRecving(const size_t& transferSize)
 
 	 WSABUF wsaBuf;
 	 wsaBuf.buf = (char*)m_arrIOData[IO_WRITE].GetptPacket();
-	 wsaBuf.len = sizeof(T_PACKET);
+	 wsaBuf.len = packet.Size;
 
 	 this->Send(wsaBuf);
  }

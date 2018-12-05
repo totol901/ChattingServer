@@ -29,7 +29,7 @@ public:
 	virtual void Update();
 	virtual void Render();
 
-	virtual LRESULT MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT CALLBACK MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 
 	inline const POINT& GetptMouse() { return m_ptMouse; }
 	inline const BOOL& IsLeftButtonDown() { return m_LeftButtonDown; }

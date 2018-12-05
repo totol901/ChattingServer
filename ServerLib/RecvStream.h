@@ -17,4 +17,7 @@ public:
 	bool checkReadBound(size_t len);
 	void read(OUT string& retVal);
 	void read(OUT void *retVal, size_t len);
+	void wStringread(OUT string & retVal);
+
+	void WStringStaticRead(OUT string & retVal);
 };

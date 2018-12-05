@@ -54,6 +54,11 @@ void ClientNetwork::ConnectServer(const char* serverIp, const u_short& serverPor
 	p_mServerSession->RecvStandBy();
 }
 
+void ClientNetwork::CloseSocket()
+{
+
+}
+
 void ClientNetwork::SetLinkIsOn(bool * ison)
 {
 	isOn = ison;

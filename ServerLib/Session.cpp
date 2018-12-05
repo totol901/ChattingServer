@@ -7,7 +7,7 @@ bool Session::setSocketOpt()
 	tcp_keepalive keepAliveSet = { 0 }, returned = { 0 };
 	keepAliveSet.onoff = 1;					// KEEPALIVE ON
 	keepAliveSet.keepalivetime = 3000;		// Keep Alive in 3 sec.
-	keepAliveSet.keepaliveinterval = 3000;	// Resend if No-Reply (10회 반복)
+	keepAliveSet.keepaliveinterval = 1000;	// Resend if No-Reply (10회 반복)
 
 	DWORD dwBytes;
 	if (WSAIoctl(

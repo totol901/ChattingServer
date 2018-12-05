@@ -61,7 +61,7 @@ bool DBSession::InitDB()
 	return true;
 }
 
-bool DBSession::CheckUserInfoQuery(string ID, string PW)
+bool DBSession::CheckUserInfoQuery(const string& ID, const string& PW)
 {
 	string query = "SELECT * FROM USER_INFO WHERE ID='";
 	query += ID + "' AND PW='";
@@ -83,6 +83,62 @@ bool DBSession::CheckUserInfoQuery(string ID, string PW)
 		if (row[0] == ID)
 		{
 			if (row[1] == PW)
+			{
+				break;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+
+		if (row == NULL)
+		{
+			return false;
+		}
+	}
+	if (res->row_count == 0)
+	{
+		return false;
+	}
+
+	SLogPrint("CheckUserInfoQuery ¼º°ø...");
+
+	return true;
+}
+
+bool DBSession::CheckUserInfoQuery(wstring ID, wstring PW)
+{
+	CHAR strID[1024] = { 0, };
+	CHAR strPW[1024] = { 0, };
+	StrConvW2A((WCHAR*)ID.c_str(), strID, sizeof(strID));
+	StrConvW2A((WCHAR*)ID.c_str(), strPW, sizeof(strPW));
+	string id = strID;
+	string pw = strPW;
+	string query = "SELECT * FROM USER_INFO WHERE ID='";
+	query += id + "' AND PW='";
+	query += pw + "'";
+
+	char q[256];
+	memset(q, 0, sizeof(q));
+	memcpy(q, query.c_str(), sizeof(query));
+
+	if (mysql_query(conn, q) != NULL)
+	{
+		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
+		return false;
+	}
+
+	res = mysql_store_result(conn);
+	while ((row = mysql_fetch_row(res)) != NULL)
+	{
+		if (row[0] == id)
+		{
+			if (row[1] == pw)
 			{
 				break;
 			}

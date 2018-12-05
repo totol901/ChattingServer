@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ClientSessionParser.h"
+#include <atlstr.h>
 
 static CRITICAL_SECTION ChannelInOutCS;
 
@@ -43,8 +44,9 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 	//stream에 받은 데이터 넣어줌
 	const size_t headSize = sizeof(packet->Size) + sizeof(packet->type);
 	recvStream.set(packet->buff, packet->Size - headSize);
-	recvStream.read(id);
-	recvStream.read(pw);
+
+	recvStream.wStringread(id);
+	recvStream.wStringread(pw);
 
 	//id, pw 쿼리 채크
 	if (DATABASE->CheckUserInfoQuery(id, pw))
@@ -101,7 +103,7 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 		SendStream.write(&isSuccess, sizeof(isSuccess));
 		SendStream.write(&errorNum, sizeof(errorNum));
 
-		SLogPrint("%s - 로그인 실패", id);
+		SLogPrint("%s - 로그인 실패", id.c_str());
 
 		//데이터베이스에 로그 남겨줌
 		DATABASE->InsertUserLogQuery(id, "로그인 실패");
@@ -347,7 +349,13 @@ bool ClientSessionParser::PacketParsing(T_PACKET * const packet)
 	switch (packet->type)
 	{
 	case PK_NONE:
-		cout << "test : " << packet->buff << endl;
+	{
+		TCHAR* str = (TCHAR*)packet->buff;
+
+		wcout << str << endl;
+
+		m_ClientSession->SendPacket(*packet);
+	}
 		break;
 
 	case PK_REQ_LOGIN:

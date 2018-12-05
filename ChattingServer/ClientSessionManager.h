@@ -16,7 +16,7 @@ private:
 	ClientSessionManager();
 	~ClientSessionManager();
 
-	UINT GetGenerateSessionID();
+	const UINT GetGenerateSessionID();
 
 public:
 	bool			AddClientSession( ClientSession* const clientSession);

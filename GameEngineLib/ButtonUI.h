@@ -28,5 +28,5 @@ public:
 	virtual void Update();
 	virtual void Render();
 
-	virtual LRESULT MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT CALLBACK MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 };

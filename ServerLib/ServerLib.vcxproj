@@ -151,17 +151,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Allocator.h" />
     <ClInclude Include="Assert.h" />
+    <ClInclude Include="c_Hash.h" />
+    <ClInclude Include="FreeListAllocator.h" />
     <ClInclude Include="IOData.h" />
+    <ClInclude Include="LinearAllocator.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="Monitoring.h" />
     <ClInclude Include="Packet.h" />
+    <ClInclude Include="PoolAllocator.h" />
     <ClInclude Include="RecvStream.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SendStream.h" />
     <ClInclude Include="ServerLib.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Stream.h" />
     <ClInclude Include="targetver.h" />
@@ -170,11 +177,17 @@
     <ClInclude Include="WinSock.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="c_Hash.cpp" />
+    <ClCompile Include="FreeListAllocator.cpp" />
     <ClCompile Include="IOData.cpp" />
+    <ClCompile Include="LinearAllocator.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="MemoryManager.cpp" />
+    <ClCompile Include="PoolAllocator.cpp" />
     <ClCompile Include="RecvStream.cpp" />
     <ClCompile Include="SendStream.cpp" />
     <ClCompile Include="Session.cpp" />
+    <ClCompile Include="StackAllocator.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

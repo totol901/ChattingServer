@@ -45,10 +45,11 @@ void ScrollBoxUI::AddStaticTextBox(const TCHAR* UIName, const D2D1_RECT_F& uiRec
 	//들어갈 UI 크기만큼 자리 이동
 	for (auto iter = m_UIList.begin(); iter != m_UIList.end(); iter++)
 	{
-		(*iter)->GetUIRect().bottom += width;
-		(*iter)->GetUIRect().top += width;
+		(*iter)->GetUIRect().bottom += height;
+		(*iter)->GetUIRect().top += height;
 	}
 
+	//리스트에 넣어줌
 	m_UIList.push_back(pStaticTextUI);
 }
 
@@ -72,13 +73,40 @@ void ScrollBoxUI::Release()
 
 void ScrollBoxUI::Update()
 {
+
 }
 
 void ScrollBoxUI::Render()
 {
+	//UI 제일 아래에 깔릴 랙트 그려줌
+	if (IsRectRender())
+	{
+		D2D_PRIMITEVS->DrawFillRect(
+			m_UIRect,
+			D2D1::ColorF(1, 0, 0)
+		);
+	}
+
+	//제일 아래에 깔린 UI보다 크게 그려지면 짤라서 그림
+	for (auto iter = m_UIList.begin(); iter != m_UIList.end(); iter++)
+	{
+		//이 이후로는 그리지 말것
+		if ((*iter)->GetUIRect().bottom < m_UIRect.top)
+		{
+			break;
+		}
+
+		//그려줘야 함
+		//if(DIRECT2D->GetBackBufferTarget()->draw
+	}
 }
 
 LRESULT ScrollBoxUI::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
-	return LRESULT();
+	switch (iMessage)
+	{
+		
+	}
+
+	return 0;
 }

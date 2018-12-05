@@ -4,23 +4,48 @@
 ******************************************************************************/
 #pragma once
 
-class Player;
-class ClientSessionParser;
 class ClientSession : public Session
 {
 private:
+	static UINT m_AllocatorID;
 	void Send(const WSABUF& wsaBuf);
 	void Recv(const WSABUF& wsabuf);
 	bool IsRecving(const size_t& transferSize);
 	
-	ClientSessionParser*	m_pSessionParser;
-	Player*					m_pPlayerData;
+	ClientSessionParser	m_SessionParser;
+	Player				m_PlayerData;
 
 public:
 	ClientSession();
 	~ClientSession();
 
-	Player*			GetPlayerData() { return m_pPlayerData; }
+	static void* operator new(size_t allocSize)
+	{
+		
+		if (m_AllocatorID == 0)
+		{
+			m_AllocatorID = MEMORYMANAGER->AddNewAllocator(
+				MemoryManager::E_PoolAllocator, 
+				allocSize * 10000, 
+				TEXT("ClientSessionMemory"),
+				allocSize
+			);
+		}
+		
+		return (ClientSession*)(MEMORYMANAGER
+			->GetAllocator(m_AllocatorID)->Allocate(sizeof(ClientSession),
+				__alignof(ClientSession)));
+	}
+
+	static void operator delete(void* deletepointer)
+	{
+		
+		MEMORYMANAGER->GetAllocator(m_AllocatorID)
+			->Deallocate(deletepointer);
+		
+	}
+
+	Player*			GetPlayerData() { return &m_PlayerData; }
 	IOData* const	GetptIOData(const int& type);
 
 	/****************************************************************************

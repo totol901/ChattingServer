@@ -56,4 +56,5 @@ void Logger::LogPrintAtFile(const char * str, ...)
 	tempStr += "\n";
 	printf(tempStr.c_str());
 	fprintf(pFile, tempStr.c_str());
+	fflush(pFile);
 }

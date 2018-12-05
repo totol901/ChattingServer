@@ -35,10 +35,18 @@ using namespace std;
 #include "Timer.h"
 #include "Logger.h"
 #include "Assert.h"
+#include "Allocator.h"
+#include "PoolAllocator.h"
+#include "LinearAllocator.h"
+#include "StackAllocator.h"
+#include "FreeListAllocator.h"
+#include "c_Hash.h"
+#include "MemoryManager.h"
 
 #define WSAWINSOCK WinSock::GetInstance()
 #define MONITORING Monitoring::GetInstance()
 #define TIMER Timer::GetInstance()
+#define MEMORYMANAGER MemoryManager::GetInstance()
 
 //파싱 에러 상태
 enum E_PARSING_ERROR

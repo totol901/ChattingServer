@@ -38,7 +38,10 @@ public:
 	함수명	: CheckUserInfoQuery
 	설명		: ID, PW 쿼리 보내고 맞는지 판단
 	*****************************************************************************/
-	bool CheckUserInfoQuery(string ID, string PW);
+	bool CheckUserInfoQuery(const string& ID, const string& PW);
+	bool CheckUserInfoQuery(wstring ID, wstring PW);
+
+
 	
 	/****************************************************************************
 	함수명	: InsertUserInfoQuery

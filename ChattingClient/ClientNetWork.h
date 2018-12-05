@@ -22,6 +22,7 @@ private:
 	void WSAInit();
 	//서버에 접속
 	void ConnectServer(const char* serverIp, const u_short& serverPort);
+	void CloseSocket();
 
 public:
 	bool IsOn() { return *isOn; }

@@ -116,12 +116,22 @@ unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 
 		//클라이언트 세션 생성 후 매니저 컨터이너에 넣어줌
 		ClientSession* clientSession = new ClientSession;
+		if (!clientSession)
+		{
+			closesocket(clientSock);
+			continue;
+		}
 		clientSession->SetSocket(clientSock);
 		clientSession->SetSocketAddr(clientAddr);
+		//소켓 옵션 세팅
+		if (!clientSession->setSocketOpt())
+		{
+			closesocket(clientSession->GetSocket());
+			SAFE_DELETE(clientSession);
+			continue;
+		}
 		//세션매니저에 세션 추가
 		CLIENTSESSIONMANAGER->AddClientSession(clientSession);
-		//소켓 옵션 세팅
-		clientSession->setSocketOpt();
 
 		//IOCP 연결
 		CreateIoCompletionPort((HANDLE)clientSession->GetSocket(),
@@ -133,6 +143,8 @@ unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 	}
 
 	SLogPrintAtFile("Accept루프 스레드 종료");
+	
+	OutputDebugStringA("Accept루프 스레드 종료");
 
 	return 0;
 }
@@ -199,7 +211,6 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 
 		if (pClientSession == nullptr)
 		{
-			
 			SLogPrintAtFile("클라이언트 세션 삭제됨");
 			return 0;
 		}
@@ -217,7 +228,8 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 				continue;
 			}
 			//로그인된 세션 제거
-			if (pClientSession->GetPlayerData()->GetPlayerID() != "")
+			if (pClientSession->GetPlayerData() != nullptr &&
+				pClientSession->GetPlayerData()->GetPlayerID() != "")
 			{
 				if (!CLIENTSESSIONMANAGER->DeleteClientSessionID(pClientSession->GetPlayerData()->GetPlayerID()))
 				{
@@ -263,6 +275,8 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			continue;
 		}
 	}
+
+	OutputDebugStringA("IOCP루프 스레드 종료");
 
 	return 0;
 }
