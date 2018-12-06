@@ -61,57 +61,7 @@ bool DBSession::InitDB()
 	return true;
 }
 
-bool DBSession::CheckUserInfoQuery(const string& ID, const string& PW)
-{
-	string query = "SELECT * FROM USER_INFO WHERE ID='";
-	query += ID + "' AND PW='";
-	query += PW + "'";
-
-	char q[256];
-	memset(q, 0, sizeof(q));
-	memcpy(q, query.c_str(), sizeof(query));
-
-	if (mysql_query(conn, q) != NULL)
-	{
-		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
-		return false;
-	}
-	
-	res = mysql_store_result(conn);
-	while ((row = mysql_fetch_row(res)) != NULL)
-	{
-		if (row[0] == ID)
-		{
-			if (row[1] == PW)
-			{
-				break;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
-
-		if (row == NULL)
-		{
-			return false;
-		}
-	}
-	if (res->row_count == 0)
-	{
-		return false;
-	}
-
-	SLogPrint("CheckUserInfoQuery 성공...");
-
-	return true;
-}
-
-bool DBSession::CheckUserInfoQuery(wstring ID, wstring PW)
+bool DBSession::CheckUserInfoQuery(const wstring& ID, const wstring& PW)
 {
 	CHAR strID[1024] = { 0, };
 	CHAR strPW[1024] = { 0, };
@@ -119,6 +69,7 @@ bool DBSession::CheckUserInfoQuery(wstring ID, wstring PW)
 	StrConvW2A((WCHAR*)ID.c_str(), strPW, sizeof(strPW));
 	string id = strID;
 	string pw = strPW;
+
 	string query = "SELECT * FROM USER_INFO WHERE ID='";
 	query += id + "' AND PW='";
 	query += pw + "'";
@@ -132,7 +83,7 @@ bool DBSession::CheckUserInfoQuery(wstring ID, wstring PW)
 		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
 		return false;
 	}
-
+	
 	res = mysql_store_result(conn);
 	while ((row = mysql_fetch_row(res)) != NULL)
 	{
@@ -167,16 +118,69 @@ bool DBSession::CheckUserInfoQuery(wstring ID, wstring PW)
 	return true;
 }
 
-bool DBSession::InsertUserInfoQuery(string ID, string PW, string nickname)
+bool DBSession::CheckUserInfoQuery(string ID, string PW)
 {
-	string query = "INSERT INTO USER_INFO VALUE ('";
+	string query = "SELECT * FROM USER_INFO WHERE ID='";
+	query += ID + "' AND PW='";
+	query += PW + "'";
+
+	char q[256];
+	memset(q, 0, sizeof(q));
+	memcpy(q, query.c_str(), sizeof(query));
+
+	if (mysql_query(conn, q) != NULL)
+	{
+		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
+		return false;
+	}
+
+	res = mysql_store_result(conn);
+	while ((row = mysql_fetch_row(res)) != NULL)
+	{
+		if (row[0] == ID)
+		{
+			if (row[1] == PW)
+			{
+				break;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+
+		if (row == NULL)
+		{
+			return false;
+		}
+	}
+	if (res->row_count == 0)
+	{
+		return false;
+	}
+
+	SLogPrint("CheckUserInfoQuery 성공...");
+
+	return true;
+}
+
+bool DBSession::InsertUserInfoQuery(wstring ID, wstring PW, wstring nickname)
+{
+	wstring query = L"INSERT INTO USER_INFO VALUE ('";
 
 	query += ID;
-	query += "', '";
-	query += PW + "', '";
-	query += nickname + "')";
+	query += L"', '";
+	query += PW + L"', '";
+	query += nickname + L"')";
 
-	if (mysql_query(conn, query.c_str()) != NULL)
+	char str[1024] = { 0, };
+	StrConvW2A((WCHAR*)query.c_str(), str, sizeof(str));
+
+	if (mysql_query(conn, str) != NULL)
 	{
 		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
 		return false;
@@ -187,12 +191,15 @@ bool DBSession::InsertUserInfoQuery(string ID, string PW, string nickname)
 	return true;
 }
 
-bool DBSession::DeleteUserInfoQuery(string ID)
+bool DBSession::DeleteUserInfoQuery(wstring ID)
 {
-	string query = "DELETE FROM USER_INFO WHERE id = '";
-	query += ID + "'";
+	wstring query = L"DELETE FROM USER_INFO WHERE id = '";
+	query += ID + L"'";
 
-	if (mysql_query(conn, query.c_str()) != NULL)
+	char str[1024] = { 0, };
+	StrConvW2A((WCHAR*)query.c_str(), str, sizeof(str));
+
+	if (mysql_query(conn, str) != NULL)
 	{
 		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
 		return false;
@@ -203,17 +210,20 @@ bool DBSession::DeleteUserInfoQuery(string ID)
 	return true;
 }
 
-string DBSession::FindNickname(string ID)
+wstring DBSession::FindNickname(wstring ID)
 {
-	string nickname;
-	string query = "SELECT nickname FROM USER_INFO WHERE ID='";
-	query += ID + "'";
-	
-	char q[256];
-	memset(q, 0, sizeof(q));
-	memcpy(q, query.c_str(), query.size());
+	wstring nickname;
+	wstring query = L"SELECT nickname FROM USER_INFO WHERE ID='";
+	query += ID + L"'";
 
-	if (mysql_query(conn, q) != NULL)
+	char str[1024] = { 0, };
+	StrConvW2A((WCHAR*)query.c_str(), str, sizeof(str));
+	
+	//char q[256];
+	//memset(q, 0, sizeof(q));
+	//memcpy(q, query.c_str(), query.size());
+
+	if (mysql_query(conn, str) != NULL)
 	{
 		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
 		return false;
@@ -228,7 +238,9 @@ string DBSession::FindNickname(string ID)
 		}
 		else
 		{
-			nickname = row[0];
+			TCHAR str[1024] = { 0, };
+			StrConvA2W(row[0], str, sizeof(str));
+			nickname = str;
 		}
 	}
 	if (res->row_count == 0)
@@ -241,21 +253,24 @@ string DBSession::FindNickname(string ID)
 	return nickname;
 }
 
-bool DBSession::InsertUserLogQuery(string ID, string log)
+bool DBSession::InsertUserLogQuery(wstring ID, wstring log)
 {
-	string query = "INSERT INTO USER_LOG VALUE ('";
+	wstring query = L"INSERT INTO USER_LOG VALUE ('";
 
 	query += ID;
-	query += "', '";
+	query += L"', '";
 	query += TIMER->NowTimeWithSec();
-	query += "', '";
-	query += log + "')";
+	query += L"', '";
+	query += log + L"')";
 
-	char q[256];
+	TCHAR q[256];
 	memset(q, 0, sizeof(q));
-	memcpy(q, query.c_str(), query.size());
+	memcpy(q, query.c_str(), query.size()* sizeof(wchar_t));
 
-	if (mysql_query(conn, q) != NULL)
+	char str[1024] = { 0, };
+	StrConvW2A(q, str, sizeof(str));
+
+	if (mysql_query(conn, str) != NULL)
 	{
 		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
 		return false;

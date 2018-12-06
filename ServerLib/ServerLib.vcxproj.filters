@@ -19,6 +19,12 @@
     <Filter Include="MemoryAllocator">
       <UniqueIdentifier>{3dc7965e-9c0f-427a-ac19-ad54e66ed0d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LoggingSystem">
+      <UniqueIdentifier>{f4aa6c97-5d20-4a43-8798-be52ac863c1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThreadPool">
+      <UniqueIdentifier>{d8dbc8dc-20e4-4bc7-ba2d-8dca89e8fd02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -57,9 +63,6 @@
     <ClInclude Include="Assert.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Stream.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -93,6 +96,12 @@
     <ClInclude Include="c_Hash.h">
       <Filter>MemoryAllocator</Filter>
     </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>LoggingSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkThread.h">
+      <Filter>ThreadPool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -108,9 +117,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Logger.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="RecvStream.cpp">
@@ -139,6 +145,12 @@
     </ClCompile>
     <ClCompile Include="c_Hash.cpp">
       <Filter>MemoryAllocator</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>LoggingSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="WorkThread.cpp">
+      <Filter>ThreadPool</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

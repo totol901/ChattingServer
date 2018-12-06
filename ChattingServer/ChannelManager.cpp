@@ -9,7 +9,7 @@ ChannelManager::~ChannelManager()
 {
 }
 
-bool ChannelManager::ClientJoinTheChannel(ClientSession* clientSession, string channelName)
+bool ChannelManager::ClientJoinTheChannel(ClientSession* clientSession, wstring channelName)
 {
 	Channel* channel = CHANNELMANAGER->FindChannelByName(channelName);
 	if (channel)
@@ -26,7 +26,7 @@ bool ChannelManager::ClientJoinTheChannel(ClientSession* clientSession, string c
 	return false;
 }
 
-bool ChannelManager::MakeChannelWithChannelName(string channelName)
+bool ChannelManager::MakeChannelWithChannelName(wstring channelName)
 {
 	auto iter = m_mapStringChannels.find(channelName);
 	if (iter == m_mapStringChannels.end())
@@ -41,7 +41,7 @@ bool ChannelManager::MakeChannelWithChannelName(string channelName)
 	return false;
 }
 
-Channel * ChannelManager::FindChannelByName(const string& channelName)
+Channel * ChannelManager::FindChannelByName(const wstring& channelName)
 {
 	auto iter = m_mapStringChannels.find(channelName);
 	if (iter == m_mapStringChannels.end())
@@ -63,7 +63,7 @@ Channel * ChannelManager::FindChannelByID(UINT id)
 	return iter->second;
 }
 
-bool ChannelManager::DeleteChannelByName(const string & channelName)
+bool ChannelManager::DeleteChannelByName(const wstring & channelName)
 {
 	auto iterString = m_mapStringChannels.find(channelName);
 	auto iterID = m_mapIDChannels.find(iterString->second->GetChannelID());
@@ -137,18 +137,18 @@ UINT ChannelManager::GetCanMakeMinimumChannelID()
 	return UINT_MAX;
 }
 
-string ChannelManager::GetChannelList()
+wstring ChannelManager::GetChannelList()
 {
-	string temp;
+	wstring temp;
 	for (auto iter = m_mapIDChannels.begin();
 		iter != m_mapIDChannels.end(); iter++)
 	{
-		char num[8];
-		_itoa_s((int)iter->first, num, 10);
+		TCHAR num[8];
+		_itow_s((int)iter->first, num, 10);
 		temp += num;
-		temp += ". ";
+		temp += L". ";
 		temp += iter->second->GetName();
-		temp += "\n";
+		temp += L"\n";
 	}
 
 	return temp;

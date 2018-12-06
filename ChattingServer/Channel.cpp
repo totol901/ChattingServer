@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Channel.h"
 
-Channel::Channel(const string& channelName)
+Channel::Channel(const wstring& channelName)
 	:Object()
 {
 	m_ChannelID = CHANNELMANAGER->GetCanMakeMinimumChannelID();

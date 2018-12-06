@@ -23,5 +23,7 @@ private:
 
 public:
 	void LogPrint(const char* str, ...);
+	void LogPrint(const wchar_t* str, ...);
 	void LogPrintAtFile(const char* str, ...);
+	void LogPrintAtFile(const wchar_t* str, ...);
 };

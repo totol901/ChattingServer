@@ -8,19 +8,19 @@ class ChannelManager : public Singleton<ChannelManager>
 {
 	friend ChannelManager;
 private:
-	map<string, Channel*>	m_mapStringChannels;
+	map<wstring, Channel*>	m_mapStringChannels;
 	map<UINT, Channel*>		m_mapIDChannels;
 
 public:
 	ChannelManager();
 	~ChannelManager();
 
-	bool		ClientJoinTheChannel(ClientSession* clientSession, string channelName);
-	bool		MakeChannelWithChannelName(string channelName);
-	Channel*	FindChannelByName(const string& channelName);
+	bool		ClientJoinTheChannel(ClientSession* clientSession, wstring channelName);
+	bool		MakeChannelWithChannelName(wstring channelName);
+	Channel*	FindChannelByName(const wstring& channelName);
 	Channel*	FindChannelByID(UINT id);
-	bool		DeleteChannelByName(const string& channelName);
+	bool		DeleteChannelByName(const wstring& channelName);
 	bool		DeleteChannelByID(const UINT& id);
 	UINT		GetCanMakeMinimumChannelID();
-	string		GetChannelList();
+	wstring		GetChannelList();
 };

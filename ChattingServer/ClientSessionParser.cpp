@@ -36,8 +36,8 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 {
 	recvStream.clear();
 	SendStream.clear();
-	string id;
-	string pw;
+	wstring id;
+	wstring pw;
 	bool isSuccess = false;
 	int errorNum = 0;
 
@@ -63,10 +63,10 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 			SendStream.write(&isSuccess, sizeof(isSuccess));
 			SendStream.write(&errorNum, sizeof(errorNum));
 
-			SLogPrint("%s - 로그인 실패", id.c_str());
+			SLogPrint(L"%s - 로그인 실패", id.c_str());
 
 			//데이터베이스에 로그 남겨줌
-			DATABASE->InsertUserLogQuery(id, "로그인 실패");
+			DATABASE->InsertUserLogQuery(id, L"로그인 실패");
 		}
 		else
 		{
@@ -75,12 +75,12 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 			errorNum = ERROR_NONE;
 
 			//stream에 보내줄 data 써줌
-			string nickname = DATABASE->FindNickname(id);
+			wstring nickname = DATABASE->FindNickname(id);
 			SendStream.write(&isSuccess, sizeof(isSuccess));
 			SendStream.write(&errorNum, sizeof(errorNum));
 			SendStream.write(nickname);
 
-			SLogPrint("%s - 로그인 성공", id.c_str());
+			SLogPrint(L"%s - 로그인 성공", id.c_str());
 
 			//플레이어 데이터에 아이디 닉네임 저장
 			m_ClientSession->GetPlayerData()->SetPlayerID(id);
@@ -88,7 +88,7 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 			m_ClientSession->GetPlayerData()->SetPlayerState(PLAYER_LOGIN);
 
 			//데이터베이스에 로그 남겨줌
-			DATABASE->InsertUserLogQuery(id, "로그인 완료");
+			DATABASE->InsertUserLogQuery(id, L"로그인 완료");
 
 			//로그인된 세션 풀에 넣음
 			CLIENTSESSIONMANAGER->AddClientSessionID(id, m_ClientSession);
@@ -103,10 +103,10 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 		SendStream.write(&isSuccess, sizeof(isSuccess));
 		SendStream.write(&errorNum, sizeof(errorNum));
 
-		SLogPrint("%s - 로그인 실패", id.c_str());
+		SLogPrint(L"%s - 로그인 실패", id.c_str());
 
 		//데이터베이스에 로그 남겨줌
-		DATABASE->InsertUserLogQuery(id, "로그인 실패");
+		DATABASE->InsertUserLogQuery(id, L"로그인 실패");
 	}
 
 	//패킷 송신
@@ -120,17 +120,17 @@ void ClientSessionParser::ReqCreateID(T_PACKET * packet)
 {
 	recvStream.clear();
 	SendStream.clear();
-	string id;
-	string pw;
-	string nickname;
+	wstring id;
+	wstring pw;
+	wstring nickname;
 	bool isSucces = false;
 	int errNum = 0;
 
 	const size_t headSize = sizeof(packet->Size) + sizeof(packet->type);
 	recvStream.set(packet->buff, packet->Size - headSize);
-	recvStream.read(id);
-	recvStream.read(pw);
-	recvStream.read(nickname);
+	recvStream.wStringread(id);
+	recvStream.wStringread(pw);
+	recvStream.wStringread(nickname);
 
 	if (DATABASE->InsertUserInfoQuery(id, pw, nickname))
 	{
@@ -142,7 +142,7 @@ void ClientSessionParser::ReqCreateID(T_PACKET * packet)
 		SendStream.write(&errNum, sizeof(errNum));
 
 		//데이터베이스에 로그 남겨줌
-		DATABASE->InsertUserLogQuery(id, "아이디 생성");
+		DATABASE->InsertUserLogQuery(id, L"아이디 생성");
 	}
 	else
 	{
@@ -152,7 +152,7 @@ void ClientSessionParser::ReqCreateID(T_PACKET * packet)
 		SendStream.write(&isSucces, sizeof(isSucces));
 		SendStream.write(&errNum, sizeof(errNum));
 
-		SLogPrint("%s - 아이디 생성 실패", id);
+		SLogPrint(L"%s - 아이디 생성 실패", id);
 	}
 
 	m_SendPk.Clear();
@@ -166,11 +166,11 @@ void ClientSessionParser::ReqWatingChannelEnter(T_PACKET * packet)
 	SendStream.clear();
 	bool isSucces = true;
 	int errNum = ERROR_NONE;
-	string vecChannel = CHANNELMANAGER->GetChannelList();
+	wstring vecChannel = CHANNELMANAGER->GetChannelList();
 
 	if (vecChannel.length() > PAKCET_BUFF_SIZE)
 	{
-		char tempStr[PAKCET_BUFF_SIZE];
+		TCHAR tempStr[PAKCET_BUFF_SIZE];
 		for (int i = 0; i < PAKCET_BUFF_SIZE; i++)
 		{
 			tempStr[i] = vecChannel[i];
@@ -195,13 +195,13 @@ void ClientSessionParser::ReqWaitingChannelCreateChannel(T_PACKET * packet)
 {
 	SendStream.clear();
 	//채널 생성
-	string channelName;
+	wstring channelName;
 	SetRecvStream(packet);
-	recvStream.read(channelName);
+	recvStream.wStringread(channelName);
 
 	if (CHANNELMANAGER->MakeChannelWithChannelName(channelName))
 	{
-		SLogPrintAtFile("%s : 채널 생성 성공", m_ClientSession->GetPlayerData()->GetPlayerNickname().c_str());
+		SLogPrintAtFile(L"%s : 채널 생성 성공", m_ClientSession->GetPlayerData()->GetPlayerNickname().c_str());
 
 		//생성 완료됬다는 패킷 전송
 		bool isSucces = true;
@@ -278,11 +278,11 @@ void ClientSessionParser::ReqChannelSendMessage(T_PACKET * packet)
 {
 	SendStream.clear();
 	//접속중인 채널의 클라이언트 세션에 메시지 보냄
-	string message;
+	wstring message;
 	SetRecvStream(packet);
-	recvStream.read(message);
+	recvStream.wStringread(message);
 
-	string nickname = m_ClientSession->GetPlayerData()->GetPlayerNickname();
+	wstring nickname = m_ClientSession->GetPlayerData()->GetPlayerNickname();
 	
 	int errNum = ERROR_NONE;
 	SendStream.write(nickname);
@@ -291,8 +291,12 @@ void ClientSessionParser::ReqChannelSendMessage(T_PACKET * packet)
 	T_PACKET pk(PK_RECV_CHANNAL_MESSAGE);
 	pk.SetStream(SendStream);
 
-	m_ClientSession->GetPlayerData()->
-		GetChannel()->SendPacketToChannelMember(pk);
+	//채널에 속해있다면 채널의 맴버에게 송신
+	Channel* tempChannel = m_ClientSession->GetPlayerData()->GetChannel();
+	if (tempChannel)
+	{
+		tempChannel->SendPacketToChannelMember(pk);
+	}
 }
 
 void ClientSessionParser::ReqChannelOut(T_PACKET * packet)
@@ -305,7 +309,7 @@ void ClientSessionParser::ReqChannelOut(T_PACKET * packet)
 	if (channel->DeleteClientSession(m_ClientSession))
 	{
 		//채널 나가기 성공
-		SLogPrintAtFile("%s : 채널 나가기 성공", m_ClientSession->GetPlayerData()->GetPlayerNickname().c_str());
+		SLogPrintAtFile(L"%s : 채널 나가기 성공", m_ClientSession->GetPlayerData()->GetPlayerNickname().c_str());
 		
 		bool isSucces = true;
 		int errNum = ERROR_NONE;

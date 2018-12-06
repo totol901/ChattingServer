@@ -27,7 +27,7 @@ bool SendStream::checkWriteBound(size_t len)
 	return true;
 }
 
-void SendStream::write(string  reVal)
+void SendStream::write(wstring  reVal)
 {
 	//string ±Ê¿Ã ≥÷æÓ¡‹
 	UINT Stringlen = (UINT)reVal.length();
@@ -36,10 +36,10 @@ void SendStream::write(string  reVal)
 	offset += sizeof(Stringlen);
 
 	//πÆ¿Â ≥÷æÓ¡‹
-	const char* str = reVal.c_str();
+	const wchar_t* str = reVal.c_str();
 	memcpy_s((void *)(stream.data() + offset), stream.size() - offset,
-		(void *)str, Stringlen);
-	offset += (Stringlen);
+		(void *)str, Stringlen * sizeof(wchar_t));
+	offset += (Stringlen) * sizeof(wchar_t);
 }
 
 void SendStream::write(void * retVal, size_t len)

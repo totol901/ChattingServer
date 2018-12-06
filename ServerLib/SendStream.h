@@ -15,6 +15,6 @@ public:
 	// write
 	//------------------------------------------------------------------------//
 	bool checkWriteBound(size_t len);
-	void write(string reVal);
+	void write(wstring reVal);
 	void write(void* retVal, size_t len);
 };

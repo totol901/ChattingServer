@@ -24,36 +24,36 @@ const tm & Timer::GetTM()
 	return m_TM;
 }
 
-string Timer::NowTimeWithMilliSec()
+wstring Timer::NowTimeWithMilliSec()
 {
-	char currentTime[128] = "";
+	TCHAR currentTime[128] = L"";
 	SYSTEMTIME st;
 	GetLocalTime(&st);
-	sprintf_s(currentTime, "%d-%d-%d %d:%d:%d.%d", 
+	swprintf_s(currentTime, L"%d-%d-%d %d:%d:%d.%d", 
 		st.wYear, st.wMonth, st.wDay,
 		st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 
 	return currentTime;
 }
 
-string Timer::NowTimeWithSec()
+wstring Timer::NowTimeWithSec()
 {
-	char currentTime[128] = "";
+	TCHAR currentTime[128] = L"";
 	SYSTEMTIME st;
 	GetLocalTime(&st);
-	sprintf_s(currentTime, "%d-%d-%d %d:%d:%d",
+	swprintf_s(currentTime, L"%d-%d-%d %d:%d:%d",
 		st.wYear, st.wMonth, st.wDay,
 		st.wHour, st.wMinute, st.wSecond);
 
 	return currentTime;
 }
 
-string Timer::Today()
+wstring Timer::Today()
 {
-	char currentTime[128] = "";
+	TCHAR currentTime[128] = L"";
 	SYSTEMTIME st;
 	GetLocalTime(&st);
-	sprintf_s(currentTime, "%d년%d월%d일%d시%d분%d_%d초",
+	swprintf_s(currentTime, L"%d년%d월%d일%d시%d분%d_%d초",
 		st.wYear, st.wMonth, st.wDay,
 		st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 

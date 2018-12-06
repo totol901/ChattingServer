@@ -38,34 +38,32 @@ public:
 	함수명	: CheckUserInfoQuery
 	설명		: ID, PW 쿼리 보내고 맞는지 판단
 	*****************************************************************************/
-	bool CheckUserInfoQuery(const string& ID, const string& PW);
-	bool CheckUserInfoQuery(wstring ID, wstring PW);
+	bool CheckUserInfoQuery(const wstring& ID, const wstring& PW);
+	bool CheckUserInfoQuery(string ID, string PW);
 
-
-	
 	/****************************************************************************
 	함수명	: InsertUserInfoQuery
 	설명		: ID, PW, nickname 생성 쿼리 보내고 DB 저장 및 중복 여부 판단
 	*****************************************************************************/
-	bool InsertUserInfoQuery(string ID, string PW, string nickname);
+	bool InsertUserInfoQuery(wstring ID, wstring PW, wstring nickname);
 	
 	/****************************************************************************
 	함수명	: DeleteUserInfoQuery
 	설명		: ID 쿼리 보내서 DB 삭제함
 	*****************************************************************************/
-	bool DeleteUserInfoQuery(string ID);
+	bool DeleteUserInfoQuery(wstring ID);
 
 	/****************************************************************************
 	함수명	: FindNickname
 	설명		: ID 퀘리 보내서 닉네임 불러옴
 	*****************************************************************************/
-	string FindNickname(string ID);
+	wstring FindNickname(wstring ID);
 
 	/****************************************************************************
 	함수명	: InsertUserLogQuery
 	설명		: ID와 Log를 DB에 저장
 	*****************************************************************************/
-	bool InsertUserLogQuery(string ID, string log);
+	bool InsertUserLogQuery(wstring ID, wstring log);
 
 	/****************************************************************************
 	함수명	: MySQLError

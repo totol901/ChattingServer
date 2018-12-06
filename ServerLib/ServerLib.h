@@ -14,6 +14,8 @@
 #include <set>
 #include <mstcpip.h>
 #include <crtdbg.h>
+#include <locale.h>
+#include <functional>
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -42,6 +44,7 @@ using namespace std;
 #include "FreeListAllocator.h"
 #include "c_Hash.h"
 #include "MemoryManager.h"
+#include "WorkThread.h"
 
 #define WSAWINSOCK WinSock::GetInstance()
 #define MONITORING Monitoring::GetInstance()
@@ -59,3 +62,4 @@ enum E_PARSING_ERROR
 	ENTER_CHANNEL_CANT_FIND,
 	LEAVE_CHANNEL_CANT_FIND,
 };
+

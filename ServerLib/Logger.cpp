@@ -14,7 +14,10 @@ Logger::~Logger()
 
 void Logger::Init()
 {
-	if (fopen_s(&pFile, (TIMER->Today() + ".log").c_str(), "a+") != 0)
+	char str[1024] = { 0, };
+	StrConvW2A((WCHAR*)TIMER->Today().c_str(), str, sizeof(str));
+	string str_today = str;
+	if (fopen_s(&pFile, (str_today + ".log").c_str(), "a+") != 0)
 	{
 		printf("Log 파일 생성 실패\n");
 		return;
@@ -25,7 +28,9 @@ void Logger::Init()
 
 void Logger::LogPrint(const char* str, ...)
 {
-	string tempStr = TIMER->NowTimeWithMilliSec();
+	char str1[1024] = { 0, };
+	StrConvW2A((WCHAR*)TIMER->NowTimeWithMilliSec().c_str(), str1, sizeof(str1));
+	string tempStr = str1;
 	tempStr += "... ";
 
 	char buf[1024] = {0,};
@@ -40,9 +45,30 @@ void Logger::LogPrint(const char* str, ...)
 	printf(tempStr.c_str());
 }
 
+
+void Logger::LogPrint(const wchar_t* str, ...)
+{
+	wstring tempStr = TIMER->NowTimeWithMilliSec().c_str();
+	tempStr += L"... ";
+
+	wchar_t buf[1024] = { 0, };
+
+	va_list args;
+	va_start(args, str);
+	vswprintf_s(buf, str, args);
+	va_end(args);
+
+	tempStr += buf;
+	tempStr += L"\n";
+	//wcout << tempStr.c_str() ;
+	wprintf_s(tempStr.c_str());
+}
+
 void Logger::LogPrintAtFile(const char * str, ...)
 {
-	string tempStr = TIMER->NowTimeWithMilliSec();
+	char str1[1024] = { 0, };
+	StrConvW2A((WCHAR*)TIMER->NowTimeWithMilliSec().c_str(), str1, sizeof(str1));
+	string tempStr = str1;
 	tempStr += "... ";
 
 	char buf[1024] = { 0, };
@@ -56,5 +82,24 @@ void Logger::LogPrintAtFile(const char * str, ...)
 	tempStr += "\n";
 	printf(tempStr.c_str());
 	fprintf(pFile, tempStr.c_str());
+	fflush(pFile);
+}
+
+void Logger::LogPrintAtFile(const wchar_t * str, ...)
+{
+	wstring tempStr = TIMER->NowTimeWithMilliSec().c_str();
+	tempStr += L"... ";
+
+	wchar_t buf[1024] = { 0, };
+	
+	va_list args;
+	va_start(args, str);
+	vswprintf_s(buf, str, args);
+	va_end(args);
+
+	tempStr += buf;
+	tempStr += L"\n";
+	wprintf(tempStr.c_str());
+	fwprintf(pFile, tempStr.c_str());
 	fflush(pFile);
 }

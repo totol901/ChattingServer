@@ -19,9 +19,9 @@ private:
 
 public:
 	const tm&	GetTM();
-	string		NowTimeWithMilliSec();
-	string		NowTimeWithSec();
-	string		Today();
+	wstring		NowTimeWithMilliSec();
+	wstring		NowTimeWithSec();
+	wstring		Today();
 	void		Update();
 
 	double ElipsedSec();

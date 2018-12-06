@@ -17,8 +17,8 @@ class Player : public GameObject
 {
 private:
 	E_PLAYER_STATE	m_PlayerState;
-	string			m_PlayerID;
-	string			m_PlayerNickname;
+	wstring			m_PlayerID;
+	wstring			m_PlayerNickname;
 	Channel*		m_pChannel;
 
 public:
@@ -27,11 +27,11 @@ public:
 
 	void SetPlayerState(const E_PLAYER_STATE& state) { m_PlayerState = state; }
 	void SetChannel(Channel* channel) { m_pChannel = channel; }
-	void SetPlayerID(string playerID) { m_PlayerID = playerID; }
-	void SetPlayerNickname(string playerNickname) { m_PlayerNickname = playerNickname; }
+	void SetPlayerID(wstring playerID) { m_PlayerID = playerID; }
+	void SetPlayerNickname(wstring playerNickname) { m_PlayerNickname = playerNickname; }
 
 	const E_PLAYER_STATE&	GetPlayerState()	{ return m_PlayerState; }
-	string&					GetPlayerNickname() { return m_PlayerNickname; }
-	string&					GetPlayerID()		{ return m_PlayerID; }
+	wstring&					GetPlayerNickname() { return m_PlayerNickname; }
+	wstring&					GetPlayerID()		{ return m_PlayerID; }
 	Channel*				GetChannel() const	{return m_pChannel;}
 };

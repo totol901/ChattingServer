@@ -72,6 +72,9 @@ void ServerNetwork::CreateListen()
 	servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	servAddr.sin_port = htons(9000);
 
+	int reUseAddr = 1;
+	setsockopt(m_ListenSock, SOL_SOCKET, SO_REUSEADDR, (char *)&reUseAddr, (int)sizeof(reUseAddr));
+
 	bind(m_ListenSock, (SOCKADDR*)&servAddr, sizeof(servAddr));
 	listen(m_ListenSock, 5);
 	SLogPrintAtFile("Listen 시작!");
@@ -93,8 +96,10 @@ unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 		addrLen		= sizeof(SOCKADDR_IN);
 		RecvBytes	= 0;
 
-		clientSock = accept(serverNetwork->GetListenSock(),
-			(SOCKADDR*)&clientAddr, &addrLen);
+		//clientSock = accept(serverNetwork->GetListenSock(),
+		//	(SOCKADDR*)&clientAddr, &addrLen);
+		clientSock = WSAAccept(serverNetwork->GetListenSock(),
+			(struct sockaddr *)&clientAddr, &addrLen, NULL, 0);
 		
 		if (clientSock == INVALID_SOCKET)
 		{
@@ -188,7 +193,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 					continue;
 				}
 				//로그인된 세션 제거
-				if (pClientSession->GetPlayerData()->GetPlayerID() != "")
+				if (pClientSession->GetPlayerData()->GetPlayerID() != L"")
 				{
 					if (!CLIENTSESSIONMANAGER->DeleteClientSessionID(pClientSession->GetPlayerData()->GetPlayerID()))
 					{
@@ -196,11 +201,11 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 						continue;
 					}
 					DATABASE->InsertUserLogQuery(pClientSession->GetPlayerData()->GetPlayerID(),
-						"비정상 접속 종료");
+						L"비정상 접속 종료");
 				}
 
 				//파일 로그, 데이터 베이스 로그에 남김
-				SLogPrintAtFile("%s : 비정상 접속 종료",
+				SLogPrintAtFile(L"%s : 비정상 접속 종료",
 					pClientSession->GetPlayerData()->GetPlayerID().c_str());
 			
 				SAFE_DELETE(pClientSession);
@@ -229,7 +234,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			}
 			//로그인된 세션 제거
 			if (pClientSession->GetPlayerData() != nullptr &&
-				pClientSession->GetPlayerData()->GetPlayerID() != "")
+				pClientSession->GetPlayerData()->GetPlayerID() != L"")
 			{
 				if (!CLIENTSESSIONMANAGER->DeleteClientSessionID(pClientSession->GetPlayerData()->GetPlayerID()))
 				{
@@ -237,7 +242,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 					continue;
 				}
 				DATABASE->InsertUserLogQuery(pClientSession->GetPlayerData()->GetPlayerID(),
-					"정상 접속 종료");
+					L"정상 접속 종료");
 			}
 		
 			//파일 로그, 데이터 베이스 로그에 남김

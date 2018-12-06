@@ -40,7 +40,7 @@ bool ClientSessionManager::AddClientSession( ClientSession * const clientSession
 	return false;
 }
 
-bool ClientSessionManager::AddClientSessionID(string id, ClientSession * const clientSession)
+bool ClientSessionManager::AddClientSessionID(wstring id, ClientSession * const clientSession)
 {
 	EnterCriticalSection(&ManagerCS);
 	if (m_mapClientSessionID.find(clientSession->GetPlayerData()->GetPlayerID()) ==
@@ -84,7 +84,7 @@ bool ClientSessionManager::DeleteClientSession(const SOCKET & socket)
 	return true;
 }
 
-bool ClientSessionManager::DeleteClientSessionID(string& id)
+bool ClientSessionManager::DeleteClientSessionID(wstring& id)
 {
 	if (m_mapClientSessionID.empty())
 	{
@@ -119,7 +119,7 @@ ClientSession* ClientSessionManager::FindClientSession(SOCKET socket)
 	return iter->second;
 }
 
-ClientSession * ClientSessionManager::FindClientSessionID(string id)
+ClientSession * ClientSessionManager::FindClientSessionID(wstring id)
 {
 	if (m_mapClientSessionID.empty())
 	{

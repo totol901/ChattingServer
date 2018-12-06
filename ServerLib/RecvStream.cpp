@@ -58,7 +58,7 @@ void RecvStream::read(OUT void * retVal, size_t len)
 	readPt += len;
 }
 
-void RecvStream::wStringread(OUT string & retVal)
+void RecvStream::wStringread(OUT wstring & retVal)
 {
 	//문장의 길이 읽어옴
 	int stringlen = 0;
@@ -75,12 +75,9 @@ void RecvStream::wStringread(OUT string & retVal)
 
 	buff[stringlen] = L'\0';
 
-	char str[1024] = { 0, };
-	StrConvW2A(buff, str, sizeof(str));
-
 	//버퍼를 string으로
 	retVal.clear();
-	retVal = str;
+	retVal = buff;
 
 	SAFE_DELETE_ARRAY(buff);
 }
