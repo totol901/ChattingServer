@@ -7,13 +7,27 @@ static CRITICAL_SECTION ChannelInOutCS;
 ClientSessionParser::ClientSessionParser(ClientSession * clientSession)
 	:m_ClientSession(clientSession)
 {
+	InitializeCriticalSection(&RecvQueueCS);
+	InitializeCriticalSection(&PacketParsingCS);
 	InitializeCriticalSection(&ChannelInOutCS);
 }
 
 ClientSessionParser::~ClientSessionParser()
 {
+	DeleteCriticalSection(&RecvQueueCS);
+	DeleteCriticalSection(&PacketParsingCS);
 	DeleteCriticalSection(&ChannelInOutCS);
 	m_ClientSession = nullptr;
+}
+
+void ClientSessionParser::RecvQueuePkParsing()
+{
+	T_PACKET * temp = PopQueueRecvPk();
+	if (temp)
+	{
+		PacketParsing(temp);
+	}
+	SAFE_DELETE(temp);
 }
 
 void ClientSessionParser::SendPacketWithSendStream(E_PACKET_TYPE && type)
@@ -350,6 +364,8 @@ void ClientSessionParser::ReqExit(T_PACKET * packet)
 
 bool ClientSessionParser::PacketParsing(T_PACKET * const packet)
 {
+	EnterCriticalSection(&PacketParsingCS);
+
 	switch (packet->type)
 	{
 	case PK_NONE:
@@ -392,11 +408,37 @@ bool ClientSessionParser::PacketParsing(T_PACKET * const packet)
 
 	case PK_REQ_EXIT:
 		ReqExit(packet);
+		LeaveCriticalSection(&PacketParsingCS);
 		return false;
 
 	default:
 		ASSERT(false);
 	}
+	LeaveCriticalSection(&PacketParsingCS);
 
 	return true;
+}
+
+void ClientSessionParser::PushQueueRecvPk(T_PACKET * pPacket)
+{
+	EnterCriticalSection(&RecvQueueCS);
+	m_recvPkQueue.push(pPacket);
+	LeaveCriticalSection(&RecvQueueCS);
+}
+
+T_PACKET * ClientSessionParser::PopQueueRecvPk()
+{
+	EnterCriticalSection(&RecvQueueCS);
+	if (m_recvPkQueue.size() == 0)
+	{
+		LeaveCriticalSection(&RecvQueueCS);
+		return nullptr;
+	}
+
+	T_PACKET * temp = m_recvPkQueue.front();
+	m_recvPkQueue.pop();
+
+	LeaveCriticalSection(&RecvQueueCS);
+
+	return temp;
 }

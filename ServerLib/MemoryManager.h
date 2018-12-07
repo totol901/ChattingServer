@@ -17,7 +17,6 @@ public:
 	};
 
 public:
-	
 	/*프로젝트에 쓰일 Allocator들 초기화 */
 	HRESULT Init();
 	void Release();

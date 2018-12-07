@@ -10,6 +10,10 @@ class DBSession : public Singleton<DBSession>
 private:
 	DBSession();
 	~DBSession();
+	DBSession(const DBSession&) = delete;
+	DBSession(const DBSession&&) = delete;
+	DBSession& operator = (const DBSession&) = delete;
+	DBSession& operator = (const DBSession&&) = delete;
 
 	enum
 	{
@@ -32,7 +36,8 @@ public:
 	함수명	: InitDB
 	설명		: Mysql 초기화
 	*****************************************************************************/
-	bool InitDB();
+	HRESULT InitDB();
+	void Release();
 
 	/****************************************************************************
 	함수명	: CheckUserInfoQuery

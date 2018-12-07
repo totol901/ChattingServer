@@ -172,9 +172,11 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Stream.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="ThreadPoolManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="WinSock.h" />
+    <ClInclude Include="Work.h" />
     <ClInclude Include="WorkThread.h" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +186,7 @@
     <ClCompile Include="LinearAllocator.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
+    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="PoolAllocator.cpp" />
     <ClCompile Include="RecvStream.cpp" />
     <ClCompile Include="SendStream.cpp" />
@@ -196,8 +199,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Stream.cpp" />
+    <ClCompile Include="ThreadPoolManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="WinSock.cpp" />
+    <ClCompile Include="Work.cpp" />
     <ClCompile Include="WorkThread.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

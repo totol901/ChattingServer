@@ -4,6 +4,7 @@
 ******************************************************************************/
 #pragma once
 
+
 class MainClass
 {
 private:
@@ -13,8 +14,13 @@ public:
 	MainClass();
 	~MainClass();
 
+	BOOL Init();
+	void Release();
 	void Update();
+	
 	bool IsOn() { return m_isOn; }
+
+	void Monitering();
 
 	static unsigned int WINAPI MoniteringThread(LPVOID param);
 };

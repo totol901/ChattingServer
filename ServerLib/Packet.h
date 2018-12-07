@@ -25,35 +25,33 @@ enum E_PACKET_TYPE
 	PK_ANS_EXIT
 };
 
-#pragma pack(push, 1)
-struct T_PACKET
+class T_PACKET
 {
+public:
 	UINT Size;
 	E_PACKET_TYPE type;
 	char buff[PAKCET_BUFF_SIZE];
+private:
+	static UINT m_AllocatorID;
 
-	T_PACKET()
-		:Size(0),
-		type(PK_NONE)
-	{
-		memset(buff, 0, (PAKCET_BUFF_SIZE));
-	}
-	T_PACKET(E_PACKET_TYPE _type)
-	{
-		Size = sizeof(*this);
-		type = _type;
-		memset(buff, 0, (PAKCET_BUFF_SIZE));
-	}
-	inline void SetStream(Stream& stream)
+public:
+	T_PACKET();
+	T_PACKET(E_PACKET_TYPE _type);
+	~T_PACKET();
+
+	void SetStream(Stream& stream)
 	{
 		memcpy(buff, stream.data(), stream.size());
 		Size = (UINT)(sizeof(Size) + stream.size() + sizeof(type));
 	}
-	inline void Clear()
+	void Clear()
 	{
 		Size = sizeof(*this);
 		type = PK_NONE;
 		memset(buff, 0, (PAKCET_BUFF_SIZE));
 	}
+
+	static void* operator new(size_t allocSize);
+	static void operator delete(void* deletepointer);
 };
-#pragma pack(pop)
+

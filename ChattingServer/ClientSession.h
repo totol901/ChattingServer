@@ -21,7 +21,6 @@ public:
 
 	static void* operator new(size_t allocSize)
 	{
-		
 		if (m_AllocatorID == 0)
 		{
 			m_AllocatorID = MEMORYMANAGER->AddNewAllocator(
@@ -39,12 +38,11 @@ public:
 
 	static void operator delete(void* deletepointer)
 	{
-		
 		MEMORYMANAGER->GetAllocator(m_AllocatorID)
 			->Deallocate(deletepointer);
-		
 	}
 
+	ClientSessionParser* GetClientSessionParser() { return &m_SessionParser; }
 	Player*			GetPlayerData() { return &m_PlayerData; }
 	IOData* const	GetptIOData(const int& type);
 

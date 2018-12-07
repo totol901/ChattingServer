@@ -8,8 +8,11 @@ class ClientSession;
 class ClientSessionParser
 {
 private:
+	CRITICAL_SECTION RecvQueueCS;
+	CRITICAL_SECTION PacketParsingCS;
 	ClientSession * m_ClientSession;
 	T_PACKET		m_SendPk;
+	queue<T_PACKET*> m_recvPkQueue;
 
 	RecvStream recvStream;
 	SendStream SendStream;
@@ -32,5 +35,11 @@ public:
 	ClientSessionParser(ClientSession * clientSession);
 	~ClientSessionParser();
 
+	void PushQueueRecvPk(T_PACKET* pPacket);
+	T_PACKET* PopQueueRecvPk();
+
+	void RecvQueuePkParsing();
+
 	bool PacketParsing(T_PACKET* const packet);
+	const queue<T_PACKET*>& GetRecvPQueue() { return m_recvPkQueue; }
 };

@@ -12,16 +12,29 @@ ServerNetwork::ServerNetwork()
 
 ServerNetwork::~ServerNetwork()
 {
-	m_Shutdown = true;
 	DeleteCriticalSection(&ClientSessionThreadCS);
-	CloseHandle(m_IOCP);
-	closesocket(m_ListenSock);
 }
 
-void ServerNetwork::Init()
+HRESULT ServerNetwork::Init()
 {
 	CreateIOCP();
 	CreateListen();	
+
+	return S_OK;
+}
+
+void ServerNetwork::Release()
+{
+	m_Shutdown = true;
+	CloseHandle(m_IOCP);
+	closesocket(m_ListenSock);
+	//스래드 종료 기다린다.
+	for (auto iter = m_vecIOCPThread.begin(); iter != m_vecIOCPThread.end();
+		iter++)
+	{
+		WaitForSingleObject((*iter), INFINITE);
+	}
+	SLogPrint("IOCP 스래드 종료 성공");
 }
 
 void ServerNetwork::CreateIOCP()
@@ -45,10 +58,11 @@ void ServerNetwork::CreateIOCPThreads()
 	GetSystemInfo(&SystemInfo);
 	for (int i = 0; i < (int)SystemInfo.dwNumberOfProcessors; i++)
 	{
-		_beginthreadex(NULL, 0,
+		HANDLE handle =	(HANDLE)_beginthreadex(NULL, 0,
 			CompletionClientSessionThread,
 			m_IOCP,
 			0, NULL);
+		m_vecIOCPThread.push_back(handle);
 	}
 	SLogPrint("IOCP 스레드 생성");
 }
@@ -69,13 +83,14 @@ void ServerNetwork::CreateListen()
 	SOCKADDR_IN servAddr;
 	memset(&servAddr, 0, sizeof(SOCKADDR_IN));
 	servAddr.sin_family = AF_INET;
-	servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	servAddr.sin_port = htons(9000);
+	servAddr.sin_addr.s_addr = ::htonl(INADDR_ANY);
+	servAddr.sin_port = ::htons(9000);
 
 	int reUseAddr = 1;
 	setsockopt(m_ListenSock, SOL_SOCKET, SO_REUSEADDR, (char *)&reUseAddr, (int)sizeof(reUseAddr));
 
-	bind(m_ListenSock, (SOCKADDR*)&servAddr, sizeof(servAddr));
+	// XXX : :: <-이거 삭제금지, std::bind로 변경됨
+	::bind(m_ListenSock, (const SOCKADDR*)&servAddr, sizeof(servAddr));
 	listen(m_ListenSock, 5);
 	SLogPrintAtFile("Listen 시작!");
 
@@ -96,8 +111,6 @@ unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 		addrLen		= sizeof(SOCKADDR_IN);
 		RecvBytes	= 0;
 
-		//clientSock = accept(serverNetwork->GetListenSock(),
-		//	(SOCKADDR*)&clientAddr, &addrLen);
 		clientSock = WSAAccept(serverNetwork->GetListenSock(),
 			(struct sockaddr *)&clientAddr, &addrLen, NULL, 0);
 		
@@ -106,6 +119,7 @@ unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 			DWORD errorCode = WSAGetLastError();
 			if (errorCode == WSAEINTR)
 			{
+				SLogPrintAtFile("Accept루프 스레드 종료");
 				//억셉트 중단됨
 				return 0;
 			}
@@ -175,6 +189,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			//IOCP 정지됨
 			if (errorCode == ERROR_ABANDONED_WAIT_0)
 			{
+				OutputDebugStringA("IOCP루프 스레드 종료");
 				//스레드 종료
 				return 0;
 			}
@@ -182,75 +197,49 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			//비정상 접속 종료
 			if (bytesTransferred == 0)
 			{
-				//recv, send한 IOData 2개가 들어오게됨
-				//때문에 임계영역 설정
-				EnterCriticalSection(&ClientSessionThreadCS);
 				//접속한 세션 제거
-				if (!CLIENTSESSIONMANAGER->
-					DeleteClientSession(pClientSession->GetSocket()))
+				if (!ServerNetwork::DisconnectClientSession(pClientSession->GetSocket()))
 				{
-					LeaveCriticalSection(&ClientSessionThreadCS);
 					continue;
 				}
-				//로그인된 세션 제거
-				if (pClientSession->GetPlayerData()->GetPlayerID() != L"")
+
+				if (pClientSession->GetPlayerData())
 				{
-					if (!CLIENTSESSIONMANAGER->DeleteClientSessionID(pClientSession->GetPlayerData()->GetPlayerID()))
-					{
-						LeaveCriticalSection(&ClientSessionThreadCS);
-						continue;
-					}
 					DATABASE->InsertUserLogQuery(pClientSession->GetPlayerData()->GetPlayerID(),
 						L"비정상 접속 종료");
+
+					//파일 로그, 데이터 베이스 로그에 남김
+					SLogPrintAtFile(L"%s : 비정상 접속 종료",
+						pClientSession->GetPlayerData()->GetPlayerID().c_str());
 				}
 
-				//파일 로그, 데이터 베이스 로그에 남김
-				SLogPrintAtFile(L"%s : 비정상 접속 종료",
-					pClientSession->GetPlayerData()->GetPlayerID().c_str());
-			
-				SAFE_DELETE(pClientSession);
-				LeaveCriticalSection(&ClientSessionThreadCS);
+				//로그인된 세션 제거
+				ServerNetwork::DisconnectLoginClientSession(pClientSession);
 			}
 			continue;
-		}
-
-		if (pClientSession == nullptr)
-		{
-			SLogPrintAtFile("클라이언트 세션 삭제됨");
-			return 0;
 		}
 
 		//정상적 접속 종료
 		if (bytesTransferred == 0)
 		{
-			//recv, send한 IOData 2개가 들어오게됨
-			//때문에 임계영역 설정
-			EnterCriticalSection(&ClientSessionThreadCS);
 			//접속한 세션 제거
-			if (!CLIENTSESSIONMANAGER->DeleteClientSession(pClientSession->GetSocket()))
+			if (!ServerNetwork::DisconnectClientSession(pClientSession->GetSocket()))
 			{
-				LeaveCriticalSection(&ClientSessionThreadCS);
 				continue;
 			}
-			//로그인된 세션 제거
-			if (pClientSession->GetPlayerData() != nullptr &&
-				pClientSession->GetPlayerData()->GetPlayerID() != L"")
+
+			if (pClientSession->GetPlayerData())
 			{
-				if (!CLIENTSESSIONMANAGER->DeleteClientSessionID(pClientSession->GetPlayerData()->GetPlayerID()))
-				{
-					LeaveCriticalSection(&ClientSessionThreadCS);
-					continue;
-				}
 				DATABASE->InsertUserLogQuery(pClientSession->GetPlayerData()->GetPlayerID(),
 					L"정상 접속 종료");
+				//파일 로그, 데이터 베이스 로그에 남김
+				SLogPrintAtFile("%s : 정상 접속 종료",
+					pClientSession->GetPlayerData()->GetPlayerID().c_str());
 			}
-		
-			//파일 로그, 데이터 베이스 로그에 남김
-			SLogPrintAtFile("%s : 정상 접속 종료",
-				pClientSession->GetPlayerData()->GetPlayerID().c_str());
-			
-			SAFE_DELETE(pClientSession);
-			LeaveCriticalSection(&ClientSessionThreadCS);
+
+			//로그인된 세션 제거
+			ServerNetwork::DisconnectLoginClientSession(pClientSession);
+
 			continue;
 		}
 
@@ -266,11 +255,12 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 
 				if (pPacket != nullptr)
 				{
-					if (!pClientSession->PacketParsing(pPacket))
-					{
-						SLogPrintAtFile("종료 패킷 받음");
-					}
-					SAFE_DELETE(pPacket);
+					//패킷을 파서의 큐에 담아주고, 스레드 풀로 파싱함
+					pClientSession->GetClientSessionParser()->PushQueueRecvPk(pPacket);
+					THREADPOOLMANAGER->MakeWork(
+						bind(&ClientSessionParser::RecvQueuePkParsing, 
+							pClientSession->GetClientSessionParser())
+					);
 				}
 			}
 			continue;
@@ -284,4 +274,38 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 	OutputDebugStringA("IOCP루프 스레드 종료");
 
 	return 0;
+}
+
+bool ServerNetwork::DisconnectClientSession(SOCKET socket)
+{
+	//recv, send한 IOData 2개가 들어오게됨
+	//때문에 임계영역 설정
+	EnterCriticalSection(&ClientSessionThreadCS);
+	
+	if (!CLIENTSESSIONMANAGER->DeleteClientSession(socket))
+	{
+		LeaveCriticalSection(&ClientSessionThreadCS);
+		return false;
+	}
+	LeaveCriticalSection(&ClientSessionThreadCS);
+	return true;
+}
+
+bool ServerNetwork::DisconnectLoginClientSession(ClientSession* pClientSession)
+{
+	EnterCriticalSection(&ClientSessionThreadCS);
+	if (pClientSession->GetPlayerData() != nullptr &&
+		pClientSession->GetPlayerData()->GetPlayerID() != L"")
+	{
+		if (!CLIENTSESSIONMANAGER->DeleteClientSessionID(pClientSession->GetPlayerData()->GetPlayerID()))
+		{
+			LeaveCriticalSection(&ClientSessionThreadCS);
+			return false;
+		}
+	}
+
+	SAFE_DELETE(pClientSession);
+	LeaveCriticalSection(&ClientSessionThreadCS);
+
+	return true;
 }

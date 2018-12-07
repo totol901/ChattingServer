@@ -47,7 +47,8 @@ public:
 	Allocator* GetPriorAllocator() const			{ return m_pPriorAllocator; }
 	Allocator* GetNextAllocator() const				{ return m_pNextAllocator; }
 	const E_KindOfAllocator& GetKindOfAllocator()	{ return m_eKindOfAllocator; }
-	
+	size_t GetUsedMemoryPercentage()				{ return (size_t)((GetUsedMemory() / (float)GetSize()) * 100); }
+
 protected:
 	E_KindOfAllocator m_eKindOfAllocator;
 	UINT m_AllocatorID;
@@ -61,56 +62,6 @@ protected:
 	Allocator* m_pNextAllocator;
 
 };
-
-//namespace allocator
-//{
-//	template <class T> T* allocateNew(Allocator& allocator)
-//	{
-//		return new (allocator.allocate(sizeof(T), __alignof(T))) T;
-//	}
-//
-//	template <class T> T* allocateNew(Allocator& allocator, const T& t)
-//	{
-//		return new (allocator.allocate(sizeof(T), __alignof(T))) T(t);
-//	}
-//
-//	template <class T> void deallocateDelete(Allocator& allocator, T& object)
-//	{
-//		object.~T();
-//		allocator.deallocate(&object);
-//	}
-//
-//	template <class T> T* allocateArray(Allocator& allocator, size_t length)
-//	{
-//		ASSERT(length != 0);
-//		u8 headerSize = sizeof(size_t) / sizeof(T);
-//
-//		if (sizeof(size_t) % sizeof(T) > 0) headerSize += 1;
-//
-//		//Allocate extra space to store array length in the bytes before the array 
-//		T* p = ((T*)allocator.allocate(sizeof(T)*(length + headerSize), __alignof(T))) + headerSize;
-//		*(((size_t*)p) - 1) = length;
-//
-//		for (size_t i = 0; i < length; i++)
-//			new (&p) T;
-//
-//		return p;
-//	}
-//
-//	template <class T> void deallocateArray(Allocator& allocator, T* array)
-//	{
-//		ASSERT(array != nullptr);
-//		size_t length = *(((size_t*)array) - 1);
-//
-//		for (size_t i = 0; i < length; i++) array.~T();
-//
-//		//Calculate how much extra memory was allocated to store the length before the array 
-//		u8 headerSize = sizeof(size_t) / sizeof(T);
-//		if (sizeof(size_t) % sizeof(T) > 0)
-//			headerSize += 1;
-//		allocator.deallocate(array - headerSize);
-//	}
-//};
 
 namespace pointer_math
 {

@@ -12,11 +12,9 @@ DBSession::DBSession()
 
 DBSession::~DBSession()
 {
-	mysql_free_result(res);
-	mysql_close(conn);
 }
 
-bool DBSession::InitDB()
+HRESULT DBSession::InitDB()
 {
 	conn = mysql_init(NULL);
 
@@ -24,30 +22,30 @@ bool DBSession::InitDB()
 		DB_PORT, DB_SOCK, DB_OPT))
 	{
 		SLogPrintAtFile("DB Connect Error : %s", mysql_error(conn));
-		return false;
+		return E_FAIL;
 	}
 
 	//한글 쓰기 위한 세팅
 	if (mysql_query(conn, "set character_set_client = euckr"))
 	{
 		SLogPrintAtFile("DB  Error : %s", mysql_error(conn));
-		return false;
+		return E_FAIL;
 	}
 	if (mysql_query(conn, "set character_set_connection = euckr"))
 	{
 		SLogPrintAtFile("DB  Error : %s", mysql_error(conn));
-		return false;
+		return E_FAIL;
 	}
 	if (mysql_query(conn, "set character_set_results = euckr"))
 	{
 		SLogPrintAtFile("DB  Error : %s", mysql_error(conn));
-		return false;
+		return E_FAIL;
 	}
 
 	if (mysql_query(conn, "SHOW TABLES"))
 	{
 		SLogPrintAtFile("DB Query Error : %s", mysql_error(conn));
-		return false;
+		return E_FAIL;
 	}
 
 	res = mysql_use_result(conn);
@@ -58,7 +56,13 @@ bool DBSession::InitDB()
 	{
 		SLogPrint(row[0]);
 	}
-	return true;
+	return S_OK;
+}
+
+void DBSession::Release()
+{
+	mysql_free_result(res);
+	mysql_close(conn);
 }
 
 bool DBSession::CheckUserInfoQuery(const wstring& ID, const wstring& PW)

@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <WinSock2.h>
 #include <Windows.h>
 #include <iostream>
@@ -16,13 +17,15 @@
 #include <crtdbg.h>
 #include <locale.h>
 #include <functional>
-
-#pragma comment(lib, "ws2_32.lib")
+#include <queue>
+#include <stack>
 
 using namespace std;
 
+#pragma comment(lib, "ws2_32.lib")
+
 #define PACKET_MAX_SIZE 1024
-#define PAKCET_BUFF_SIZE (PACKET_MAX_SIZE - sizeof(DWORD) - sizeof(int))
+#define PAKCET_BUFF_SIZE (PACKET_MAX_SIZE - sizeof(UINT) - sizeof(int))
 
 #include "Stream.h"
 #include "RecvStream.h"
@@ -44,12 +47,15 @@ using namespace std;
 #include "FreeListAllocator.h"
 #include "c_Hash.h"
 #include "MemoryManager.h"
+#include "Work.h"
 #include "WorkThread.h"
+#include "ThreadPoolManager.h"
 
 #define WSAWINSOCK WinSock::GetInstance()
 #define MONITORING Monitoring::GetInstance()
 #define TIMER Timer::GetInstance()
 #define MEMORYMANAGER MemoryManager::GetInstance()
+#define THREADPOOLMANAGER ThreadPoolManager::GetInstance()
 
 //파싱 에러 상태
 enum E_PARSING_ERROR

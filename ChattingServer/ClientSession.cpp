@@ -112,6 +112,7 @@ bool ClientSession::IsRecving(const size_t& transferSize)
 	 T_PACKET* packetData = new T_PACKET();
 	 *packetData = *m_arrIOData[IO_READ].GetptPacket();
 
+	 //패킷 하나를 다 받은 뒤에 다시 recv 해준다
 	 RecvStandBy();
 	 return packetData;
  }
