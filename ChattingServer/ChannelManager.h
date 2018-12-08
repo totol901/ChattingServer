@@ -4,7 +4,7 @@
 ******************************************************************************/
 #pragma once
 
-class ChannelManager : public Singleton<ChannelManager>
+class ChannelManager : public ServerEngine::Singleton<ChannelManager>
 {
 	friend ChannelManager;
 private:
@@ -15,7 +15,7 @@ public:
 	ChannelManager();
 	~ChannelManager();
 
-	bool		ClientJoinTheChannel(ClientSession* clientSession, wstring channelName);
+	bool		ClientJoinTheChannel(LoginChattingClientSession* clientSession, wstring channelName);
 	bool		MakeChannelWithChannelName(wstring channelName);
 	Channel*	FindChannelByName(const wstring& channelName);
 	Channel*	FindChannelByID(UINT id);

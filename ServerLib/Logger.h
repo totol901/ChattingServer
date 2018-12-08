@@ -4,26 +4,33 @@
 ******************************************************************************/
 #pragma once
 
-#define SLogPrint(arg, ...)	Logger::GetInstance()->LogPrint(arg, __VA_ARGS__);
-#define SLogPrintAtFile(arg, ...)	Logger::GetInstance()->LogPrintAtFile(arg, __VA_ARGS__);
 
-#define SErrLogPrint(arg, ...) Logger::GetInstance()->LogPrint(arg, __VA_ARGS__); ExitProcess(0);
-#define SErrPrintAtFile(arg, ...) Logger::GetInstance()->LogPrintAtFile(arg, __VA_ARGS__); ExitProcess(0);
+#define SLogPrint(arg, ...)	LogSystem::Logger::GetInstance()->LogPrint(arg, __VA_ARGS__);
+#define SLogPrintAtFile(arg, ...)	LogSystem::Logger::GetInstance()->LogPrintAtFile(arg, __VA_ARGS__);
 
-class Logger : public Singleton<Logger>
+#define SErrLogPrint(arg, ...) LogSystem::Logger::GetInstance()->LogPrint(arg, __VA_ARGS__); ExitProcess(0);
+#define SErrPrintAtFile(arg, ...) LogSystem::Logger::GetInstance()->LogPrintAtFile(arg, __VA_ARGS__); ExitProcess(0);
+
+namespace ServerEngine
 {
-	friend Singleton;
-private:
-	FILE* pFile;
+	namespace LogSystem
+	{
+		class Logger : public Singleton<Logger>
+		{
+			friend Singleton;
+		private:
+			FILE* pFile;
 
-	Logger();
-	~Logger();
+			Logger();
+			~Logger();
 
-	void Init();
+			void Init();
 
-public:
-	void LogPrint(const char* str, ...);
-	void LogPrint(const wchar_t* str, ...);
-	void LogPrintAtFile(const char* str, ...);
-	void LogPrintAtFile(const wchar_t* str, ...);
-};
+		public:
+			void LogPrint(const char* str, ...);
+			void LogPrint(const wchar_t* str, ...);
+			void LogPrintAtFile(const char* str, ...);
+			void LogPrintAtFile(const wchar_t* str, ...);
+		};
+	}
+}

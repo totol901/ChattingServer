@@ -4,17 +4,23 @@
 ******************************************************************************/
 #pragma once
 
-class Stream;
-class SendStream : public Stream
+namespace ServerEngine
 {
-public:
-	SendStream();
-	SendStream(CHAR *stream, size_t size);
-	~SendStream();
+	namespace NetworkSystem
+	{
+		class Stream;
+		class SendStream : public Stream
+		{
+		public:
+			SendStream();
+			SendStream(CHAR *stream, size_t size);
+			~SendStream();
 
-	// write
-	//------------------------------------------------------------------------//
-	bool checkWriteBound(size_t len);
-	void write(wstring reVal);
-	void write(void* retVal, size_t len);
-};
+			// write
+			//------------------------------------------------------------------------//
+			bool checkWriteBound(size_t len);
+			void write(wstring reVal);
+			void write(void* retVal, size_t len);
+		};
+	}
+}

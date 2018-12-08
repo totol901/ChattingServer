@@ -1,57 +1,32 @@
 #include "stdafx.h"
-#include "ServerNetwork.h"
+#include "LoginChattingServerNetwork.h"
 
 static CRITICAL_SECTION ClientSessionThreadCS;
 
-ServerNetwork::ServerNetwork()
-	:m_Shutdown(false)
+LoginChattingServerNetwork::LoginChattingServerNetwork()
+	:ServerNetwork()
 {
 	InitializeCriticalSection(&ClientSessionThreadCS);
-	WSAWINSOCK->Init();
 }
 
-ServerNetwork::~ServerNetwork()
+LoginChattingServerNetwork::~LoginChattingServerNetwork()
 {
 	DeleteCriticalSection(&ClientSessionThreadCS);
 }
 
-HRESULT ServerNetwork::Init()
+HRESULT LoginChattingServerNetwork::Init()
 {
-	CreateIOCP();
-	CreateListen();	
+	HRESULT hr = ServerNetwork::Init();
 
-	return S_OK;
+	return hr;
 }
 
-void ServerNetwork::Release()
+void LoginChattingServerNetwork::Release()
 {
-	m_Shutdown = true;
-	CloseHandle(m_IOCP);
-	closesocket(m_ListenSock);
-	//스래드 종료 기다린다.
-	for (auto iter = m_vecIOCPThread.begin(); iter != m_vecIOCPThread.end();
-		iter++)
-	{
-		WaitForSingleObject((*iter), INFINITE);
-	}
-	SLogPrint("IOCP 스래드 종료 성공");
+	ServerNetwork::Release();
 }
 
-void ServerNetwork::CreateIOCP()
-{
-	m_IOCP = CreateIoCompletionPort(INVALID_HANDLE_VALUE,
-		NULL, 0, 0);
-	if (m_IOCP == nullptr)
-	{
-		ASSERT(0);
-		return;
-	}
-	SLogPrint("IOCP 생성 성공!");
-	
-	CreateIOCPThreads();
-}
-
-void ServerNetwork::CreateIOCPThreads()
+void LoginChattingServerNetwork::CreateIOCPThreads()
 {
 	SYSTEM_INFO SystemInfo;
 	memset(&SystemInfo, 0, sizeof(SYSTEM_INFO));
@@ -67,7 +42,7 @@ void ServerNetwork::CreateIOCPThreads()
 	SLogPrint("IOCP 스레드 생성");
 }
 
-void ServerNetwork::CreateAcceptThread()
+void LoginChattingServerNetwork::CreateAcceptThread()
 {
 	//acceptRoop 돌려줌
 	_beginthreadex(NULL, 0,
@@ -76,30 +51,9 @@ void ServerNetwork::CreateAcceptThread()
 		0, NULL);
 }
 
-void ServerNetwork::CreateListen()
+unsigned int LoginChattingServerNetwork::AcceptRoop(LPVOID sNetwork)
 {
-	m_ListenSock = WSASocket(AF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED);
-
-	SOCKADDR_IN servAddr;
-	memset(&servAddr, 0, sizeof(SOCKADDR_IN));
-	servAddr.sin_family = AF_INET;
-	servAddr.sin_addr.s_addr = ::htonl(INADDR_ANY);
-	servAddr.sin_port = ::htons(9000);
-
-	int reUseAddr = 1;
-	setsockopt(m_ListenSock, SOL_SOCKET, SO_REUSEADDR, (char *)&reUseAddr, (int)sizeof(reUseAddr));
-
-	// XXX : :: <-이거 삭제금지, std::bind로 변경됨
-	::bind(m_ListenSock, (const SOCKADDR*)&servAddr, sizeof(servAddr));
-	listen(m_ListenSock, 5);
-	SLogPrintAtFile("Listen 시작!");
-
-	CreateAcceptThread();
-}
-
-unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
-{
-	ServerNetwork*	serverNetwork	= (ServerNetwork*)sNetwork;
+	LoginChattingServerNetwork*	serverNetwork	= (LoginChattingServerNetwork*)sNetwork;
 	SOCKET			clientSock		= INVALID_SOCKET;
 	int				addrLen			= sizeof(SOCKADDR_IN);
 	DWORD			RecvBytes		= 0;
@@ -134,7 +88,9 @@ unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 			ip, clientAddr.sin_port);
 
 		//클라이언트 세션 생성 후 매니저 컨터이너에 넣어줌
-		ClientSession* clientSession = new ClientSession;
+		LoginChattingClientSession* clientSession = new LoginChattingClientSession;
+		clientSession->Init();
+
 		if (!clientSession)
 		{
 			closesocket(clientSock);
@@ -146,6 +102,7 @@ unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 		if (!clientSession->setSocketOpt())
 		{
 			closesocket(clientSession->GetSocket());
+			clientSession->Release();
 			SAFE_DELETE(clientSession);
 			continue;
 		}
@@ -168,12 +125,12 @@ unsigned int ServerNetwork::AcceptRoop(LPVOID sNetwork)
 	return 0;
 }
 
-unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
+unsigned int LoginChattingServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 {
 	HANDLE			completionPort		= (HANDLE)pComPort;
 	DWORD			bytesTransferred	= 0;
-	ClientSession*	pClientSession		= nullptr;
-	IOData*			pIOData				= nullptr;
+	LoginChattingClientSession*	pClientSession		= nullptr;
+	IOData* pIOData		= nullptr;
 
 	while (1)
 	{
@@ -182,6 +139,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			(LPOVERLAPPED*)&pIOData,
 			INFINITE);		
 
+		//IOCP 에러처리
 		if (!ret)
 		{
 			DWORD errorCode = GetLastError();
@@ -198,7 +156,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			if (bytesTransferred == 0)
 			{
 				//접속한 세션 제거
-				if (!ServerNetwork::DisconnectClientSession(pClientSession->GetSocket()))
+				if (!LoginChattingServerNetwork::DisconnectClientSession(pClientSession->GetSocket()))
 				{
 					continue;
 				}
@@ -214,7 +172,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 				}
 
 				//로그인된 세션 제거
-				ServerNetwork::DisconnectLoginClientSession(pClientSession);
+				LoginChattingServerNetwork::DisconnectLoginClientSession(pClientSession);
 			}
 			continue;
 		}
@@ -223,7 +181,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 		if (bytesTransferred == 0)
 		{
 			//접속한 세션 제거
-			if (!ServerNetwork::DisconnectClientSession(pClientSession->GetSocket()))
+			if (!LoginChattingServerNetwork::DisconnectClientSession(pClientSession->GetSocket()))
 			{
 				continue;
 			}
@@ -238,7 +196,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 			}
 
 			//로그인된 세션 제거
-			ServerNetwork::DisconnectLoginClientSession(pClientSession);
+			LoginChattingServerNetwork::DisconnectLoginClientSession(pClientSession);
 
 			continue;
 		}
@@ -258,7 +216,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 					//패킷을 파서의 큐에 담아주고, 스레드 풀로 파싱함
 					pClientSession->GetClientSessionParser()->PushQueueRecvPk(pPacket);
 					THREADPOOLMANAGER->MakeWork(
-						bind(&ClientSessionParser::RecvQueuePkParsing, 
+						bind(&LoginChattingClientSessionParser::RecvQueuePkParsing,
 							pClientSession->GetClientSessionParser())
 					);
 				}
@@ -276,7 +234,7 @@ unsigned int ServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 	return 0;
 }
 
-bool ServerNetwork::DisconnectClientSession(SOCKET socket)
+bool LoginChattingServerNetwork::DisconnectClientSession(SOCKET socket)
 {
 	//recv, send한 IOData 2개가 들어오게됨
 	//때문에 임계영역 설정
@@ -291,7 +249,7 @@ bool ServerNetwork::DisconnectClientSession(SOCKET socket)
 	return true;
 }
 
-bool ServerNetwork::DisconnectLoginClientSession(ClientSession* pClientSession)
+bool LoginChattingServerNetwork::DisconnectLoginClientSession(LoginChattingClientSession* pClientSession)
 {
 	EnterCriticalSection(&ClientSessionThreadCS);
 	if (pClientSession->GetPlayerData() != nullptr &&
@@ -304,6 +262,7 @@ bool ServerNetwork::DisconnectLoginClientSession(ClientSession* pClientSession)
 		}
 	}
 
+	pClientSession->Release();
 	SAFE_DELETE(pClientSession);
 	LeaveCriticalSection(&ClientSessionThreadCS);
 

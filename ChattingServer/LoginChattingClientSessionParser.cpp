@@ -1,52 +1,22 @@
 #include "stdafx.h"
-#include "ClientSessionParser.h"
+#include "LoginChattingClientSessionParser.h"
 #include <atlstr.h>
 
 static CRITICAL_SECTION ChannelInOutCS;
 
-ClientSessionParser::ClientSessionParser(ClientSession * clientSession)
-	:m_ClientSession(clientSession)
+LoginChattingClientSessionParser::LoginChattingClientSessionParser(ClientSession * clientSession)
+	:ClientSessionParser(clientSession),
+	m_LoginChattingClientSession((LoginChattingClientSession*)clientSession)
 {
-	InitializeCriticalSection(&RecvQueueCS);
-	InitializeCriticalSection(&PacketParsingCS);
 	InitializeCriticalSection(&ChannelInOutCS);
 }
 
-ClientSessionParser::~ClientSessionParser()
+LoginChattingClientSessionParser::~LoginChattingClientSessionParser()
 {
-	DeleteCriticalSection(&RecvQueueCS);
-	DeleteCriticalSection(&PacketParsingCS);
 	DeleteCriticalSection(&ChannelInOutCS);
-	m_ClientSession = nullptr;
 }
 
-void ClientSessionParser::RecvQueuePkParsing()
-{
-	T_PACKET * temp = PopQueueRecvPk();
-	if (temp)
-	{
-		PacketParsing(temp);
-	}
-	SAFE_DELETE(temp);
-}
-
-void ClientSessionParser::SendPacketWithSendStream(E_PACKET_TYPE && type)
-{
-	m_SendPk.Clear();
-	m_SendPk.type = type;
-	m_SendPk.SetStream(SendStream);
-
-	m_ClientSession->SendPacket(m_SendPk);
-}
-
-void ClientSessionParser::SetRecvStream(T_PACKET * packet)
-{
-	recvStream.clear();
-	const size_t headSize = sizeof(packet->Size) + sizeof(packet->type);
-	recvStream.set(packet->buff, packet->Size - headSize);
-}
-
-void ClientSessionParser::ReqLogin(T_PACKET * packet)
+void LoginChattingClientSessionParser::ReqLogin(T_PACKET * packet)
 {
 	recvStream.clear();
 	SendStream.clear();
@@ -97,15 +67,15 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 			SLogPrint(L"%s - 로그인 성공", id.c_str());
 
 			//플레이어 데이터에 아이디 닉네임 저장
-			m_ClientSession->GetPlayerData()->SetPlayerID(id);
-			m_ClientSession->GetPlayerData()->SetPlayerNickname(nickname);
-			m_ClientSession->GetPlayerData()->SetPlayerState(PLAYER_LOGIN);
+			m_LoginChattingClientSession->GetPlayerData()->SetPlayerID(id);
+			m_LoginChattingClientSession->GetPlayerData()->SetPlayerNickname(nickname);
+			m_LoginChattingClientSession->GetPlayerData()->SetPlayerState(PLAYER_LOGIN);
 
 			//데이터베이스에 로그 남겨줌
 			DATABASE->InsertUserLogQuery(id, L"로그인 완료");
 
 			//로그인된 세션 풀에 넣음
-			CLIENTSESSIONMANAGER->AddClientSessionID(id, m_ClientSession);
+			CLIENTSESSIONMANAGER->AddClientSessionID(id, m_LoginChattingClientSession);
 		}
 	}
 	else
@@ -130,7 +100,7 @@ void ClientSessionParser::ReqLogin(T_PACKET * packet)
 	m_ClientSession->SendPacket(m_SendPk);
 }
 
-void ClientSessionParser::ReqCreateID(T_PACKET * packet)
+void LoginChattingClientSessionParser::ReqCreateID(T_PACKET * packet)
 {
 	recvStream.clear();
 	SendStream.clear();
@@ -175,7 +145,7 @@ void ClientSessionParser::ReqCreateID(T_PACKET * packet)
 	m_ClientSession->SendPacket(m_SendPk);
 }
 
-void ClientSessionParser::ReqWatingChannelEnter(T_PACKET * packet)
+void LoginChattingClientSessionParser::ReqWatingChannelEnter(T_PACKET * packet)
 {
 	SendStream.clear();
 	bool isSucces = true;
@@ -197,15 +167,15 @@ void ClientSessionParser::ReqWatingChannelEnter(T_PACKET * packet)
 	SendStream.write(vecChannel);
 
 	//플레이어 데이터에 상태 업뎃
-	m_ClientSession->GetPlayerData()->SetPlayerState(PLAYER_WAITING_CHANNEL);
+	m_LoginChattingClientSession->GetPlayerData()->SetPlayerState(PLAYER_WAITING_CHANNEL);
 
 	m_SendPk.Clear();
 	m_SendPk.type = PK_ANS_WAITINGCHANNAL_ENTER;
 	m_SendPk.SetStream(SendStream);
-	m_ClientSession->SendPacket(m_SendPk);
+	m_LoginChattingClientSession->SendPacket(m_SendPk);
 }
 
-void ClientSessionParser::ReqWaitingChannelCreateChannel(T_PACKET * packet)
+void LoginChattingClientSessionParser::ReqWaitingChannelCreateChannel(T_PACKET * packet)
 {
 	SendStream.clear();
 	//채널 생성
@@ -215,7 +185,7 @@ void ClientSessionParser::ReqWaitingChannelCreateChannel(T_PACKET * packet)
 
 	if (CHANNELMANAGER->MakeChannelWithChannelName(channelName))
 	{
-		SLogPrintAtFile(L"%s : 채널 생성 성공", m_ClientSession->GetPlayerData()->GetPlayerNickname().c_str());
+		SLogPrintAtFile(L"%s : 채널 생성 성공", m_LoginChattingClientSession->GetPlayerData()->GetPlayerNickname().c_str());
 
 		//생성 완료됬다는 패킷 전송
 		bool isSucces = true;
@@ -226,7 +196,7 @@ void ClientSessionParser::ReqWaitingChannelCreateChannel(T_PACKET * packet)
 		SendPacketWithSendStream(PK_ANS_WAITINGCHANNAL_CHREAT_CHANNAL);
 
 		//생성한 채널에 입장
-		if (CHANNELMANAGER->ClientJoinTheChannel(m_ClientSession, channelName))
+		if (CHANNELMANAGER->ClientJoinTheChannel(m_LoginChattingClientSession, channelName))
 		{
 			SLogPrint("채널 입장 성공");
 		}
@@ -248,7 +218,7 @@ void ClientSessionParser::ReqWaitingChannelCreateChannel(T_PACKET * packet)
 	SendPacketWithSendStream(PK_ANS_WAITINGCHANNAL_CHREAT_CHANNAL);
 }
 
-void ClientSessionParser::ReqWaitingChannelChannelJoin(T_PACKET * packet)
+void LoginChattingClientSessionParser::ReqWaitingChannelChannelJoin(T_PACKET * packet)
 {
 	SendStream.clear();
 	//해당 채널 찾음
@@ -267,8 +237,8 @@ void ClientSessionParser::ReqWaitingChannelChannelJoin(T_PACKET * packet)
 		channel->InsertClientSession(m_ClientSession);
 
 		//플레이어 데이터에 입장한 채널 세팅해줌
-		m_ClientSession->GetPlayerData()->SetChannel(channel);
-		m_ClientSession->GetPlayerData()->SetPlayerState(PLAYER_IN_CHANNEL);
+		m_LoginChattingClientSession->GetPlayerData()->SetChannel(channel);
+		m_LoginChattingClientSession->GetPlayerData()->SetPlayerState(PLAYER_IN_CHANNEL);
 
 		//채널 입장 성공 패킷 송신
 		SendStream.write(&isSucces, sizeof(isSucces));
@@ -288,7 +258,7 @@ void ClientSessionParser::ReqWaitingChannelChannelJoin(T_PACKET * packet)
 	SendPacketWithSendStream(PK_ANS_WAITINGCHANNAL_CHANNAL_JOIN);
 }
 
-void ClientSessionParser::ReqChannelSendMessage(T_PACKET * packet)
+void LoginChattingClientSessionParser::ReqChannelSendMessage(T_PACKET * packet)
 {
 	SendStream.clear();
 	//접속중인 채널의 클라이언트 세션에 메시지 보냄
@@ -296,7 +266,7 @@ void ClientSessionParser::ReqChannelSendMessage(T_PACKET * packet)
 	SetRecvStream(packet);
 	recvStream.wStringread(message);
 
-	wstring nickname = m_ClientSession->GetPlayerData()->GetPlayerNickname();
+	wstring nickname = m_LoginChattingClientSession->GetPlayerData()->GetPlayerNickname();
 	
 	int errNum = ERROR_NONE;
 	SendStream.write(nickname);
@@ -306,24 +276,24 @@ void ClientSessionParser::ReqChannelSendMessage(T_PACKET * packet)
 	pk.SetStream(SendStream);
 
 	//채널에 속해있다면 채널의 맴버에게 송신
-	Channel* tempChannel = m_ClientSession->GetPlayerData()->GetChannel();
+	Channel* tempChannel = m_LoginChattingClientSession->GetPlayerData()->GetChannel();
 	if (tempChannel)
 	{
 		tempChannel->SendPacketToChannelMember(pk);
 	}
 }
 
-void ClientSessionParser::ReqChannelOut(T_PACKET * packet)
+void LoginChattingClientSessionParser::ReqChannelOut(T_PACKET * packet)
 {
 	SendStream.clear();
-	Channel* channel = m_ClientSession->GetPlayerData()->GetChannel();
+	Channel* channel = m_LoginChattingClientSession->GetPlayerData()->GetChannel();
 	
 	//채널에서 클라세션을 지워줌으로서 채널 나감
 	EnterCriticalSection(&ChannelInOutCS);
 	if (channel->DeleteClientSession(m_ClientSession))
 	{
 		//채널 나가기 성공
-		SLogPrintAtFile(L"%s : 채널 나가기 성공", m_ClientSession->GetPlayerData()->GetPlayerNickname().c_str());
+		SLogPrintAtFile(L"%s : 채널 나가기 성공", m_LoginChattingClientSession->GetPlayerData()->GetPlayerNickname().c_str());
 		
 		bool isSucces = true;
 		int errNum = ERROR_NONE;
@@ -351,7 +321,7 @@ void ClientSessionParser::ReqChannelOut(T_PACKET * packet)
 	SendPacketWithSendStream(PK_ANS_CHANNAL_OUT);
 }
 
-void ClientSessionParser::ReqExit(T_PACKET * packet)
+void LoginChattingClientSessionParser::ReqExit(T_PACKET * packet)
 {
 	SendStream.clear();
 	bool isSucces = true;
@@ -362,7 +332,7 @@ void ClientSessionParser::ReqExit(T_PACKET * packet)
 	SendPacketWithSendStream(PK_ANS_EXIT);
 }
 
-bool ClientSessionParser::PacketParsing(T_PACKET * const packet)
+bool LoginChattingClientSessionParser::PacketParsing(T_PACKET * const packet)
 {
 	EnterCriticalSection(&PacketParsingCS);
 
@@ -417,28 +387,4 @@ bool ClientSessionParser::PacketParsing(T_PACKET * const packet)
 	LeaveCriticalSection(&PacketParsingCS);
 
 	return true;
-}
-
-void ClientSessionParser::PushQueueRecvPk(T_PACKET * pPacket)
-{
-	EnterCriticalSection(&RecvQueueCS);
-	m_recvPkQueue.push(pPacket);
-	LeaveCriticalSection(&RecvQueueCS);
-}
-
-T_PACKET * ClientSessionParser::PopQueueRecvPk()
-{
-	EnterCriticalSection(&RecvQueueCS);
-	if (m_recvPkQueue.size() == 0)
-	{
-		LeaveCriticalSection(&RecvQueueCS);
-		return nullptr;
-	}
-
-	T_PACKET * temp = m_recvPkQueue.front();
-	m_recvPkQueue.pop();
-
-	LeaveCriticalSection(&RecvQueueCS);
-
-	return temp;
 }

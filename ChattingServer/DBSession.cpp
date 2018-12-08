@@ -2,75 +2,20 @@
 #include "DBSession.h"
 
 DBSession::DBSession()
+	:Database()
 {
-	DB_HOST = "localhost";
-	DB_NAME = "login_db";
-	DB_SOCK = NULL;
-	DB_USER = "root";
-	DB_PASS = "12345";
 }
 
 DBSession::~DBSession()
 {
 }
 
-HRESULT DBSession::InitDB()
-{
-	conn = mysql_init(NULL);
-
-	if (!mysql_real_connect(conn, DB_HOST, DB_USER, DB_PASS, DB_NAME,
-		DB_PORT, DB_SOCK, DB_OPT))
-	{
-		SLogPrintAtFile("DB Connect Error : %s", mysql_error(conn));
-		return E_FAIL;
-	}
-
-	//한글 쓰기 위한 세팅
-	if (mysql_query(conn, "set character_set_client = euckr"))
-	{
-		SLogPrintAtFile("DB  Error : %s", mysql_error(conn));
-		return E_FAIL;
-	}
-	if (mysql_query(conn, "set character_set_connection = euckr"))
-	{
-		SLogPrintAtFile("DB  Error : %s", mysql_error(conn));
-		return E_FAIL;
-	}
-	if (mysql_query(conn, "set character_set_results = euckr"))
-	{
-		SLogPrintAtFile("DB  Error : %s", mysql_error(conn));
-		return E_FAIL;
-	}
-
-	if (mysql_query(conn, "SHOW TABLES"))
-	{
-		SLogPrintAtFile("DB Query Error : %s", mysql_error(conn));
-		return E_FAIL;
-	}
-
-	res = mysql_use_result(conn);
-
-	SLogPrint("** %s 안의 테이블을 보여줌 **", DB_NAME);
-
-	while ((row = mysql_fetch_row(res)) != NULL)
-	{
-		SLogPrint(row[0]);
-	}
-	return S_OK;
-}
-
-void DBSession::Release()
-{
-	mysql_free_result(res);
-	mysql_close(conn);
-}
-
 bool DBSession::CheckUserInfoQuery(const wstring& ID, const wstring& PW)
 {
 	CHAR strID[1024] = { 0, };
 	CHAR strPW[1024] = { 0, };
-	StrConvW2A((WCHAR*)ID.c_str(), strID, sizeof(strID));
-	StrConvW2A((WCHAR*)ID.c_str(), strPW, sizeof(strPW));
+	Util::StrConvW2A((WCHAR*)ID.c_str(), strID, sizeof(strID));
+	Util::StrConvW2A((WCHAR*)PW.c_str(), strPW, sizeof(strPW));
 	string id = strID;
 	string pw = strPW;
 
@@ -112,6 +57,7 @@ bool DBSession::CheckUserInfoQuery(const wstring& ID, const wstring& PW)
 			return false;
 		}
 	}
+
 	if (res->row_count == 0)
 	{
 		return false;
@@ -162,6 +108,7 @@ bool DBSession::CheckUserInfoQuery(string ID, string PW)
 			return false;
 		}
 	}
+
 	if (res->row_count == 0)
 	{
 		return false;
@@ -182,7 +129,7 @@ bool DBSession::InsertUserInfoQuery(wstring ID, wstring PW, wstring nickname)
 	query += nickname + L"')";
 
 	char str[1024] = { 0, };
-	StrConvW2A((WCHAR*)query.c_str(), str, sizeof(str));
+	Util::StrConvW2A((WCHAR*)query.c_str(), str, sizeof(str));
 
 	if (mysql_query(conn, str) != NULL)
 	{
@@ -201,7 +148,7 @@ bool DBSession::DeleteUserInfoQuery(wstring ID)
 	query += ID + L"'";
 
 	char str[1024] = { 0, };
-	StrConvW2A((WCHAR*)query.c_str(), str, sizeof(str));
+	Util::StrConvW2A((WCHAR*)query.c_str(), str, sizeof(str));
 
 	if (mysql_query(conn, str) != NULL)
 	{
@@ -221,7 +168,7 @@ wstring DBSession::FindNickname(wstring ID)
 	query += ID + L"'";
 
 	char str[1024] = { 0, };
-	StrConvW2A((WCHAR*)query.c_str(), str, sizeof(str));
+	Util::StrConvW2A((WCHAR*)query.c_str(), str, sizeof(str));
 	
 	//char q[256];
 	//memset(q, 0, sizeof(q));
@@ -243,10 +190,11 @@ wstring DBSession::FindNickname(wstring ID)
 		else
 		{
 			TCHAR str[1024] = { 0, };
-			StrConvA2W(row[0], str, sizeof(str));
+			Util::StrConvA2W(row[0], str, sizeof(str));
 			nickname = str;
 		}
 	}
+
 	if (res->row_count == 0)
 	{
 		return false;
@@ -272,7 +220,7 @@ bool DBSession::InsertUserLogQuery(wstring ID, wstring log)
 	memcpy(q, query.c_str(), query.size()* sizeof(wchar_t));
 
 	char str[1024] = { 0, };
-	StrConvW2A(q, str, sizeof(str));
+	Util::StrConvW2A(q, str, sizeof(str));
 
 	if (mysql_query(conn, str) != NULL)
 	{

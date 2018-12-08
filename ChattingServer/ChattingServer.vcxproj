@@ -158,15 +158,15 @@
   <ItemGroup>
     <ClInclude Include="Channel.h" />
     <ClInclude Include="ChannelManager.h" />
-    <ClInclude Include="ClientSession.h" />
-    <ClInclude Include="ClientSessionManager.h" />
-    <ClInclude Include="ClientSessionParser.h" />
+    <ClInclude Include="LoginChattingClientSession.h" />
+    <ClInclude Include="LoginChattingClientSessionManager.h" />
+    <ClInclude Include="LoginChattingClientSessionParser.h" />
     <ClInclude Include="DBSession.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="MainClass.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="ServerNetwork.h" />
+    <ClInclude Include="LoginChattingServerNetwork.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -174,15 +174,15 @@
     <ClCompile Include="Channel.cpp" />
     <ClCompile Include="ChannelManager.cpp" />
     <ClCompile Include="ChattingServer.cpp" />
-    <ClCompile Include="ClientSession.cpp" />
-    <ClCompile Include="ClientSessionManager.cpp" />
-    <ClCompile Include="ClientSessionParser.cpp" />
+    <ClCompile Include="LoginChattingClientSession.cpp" />
+    <ClCompile Include="LoginChattingClientSessionManager.cpp" />
+    <ClCompile Include="LoginChattingClientSessionParser.cpp" />
     <ClCompile Include="DBSession.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="MainClass.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="ServerNetwork.cpp" />
+    <ClCompile Include="LoginChattingServerNetwork.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

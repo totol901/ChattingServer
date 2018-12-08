@@ -72,6 +72,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
+    <LibraryPath>C:\Program Files\MySQL\MySQL Server 8.0\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files\MySQL\MySQL Server 8.0\include;$(IncludePath);$(ReferencePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -153,19 +156,24 @@
   <ItemGroup>
     <ClInclude Include="Allocator.h" />
     <ClInclude Include="Assert.h" />
-    <ClInclude Include="c_Hash.h" />
+    <ClInclude Include="ClientSession.h" />
+    <ClInclude Include="ClientSessionManager.h" />
+    <ClInclude Include="ClientSessionParser.h" />
+    <ClInclude Include="Database.h" />
     <ClInclude Include="FreeListAllocator.h" />
     <ClInclude Include="IOData.h" />
     <ClInclude Include="LinearAllocator.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="Monitoring.h" />
+    <ClInclude Include="Network.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="PoolAllocator.h" />
     <ClInclude Include="RecvStream.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SendStream.h" />
     <ClInclude Include="ServerLib.h" />
+    <ClInclude Include="ServerNetwork.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="StackAllocator.h" />
@@ -175,21 +183,25 @@
     <ClInclude Include="ThreadPoolManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Util.h" />
-    <ClInclude Include="WinSock.h" />
     <ClInclude Include="Work.h" />
     <ClInclude Include="WorkThread.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="c_Hash.cpp" />
+    <ClCompile Include="ClientSession.cpp" />
+    <ClCompile Include="ClientSessionManager.cpp" />
+    <ClCompile Include="ClientSessionParser.cpp" />
+    <ClCompile Include="Database.cpp" />
     <ClCompile Include="FreeListAllocator.cpp" />
     <ClCompile Include="IOData.cpp" />
     <ClCompile Include="LinearAllocator.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
+    <ClCompile Include="Network.cpp" />
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="PoolAllocator.cpp" />
     <ClCompile Include="RecvStream.cpp" />
     <ClCompile Include="SendStream.cpp" />
+    <ClCompile Include="ServerNetwork.cpp" />
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="StackAllocator.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -201,7 +213,6 @@
     <ClCompile Include="Stream.cpp" />
     <ClCompile Include="ThreadPoolManager.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="WinSock.cpp" />
     <ClCompile Include="Work.cpp" />
     <ClCompile Include="WorkThread.cpp" />
   </ItemGroup>

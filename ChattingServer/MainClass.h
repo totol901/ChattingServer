@@ -22,5 +22,5 @@ public:
 
 	void Monitering();
 
-	static unsigned int WINAPI MoniteringThread(LPVOID param);
+	//static unsigned int WINAPI MoniteringThread(LPVOID param);
 };

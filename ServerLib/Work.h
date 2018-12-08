@@ -1,22 +1,28 @@
 #pragma once
 
-typedef function<void(void)> WORK_FUNCTION_VOID_VOID;
-
-class Work
+namespace ServerEngine
 {
-private:
-	WORK_FUNCTION_VOID_VOID function;
-	static UINT m_AllocatorID;
+	namespace System
+	{
+		typedef function<void(void)> WORK_FUNCTION_VOID_VOID;
 
-public:
-	Work();
-	virtual ~Work();
+		class Work
+		{
+		private:
+			WORK_FUNCTION_VOID_VOID function;
+			static BOOL m_AllocatorOn;
 
-	virtual void DoWork();
+		public:
+			Work();
+			virtual ~Work();
 
-	void SetCallbackFunction(WORK_FUNCTION_VOID_VOID func) { function = func; }
-	WORK_FUNCTION_VOID_VOID GetCallbackFunc() { return function; }
+			virtual void DoWork();
 
-	static void* operator new(size_t allocSize);
-	static void operator delete(void* deletepointer);
-};
+			void SetCallbackFunction(WORK_FUNCTION_VOID_VOID func) { function = func; }
+			WORK_FUNCTION_VOID_VOID GetCallbackFunc() { return function; }
+
+			static void* operator new(size_t allocSize);
+			static void operator delete(void* deletepointer);
+		};
+	}
+}

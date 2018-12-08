@@ -24,7 +24,7 @@ public:
 	bool IsClientSessionIntoSet(ClientSession* clientsession);
 	bool DeleteClientSession(ClientSession* clientsession);
 
-	void SendPacketToChannelMember(T_PACKET& packet);
+	void SendPacketToChannelMember(NetworkSystem::T_PACKET& packet);
 
 	wstring& GetName()		{ return m_name; }
 	UINT	GetChannelID() const	{ return m_ChannelID; }

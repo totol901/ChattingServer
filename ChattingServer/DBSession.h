@@ -4,7 +4,9 @@
 ******************************************************************************/
 #pragma once
 
-class DBSession : public Singleton<DBSession>
+class DBSession : 
+	public ServerEngine::Singleton<DBSession>,
+	public DatabaseSystem::Database
 {
 	friend Singleton;
 private:
@@ -15,30 +17,7 @@ private:
 	DBSession& operator = (const DBSession&) = delete;
 	DBSession& operator = (const DBSession&&) = delete;
 
-	enum
-	{
-		DB_PORT = 3306,
-		DB_OPT = 0
-	};
-
-	const char* DB_HOST;
-	const char* DB_NAME;
-	const char* DB_SOCK;
-	const char* DB_USER;
-	const char* DB_PASS;
-
-	MYSQL*		conn;
-	MYSQL_RES*	res;
-	MYSQL_ROW	row;
-
 public:
-	/****************************************************************************
-	함수명	: InitDB
-	설명		: Mysql 초기화
-	*****************************************************************************/
-	HRESULT InitDB();
-	void Release();
-
 	/****************************************************************************
 	함수명	: CheckUserInfoQuery
 	설명		: ID, PW 쿼리 보내고 맞는지 판단
@@ -70,9 +49,5 @@ public:
 	*****************************************************************************/
 	bool InsertUserLogQuery(wstring ID, wstring log);
 
-	/****************************************************************************
-	함수명	: MySQLError
-	설명		: 쿼리 에러 내용을 리턴함
-	*****************************************************************************/
-	const char* MySQLError() const { return mysql_error(conn); }
+	
 };

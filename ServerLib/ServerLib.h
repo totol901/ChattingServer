@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <WinSock2.h>
 #include <Windows.h>
 #include <iostream>
@@ -19,14 +18,17 @@
 #include <functional>
 #include <queue>
 #include <stack>
+#include <unordered_map>
 
 using namespace std;
 
 #pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "libmysql.lib")
 
 #define PACKET_MAX_SIZE 1024
 #define PAKCET_BUFF_SIZE (PACKET_MAX_SIZE - sizeof(UINT) - sizeof(int))
 
+#include "mysql.h"
 #include "Stream.h"
 #include "RecvStream.h"
 #include "SendStream.h"
@@ -45,17 +47,24 @@ using namespace std;
 #include "LinearAllocator.h"
 #include "StackAllocator.h"
 #include "FreeListAllocator.h"
-#include "c_Hash.h"
 #include "MemoryManager.h"
 #include "Work.h"
 #include "WorkThread.h"
 #include "ThreadPoolManager.h"
+#include "Network.h"
+#include "ServerNetwork.h"
+#include "ClientSessionParser.h"
+#include "ClientSession.h"
+#include "ClientSessionManager.h"
+#include "Database.h"
 
-#define WSAWINSOCK WinSock::GetInstance()
-#define MONITORING Monitoring::GetInstance()
-#define TIMER Timer::GetInstance()
-#define MEMORYMANAGER MemoryManager::GetInstance()
-#define THREADPOOLMANAGER ThreadPoolManager::GetInstance()
+using namespace ServerEngine;
+using namespace NetworkSystem;
+
+#define MONITORING MonitoringSystem::Monitoring::GetInstance()
+#define TIMER TimerSystem::Timer::GetInstance()
+#define MEMORYMANAGER System::MemoryManager::GetInstance()
+#define THREADPOOLMANAGER System::ThreadPoolManager::GetInstance()
 
 //파싱 에러 상태
 enum E_PARSING_ERROR

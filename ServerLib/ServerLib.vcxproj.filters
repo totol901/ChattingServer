@@ -13,26 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Manager">
-      <UniqueIdentifier>{6e2dfa0b-313f-4377-b281-c49ef94f8350}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SystemModule">
       <UniqueIdentifier>{bf2cc307-b182-4dcc-8fa2-a997215d0457}</UniqueIdentifier>
     </Filter>
     <Filter Include="SystemModule\LoggingSystem">
       <UniqueIdentifier>{f4aa6c97-5d20-4a43-8798-be52ac863c1f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SystemModule\MemoryAllocator">
-      <UniqueIdentifier>{3dc7965e-9c0f-427a-ac19-ad54e66ed0d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SystemModule\Network">
-      <UniqueIdentifier>{62bd4e5b-220e-485c-bd3f-7eab5b962c0b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SystemModule\Network\IOCP">
-      <UniqueIdentifier>{60f9c95c-9e6b-4281-85ad-21403e93e4f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SystemModule\ThreadPool">
-      <UniqueIdentifier>{d8dbc8dc-20e4-4bc7-ba2d-8dca89e8fd02}</UniqueIdentifier>
     </Filter>
     <Filter Include="SystemModule\MonitoringSystem">
       <UniqueIdentifier>{ea0f2a65-8407-438d-bfbf-fe73b651f518}</UniqueIdentifier>
@@ -43,6 +28,36 @@
     <Filter Include="SystemModule\TimerSystem">
       <UniqueIdentifier>{5a9b3303-f358-4fb1-9088-7f323aa2db55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SystemModule\NetworkSystem">
+      <UniqueIdentifier>{62bd4e5b-220e-485c-bd3f-7eab5b962c0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SystemModule\NetworkSystem\IOCP">
+      <UniqueIdentifier>{60f9c95c-9e6b-4281-85ad-21403e93e4f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SystemModule\NetworkSystem\Packet">
+      <UniqueIdentifier>{46a44cd6-8daa-4521-a8d4-f72edc900cfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SystemModule\NetworkSystem\Session">
+      <UniqueIdentifier>{e1dfcdf0-b8f7-46a6-99d7-027b1b952504}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SystemModule\NetworkSystem\Session\PakcetParser">
+      <UniqueIdentifier>{9711518f-c165-46f8-b932-42736cff6a01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SystemModule\Database">
+      <UniqueIdentifier>{313b9c52-42c4-48ec-8092-a912e3287ccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SystemModule\System">
+      <UniqueIdentifier>{dfb9643a-870b-4782-b7da-9130fddc35b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SystemModule\System\ThreadPool">
+      <UniqueIdentifier>{d8dbc8dc-20e4-4bc7-ba2d-8dca89e8fd02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SystemModule\System\MemoryAllocator">
+      <UniqueIdentifier>{3dc7965e-9c0f-427a-ac19-ad54e66ed0d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Singleton">
+      <UniqueIdentifier>{6e2dfa0b-313f-4377-b281-c49ef94f8350}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -51,9 +66,6 @@
     <ClInclude Include="targetver.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="WinSock.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -61,58 +73,40 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Allocator.h">
-      <Filter>SystemModule\MemoryAllocator</Filter>
+      <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClInclude>
     <ClInclude Include="PoolAllocator.h">
-      <Filter>SystemModule\MemoryAllocator</Filter>
+      <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClInclude>
     <ClInclude Include="MemoryManager.h">
-      <Filter>SystemModule\MemoryAllocator</Filter>
+      <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClInclude>
     <ClInclude Include="StackAllocator.h">
-      <Filter>SystemModule\MemoryAllocator</Filter>
+      <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClInclude>
     <ClInclude Include="LinearAllocator.h">
-      <Filter>SystemModule\MemoryAllocator</Filter>
+      <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClInclude>
     <ClInclude Include="FreeListAllocator.h">
-      <Filter>SystemModule\MemoryAllocator</Filter>
-    </ClInclude>
-    <ClInclude Include="c_Hash.h">
-      <Filter>SystemModule\MemoryAllocator</Filter>
+      <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
       <Filter>SystemModule\LoggingSystem</Filter>
     </ClInclude>
     <ClInclude Include="WorkThread.h">
-      <Filter>SystemModule\ThreadPool</Filter>
+      <Filter>SystemModule\System\ThreadPool</Filter>
     </ClInclude>
     <ClInclude Include="ThreadPoolManager.h">
-      <Filter>SystemModule\ThreadPool</Filter>
+      <Filter>SystemModule\System\ThreadPool</Filter>
     </ClInclude>
     <ClInclude Include="Work.h">
-      <Filter>SystemModule\ThreadPool</Filter>
-    </ClInclude>
-    <ClInclude Include="SendStream.h">
-      <Filter>SystemModule\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Session.h">
-      <Filter>SystemModule\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Stream.h">
-      <Filter>SystemModule\Network</Filter>
+      <Filter>SystemModule\System\ThreadPool</Filter>
     </ClInclude>
     <ClInclude Include="Monitoring.h">
       <Filter>SystemModule\MonitoringSystem</Filter>
     </ClInclude>
-    <ClInclude Include="RecvStream.h">
-      <Filter>SystemModule\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet.h">
-      <Filter>SystemModule\Network</Filter>
-    </ClInclude>
     <ClInclude Include="Singleton.h">
-      <Filter>Manager</Filter>
+      <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="Assert.h">
       <Filter>Util</Filter>
@@ -124,66 +118,111 @@
       <Filter>SystemModule\TimerSystem</Filter>
     </ClInclude>
     <ClInclude Include="IOData.h">
-      <Filter>SystemModule\Network\IOCP</Filter>
+      <Filter>SystemModule\NetworkSystem\IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet.h">
+      <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="RecvStream.h">
+      <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="SendStream.h">
+      <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Stream.h">
+      <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Session.h">
+      <Filter>SystemModule\NetworkSystem\Session</Filter>
+    </ClInclude>
+    <ClInclude Include="Network.h">
+      <Filter>SystemModule\NetworkSystem\IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerNetwork.h">
+      <Filter>SystemModule\NetworkSystem\IOCP</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSession.h">
+      <Filter>SystemModule\NetworkSystem\Session</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSessionManager.h">
+      <Filter>SystemModule\NetworkSystem\Session</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSessionParser.h">
+      <Filter>SystemModule\NetworkSystem\Session\PakcetParser</Filter>
+    </ClInclude>
+    <ClInclude Include="Database.h">
+      <Filter>SystemModule\Database</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="WinSock.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="PoolAllocator.cpp">
-      <Filter>SystemModule\MemoryAllocator</Filter>
+      <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClCompile>
     <ClCompile Include="MemoryManager.cpp">
-      <Filter>SystemModule\MemoryAllocator</Filter>
+      <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClCompile>
     <ClCompile Include="StackAllocator.cpp">
-      <Filter>SystemModule\MemoryAllocator</Filter>
+      <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClCompile>
     <ClCompile Include="LinearAllocator.cpp">
-      <Filter>SystemModule\MemoryAllocator</Filter>
+      <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClCompile>
     <ClCompile Include="FreeListAllocator.cpp">
-      <Filter>SystemModule\MemoryAllocator</Filter>
-    </ClCompile>
-    <ClCompile Include="c_Hash.cpp">
-      <Filter>SystemModule\MemoryAllocator</Filter>
+      <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>SystemModule\LoggingSystem</Filter>
     </ClCompile>
     <ClCompile Include="WorkThread.cpp">
-      <Filter>SystemModule\ThreadPool</Filter>
+      <Filter>SystemModule\System\ThreadPool</Filter>
     </ClCompile>
     <ClCompile Include="ThreadPoolManager.cpp">
-      <Filter>SystemModule\ThreadPool</Filter>
+      <Filter>SystemModule\System\ThreadPool</Filter>
     </ClCompile>
     <ClCompile Include="Work.cpp">
-      <Filter>SystemModule\ThreadPool</Filter>
-    </ClCompile>
-    <ClCompile Include="RecvStream.cpp">
-      <Filter>SystemModule\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="SendStream.cpp">
-      <Filter>SystemModule\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Session.cpp">
-      <Filter>SystemModule\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Stream.cpp">
-      <Filter>SystemModule\Network</Filter>
+      <Filter>SystemModule\System\ThreadPool</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>SystemModule\TimerSystem</Filter>
     </ClCompile>
     <ClCompile Include="IOData.cpp">
-      <Filter>SystemModule\Network\IOCP</Filter>
+      <Filter>SystemModule\NetworkSystem\IOCP</Filter>
     </ClCompile>
     <ClCompile Include="Packet.cpp">
-      <Filter>SystemModule\Network</Filter>
+      <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="RecvStream.cpp">
+      <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="SendStream.cpp">
+      <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Stream.cpp">
+      <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Session.cpp">
+      <Filter>SystemModule\NetworkSystem\Session</Filter>
+    </ClCompile>
+    <ClCompile Include="Network.cpp">
+      <Filter>SystemModule\NetworkSystem\IOCP</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerNetwork.cpp">
+      <Filter>SystemModule\NetworkSystem\IOCP</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSession.cpp">
+      <Filter>SystemModule\NetworkSystem\Session</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSessionManager.cpp">
+      <Filter>SystemModule\NetworkSystem\Session</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientSessionParser.cpp">
+      <Filter>SystemModule\NetworkSystem\Session\PakcetParser</Filter>
+    </ClCompile>
+    <ClCompile Include="Database.cpp">
+      <Filter>SystemModule\Database</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

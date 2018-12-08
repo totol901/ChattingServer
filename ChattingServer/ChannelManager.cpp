@@ -9,7 +9,7 @@ ChannelManager::~ChannelManager()
 {
 }
 
-bool ChannelManager::ClientJoinTheChannel(ClientSession* clientSession, wstring channelName)
+bool ChannelManager::ClientJoinTheChannel(LoginChattingClientSession* clientSession, wstring channelName)
 {
 	Channel* channel = CHANNELMANAGER->FindChannelByName(channelName);
 	if (channel)

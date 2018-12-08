@@ -5,27 +5,30 @@
 ******************************************************************************/
 #pragma once
 
-template<class T>
-class Singleton
+namespace ServerEngine
 {
-protected:
-	Singleton(const Singleton&) = delete;
-	Singleton(const Singleton&&) = delete;
-	Singleton& operator = (const Singleton&) = delete;
-	Singleton& operator = (const Singleton&&) = delete;
-
-	Singleton() {}
-	virtual ~Singleton() {}
-	
-public:
-	/****************************************************************************
-	함수명	: GetInstance
-	설명		: T 클래스의 인스턴스 주소를 리턴받음
-	*****************************************************************************/
-	static T* GetInstance()
+	template<class T>
+	class Singleton
 	{
-		static T Instatnce;
+	protected:
+		Singleton(const Singleton&) = delete;
+		Singleton(const Singleton&&) = delete;
+		Singleton& operator = (const Singleton&) = delete;
+		Singleton& operator = (const Singleton&&) = delete;
 
-		return &Instatnce;
-	}
-};
+		Singleton() {}
+		virtual ~Singleton() {}
+
+	public:
+		/****************************************************************************
+		함수명	: GetInstance
+		설명		: T 클래스의 인스턴스 주소를 리턴받음
+		*****************************************************************************/
+		static T* GetInstance()
+		{
+			static T Instatnce;
+
+			return &Instatnce;
+		}
+	};
+}

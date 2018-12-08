@@ -4,21 +4,15 @@
 ******************************************************************************/
 #pragma once
 
-class ServerNetwork : public Singleton<ServerNetwork>
+class LoginChattingServerNetwork : 
+	public ServerNetwork, 
+	public Singleton<LoginChattingServerNetwork>
 {
 	friend Singleton;
 private:
-	vector<HANDLE> m_vecIOCPThread;
-	HANDLE	m_IOCP;
-	SOCKET	m_ListenSock;
-	bool	m_Shutdown;
+	LoginChattingServerNetwork();
+	~LoginChattingServerNetwork();
 
-private:
-	ServerNetwork();
-	~ServerNetwork();
-
-	void CreateListen();
-	void CreateIOCP();
 	void CreateIOCPThreads();
 	void CreateAcceptThread();
 
@@ -30,9 +24,6 @@ public:
 	static unsigned int WINAPI CompletionClientSessionThread(LPVOID pComPort);
 
 	static bool DisconnectClientSession(SOCKET socket);
-	static bool DisconnectLoginClientSession(ClientSession* pClientSession);
-public:
-	const bool&		IsShutdown()	const { return m_Shutdown; }
-	const SOCKET &	GetListenSock() const { return m_ListenSock; }
-	const HANDLE &	GetIOCPHandle() const { return m_IOCP; }
+	static bool DisconnectLoginClientSession(LoginChattingClientSession* pClientSession);
+
 };
