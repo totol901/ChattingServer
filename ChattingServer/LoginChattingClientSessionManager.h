@@ -10,7 +10,7 @@ class LoginChattingClientSessionManager :
 {
 	friend Singleton;
 private:
-	map<wstring, LoginChattingClientSession*> m_mapClientSessionID;	//肺弊牢等 技记
+	unordered_map<wstring, LoginChattingClientSession*> m_mapClientSessionID;	//肺弊牢等 技记
 
 private:
 	LoginChattingClientSessionManager();

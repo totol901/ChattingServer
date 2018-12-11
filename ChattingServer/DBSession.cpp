@@ -25,10 +25,11 @@ bool DBSession::CheckUserInfoQuery(const wstring& ID, const wstring& PW)
 
 	char q[256];
 	memset(q, 0, sizeof(q));
-	memcpy(q, query.c_str(), sizeof(query));
+	memcpy(q, query.c_str(), query.size());
 
 	if (mysql_query(conn, q) != NULL)
 	{
+		SLogPrint("error : id = %s, pw = %s", id.c_str(), pw.c_str());
 		SLogPrintAtFile("Query Error : %s", mysql_error(conn));
 		return false;
 	}
@@ -44,22 +45,26 @@ bool DBSession::CheckUserInfoQuery(const wstring& ID, const wstring& PW)
 			}
 			else
 			{
+				SLogPrintAtFile("cant find : id = %s, pw = %s", id.c_str(), pw.c_str());
 				return false;
 			}
 		}
 		else
 		{
+			SLogPrintAtFile("cant find : id = %s, pw = %s", id.c_str(), pw.c_str());
 			return false;
 		}
 
 		if (row == NULL)
 		{
+			SLogPrintAtFile("cant find : id = %s, pw = %s", id.c_str(), pw.c_str());
 			return false;
 		}
 	}
 
 	if (res->row_count == 0)
 	{
+		SLogPrintAtFile("cant find : id = %s, pw = %s", id.c_str(), pw.c_str());
 		return false;
 	}
 
@@ -76,7 +81,7 @@ bool DBSession::CheckUserInfoQuery(string ID, string PW)
 
 	char q[256];
 	memset(q, 0, sizeof(q));
-	memcpy(q, query.c_str(), sizeof(query));
+	memcpy(q, query.c_str(), query.size());
 
 	if (mysql_query(conn, q) != NULL)
 	{
@@ -169,10 +174,6 @@ wstring DBSession::FindNickname(wstring ID)
 
 	char str[1024] = { 0, };
 	Util::StrConvW2A((WCHAR*)query.c_str(), str, sizeof(str));
-	
-	//char q[256];
-	//memset(q, 0, sizeof(q));
-	//memcpy(q, query.c_str(), query.size());
 
 	if (mysql_query(conn, str) != NULL)
 	{
@@ -217,7 +218,7 @@ bool DBSession::InsertUserLogQuery(wstring ID, wstring log)
 
 	TCHAR q[256];
 	memset(q, 0, sizeof(q));
-	memcpy(q, query.c_str(), query.size()* sizeof(wchar_t));
+	memcpy(q, query.c_str(), query.size() * sizeof(wchar_t));
 
 	char str[1024] = { 0, };
 	Util::StrConvW2A(q, str, sizeof(str));

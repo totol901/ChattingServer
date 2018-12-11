@@ -13,7 +13,7 @@ namespace ServerEngine
 		protected:
 			CRITICAL_SECTION ManagerCS;
 			UINT						m_GenerateSessionID;
-			map<SOCKET, ClientSession*> m_mapClientSession;		//撅剂飘等 技记
+			unordered_map<SOCKET, ClientSession*> m_mapClientSession;		//撅剂飘等 技记
 
 			ClientSessionManager();
 			virtual ~ClientSessionManager();

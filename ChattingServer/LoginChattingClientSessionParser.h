@@ -19,6 +19,9 @@ private:
 	void ReqChannelSendMessage(NetworkSystem::T_PACKET* packet);
 	void ReqChannelOut(NetworkSystem::T_PACKET* packet);
 	void ReqExit(NetworkSystem::T_PACKET* packet);
+	void RecvMoveStart(NetworkSystem::T_PACKET* packet);
+	void RecvMoveEnd(NetworkSystem::T_PACKET* packet);
+	void RecvLocationRenewal(NetworkSystem::T_PACKET* packet);
 
 public:
 	LoginChattingClientSessionParser(ClientSession * clientSession);

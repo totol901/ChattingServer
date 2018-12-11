@@ -147,6 +147,10 @@ void LoginChattingClientSessionParser::ReqCreateID(T_PACKET * packet)
 
 void LoginChattingClientSessionParser::ReqWatingChannelEnter(T_PACKET * packet)
 {
+	SLogPrint(L"%s : 채널 리스트 요청",
+		m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str()
+		);
+
 	SendStream.clear();
 	bool isSucces = true;
 	int errNum = ERROR_NONE;
@@ -198,16 +202,23 @@ void LoginChattingClientSessionParser::ReqWaitingChannelCreateChannel(T_PACKET *
 		//생성한 채널에 입장
 		if (CHANNELMANAGER->ClientJoinTheChannel(m_LoginChattingClientSession, channelName))
 		{
-			SLogPrint("채널 입장 성공");
+			SLogPrint(L"%s : %s, 채널 입장 성공", 
+				m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str(),
+				channelName.c_str());
 		}
 		else
 		{
-			SLogPrintAtFile("!채널 생성후 입장 실패");
+			SLogPrintAtFile(L"%s : !채널 생성후 입장 실패",
+				m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str());
 			ASSERT(FALSE);
 		}
 
 		return;
 	}
+
+	SLogPrint(L"%s : %s, 채널 생성 실패",
+		m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str(),
+		channelName.c_str());
 	
 	//생성 실패
 	bool isSucces = false;
@@ -240,6 +251,10 @@ void LoginChattingClientSessionParser::ReqWaitingChannelChannelJoin(T_PACKET * p
 		m_LoginChattingClientSession->GetPlayerData()->SetChannel(channel);
 		m_LoginChattingClientSession->GetPlayerData()->SetPlayerState(PLAYER_IN_CHANNEL);
 
+		SLogPrint(L"%s : %s, 채널 입장 성공",
+			m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str(),
+			channel->GetName().c_str());
+
 		//채널 입장 성공 패킷 송신
 		SendStream.write(&isSucces, sizeof(isSucces));
 		SendStream.write(&errNum, sizeof(errNum));
@@ -249,6 +264,9 @@ void LoginChattingClientSessionParser::ReqWaitingChannelChannelJoin(T_PACKET * p
 		return;
 	}
 	LeaveCriticalSection(&ChannelInOutCS);
+
+	SLogPrint(L"%s : !채널 입장 실패",
+		m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str());
 
 	//채널 못찾음, 실패 패킷 송신
 	bool isSucces = false;
@@ -279,6 +297,8 @@ void LoginChattingClientSessionParser::ReqChannelSendMessage(T_PACKET * packet)
 	Channel* tempChannel = m_LoginChattingClientSession->GetPlayerData()->GetChannel();
 	if (tempChannel)
 	{
+		SLogPrint(L"%s : 채널에 메시지 송신",
+			m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str());
 		tempChannel->SendPacketToChannelMember(pk);
 	}
 }
@@ -313,6 +333,9 @@ void LoginChattingClientSessionParser::ReqChannelOut(T_PACKET * packet)
 	}
 	LeaveCriticalSection(&ChannelInOutCS);
 
+	SLogPrint(L"%s : 채널나가기 실패",
+		m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str());
+
 	//채널 나가기 실패
 	bool isSucces = false;
 	int errNum = LEAVE_CHANNEL_CANT_FIND;
@@ -330,6 +353,120 @@ void LoginChattingClientSessionParser::ReqExit(T_PACKET * packet)
 	SendStream.write(&isSucces, sizeof(isSucces));
 	SendStream.write(&errNum, sizeof(errNum));
 	SendPacketWithSendStream(PK_ANS_EXIT);
+}
+
+void LoginChattingClientSessionParser::RecvMoveStart(NetworkSystem::T_PACKET * packet)
+{
+	recvStream.clear();
+	float LocationX = 0.0f;
+	float LocationY = 0.0f;
+	float DirectionX = 0.0f;
+	float DirectionY = 0.0f;
+	float Velocity = 0.0f;
+
+	//클라이언트의 현재 위치 방향 속도를 받아오고
+	const size_t headSize = sizeof(packet->Size) + sizeof(packet->type);
+	recvStream.set(packet->buff, packet->Size - headSize);
+	recvStream.read(&LocationX, sizeof(float));
+	recvStream.read(&LocationY, sizeof(float));
+	recvStream.read(&DirectionX, sizeof(float));
+	recvStream.read(&DirectionY, sizeof(float));
+	recvStream.read(&Velocity, sizeof(float));
+
+	//다른 클라이언트에 브로드케스팅 해주기 위해 ID 받아옴
+	wstring ID = m_LoginChattingClientSession->GetPlayerData()->GetPlayerID();
+	m_LoginChattingClientSession->GetPlayerData()->SetLocation(LocationX, LocationY);
+	m_LoginChattingClientSession->GetPlayerData()->SetAcceleration(1.3f);
+
+	SLogPrint(L"%s : MoveStart",
+		m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str());
+
+	//해당 클라이언트의 player가 아래 데이터를 가지고 이동한다고 브로드케스팅 함
+	SendStream.clear();
+	SendStream.write(ID);
+	SendStream.write(&m_LoginChattingClientSession->GetPlayerData()->GetLocationX(),
+		sizeof(float));
+	SendStream.write(&m_LoginChattingClientSession->GetPlayerData()->GetLocationY(),
+		sizeof(float));
+	SendStream.write(&DirectionX, sizeof(float));
+	SendStream.write(&DirectionY, sizeof(float));
+	SendStream.write(&Velocity, sizeof(float));
+	SendStream.write(&m_LoginChattingClientSession->GetPlayerData()->GetAcceleration(),
+		sizeof(float));
+
+	SendPacketWithSendStream(PK_RECV_MOVE_START);
+}
+
+void LoginChattingClientSessionParser::RecvMoveEnd(NetworkSystem::T_PACKET * packet)
+{
+	recvStream.clear();
+	float LocationX = 0.0f;
+	float LocationY = 0.0f;
+	float DirectionX = 0.0f;
+	float DirectionY = 0.0f;
+	float Velocity = 0.0f;
+
+	//클라이언트의 현재 위치 방향 속도를 받아오고
+	const size_t headSize = sizeof(packet->Size) + sizeof(packet->type);
+	recvStream.set(packet->buff, packet->Size - headSize);
+	recvStream.read(&LocationX, sizeof(float));
+	recvStream.read(&LocationY, sizeof(float));
+	recvStream.read(&DirectionX, sizeof(float));
+	recvStream.read(&DirectionY, sizeof(float));
+	recvStream.read(&Velocity, sizeof(float));
+
+	SLogPrint(L"%s : MoveEnd",
+		m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str());
+
+	//다른 클라이언트에 브로드케스팅 해주기 위해 ID 받아옴
+	wstring ID = m_LoginChattingClientSession->GetPlayerData()->GetPlayerID();
+	m_LoginChattingClientSession->GetPlayerData()->SetLocation(LocationX, LocationY);
+	m_LoginChattingClientSession->GetPlayerData()->SetAcceleration(-1.3f);
+
+	//해당 클라이언트의 player가 아래 데이터를 가지고 이동한다고 브로드케스팅 함
+	SendStream.clear();
+	SendStream.write(ID);
+	SendStream.write(&m_LoginChattingClientSession->GetPlayerData()->GetLocationX(),
+		sizeof(float));
+	SendStream.write(&m_LoginChattingClientSession->GetPlayerData()->GetLocationY(),
+		sizeof(float));
+	SendStream.write(&DirectionX, sizeof(float));
+	SendStream.write(&DirectionY, sizeof(float));
+	SendStream.write(&Velocity, sizeof(float));
+	SendStream.write(&m_LoginChattingClientSession->GetPlayerData()->GetAcceleration(),
+		sizeof(float));
+
+	SendPacketWithSendStream(PK_RECV_MOVE_END);
+}
+
+void LoginChattingClientSessionParser::RecvLocationRenewal(NetworkSystem::T_PACKET * packet)
+{
+	recvStream.clear();
+	float LocationX = 0.0f;
+	float LocationY = 0.0f;
+
+	//클라이언트의 현재 위치 방향 속도를 받아오고
+	const size_t headSize = sizeof(packet->Size) + sizeof(packet->type);
+	recvStream.set(packet->buff, packet->Size - headSize);
+	recvStream.read(&LocationX, sizeof(float));
+	recvStream.read(&LocationY, sizeof(float));
+
+	SLogPrint(L"%s : LocationRenewal",
+		m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str());
+
+	//다른 클라이언트에 브로드케스팅 해주기 위해 ID 받아옴
+	wstring ID = m_LoginChattingClientSession->GetPlayerData()->GetPlayerID();
+	m_LoginChattingClientSession->GetPlayerData()->SetLocation(LocationX, LocationY);
+	
+	//해당 클라이언트의 player가 아래 데이터를 가지고 이동한다고 브로드케스팅 함
+	SendStream.clear();
+	SendStream.write(ID);
+	SendStream.write(&m_LoginChattingClientSession->GetPlayerData()->GetLocationX(),
+		sizeof(float));
+	SendStream.write(&m_LoginChattingClientSession->GetPlayerData()->GetLocationY(),
+		sizeof(float));
+	
+	SendPacketWithSendStream(PK_RECV_LOCATION_RENEWAL);
 }
 
 bool LoginChattingClientSessionParser::PacketParsing(T_PACKET * const packet)
@@ -380,6 +517,18 @@ bool LoginChattingClientSessionParser::PacketParsing(T_PACKET * const packet)
 		ReqExit(packet);
 		LeaveCriticalSection(&PacketParsingCS);
 		return false;
+
+	case PK_SEND_MOVE_START:
+		RecvMoveStart(packet);
+		break;
+
+	case PK_SEND_MOVE_END:
+		RecvMoveEnd(packet);
+		break;
+
+	case PK_SEND_LOCATION_RENEWAL:
+		RecvLocationRenewal(packet);
+		break;
 
 	default:
 		ASSERT(false);

@@ -8,8 +8,8 @@ class ChannelManager : public ServerEngine::Singleton<ChannelManager>
 {
 	friend ChannelManager;
 private:
-	map<wstring, Channel*>	m_mapStringChannels;
-	map<UINT, Channel*>		m_mapIDChannels;
+	unordered_map<wstring, Channel*>	m_mapStringChannels;
+	unordered_map<UINT, Channel*>		m_mapIDChannels;
 
 public:
 	ChannelManager();
