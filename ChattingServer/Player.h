@@ -22,8 +22,6 @@ private:
 
 	bool IsMove;
 
-	float m_LocationX;
-	float m_LocationY;
 	float m_DirectionX;
 	float m_DirectionY;
 	float m_Velocity;
@@ -49,11 +47,10 @@ public:
 	}
 
 	void SetVelocity(float Velocity) { m_Velocity = Velocity; }
-	void SetLocationX(float x) { m_LocationX = x; }
-	void SetLocationY(float y) { m_LocationY = y; }
+	
 	void SetDirectionX(float x) { m_DirectionX = x; }
 	void SetDirectionY(float y) { m_DirectionY = y; }
-	void SetLocation(float x, float y) { m_LocationX = x; m_LocationY = y; }
+	
 	void SetDirection(float x, float y) { m_DirectionX = x; m_DirectionY = y; }
 	void SetPlayerState(const E_PLAYER_STATE& state) { m_PlayerState = state; }
 	void SetChannel(Channel* channel) { m_pChannel = channel; }
@@ -61,8 +58,7 @@ public:
 	void SetPlayerNickname(wstring playerNickname) { m_PlayerNickname = playerNickname; }
 
 	float& GetVelocity() { return m_Velocity; }
-	float& GetLocationX() { return m_LocationX; }
-	float& GetLocationY() { return m_LocationY; }
+	
 	float& GetDirectionX() { return m_DirectionX; }
 	float& GetDirectionY() { return m_DirectionY; }
 

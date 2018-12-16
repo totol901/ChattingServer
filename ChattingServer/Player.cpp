@@ -6,8 +6,6 @@ Player::Player()
 	m_PlayerState(PLAYER_NONE),
 	m_pChannel(nullptr),
 	m_PlayerID(L""),
-	m_LocationX(0.0f),
-	m_LocationY(0.0f),
 	m_Velocity(0.0f),
 	m_DirectionX(0.0f),
 	m_DirectionY(0.0f),

@@ -7,8 +7,16 @@
 class GameObject : public Object
 {
 protected:
-	//TODO : 추후 실제 게임을 만들때 업뎃 할 것
+	float m_LocationX;
+	float m_LocationY;
+
 public:
 	GameObject();
 	virtual~GameObject();
+
+	void SetLocationX(float x) { m_LocationX = x; }
+	void SetLocationY(float y) { m_LocationY = y; }
+	void SetLocation(float x, float y) { m_LocationX = x; m_LocationY = y; }
+	float& GetLocationX() { return m_LocationX; }
+	float& GetLocationY() { return m_LocationY; }
 };
