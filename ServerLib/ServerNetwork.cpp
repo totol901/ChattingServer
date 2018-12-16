@@ -5,7 +5,6 @@ namespace ServerEngine
 {
 	namespace NetworkSystem
 	{
-
 		ServerNetwork::ServerNetwork()
 			:Network()
 		{

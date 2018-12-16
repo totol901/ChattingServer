@@ -16,10 +16,13 @@ namespace ServerEngine
 			SESSION_TYPE_SERVER,
 		};
 
+		const int DeadMinTime = 1;
+
 		class Session
 		{
 		protected:
-			static BOOL m_AllocatorOn;
+			CRITICAL_SECTION m_HartBeatCS;
+			CRITICAL_SECTION m_HeartBeatSendRecvCS;
 
 			IOData		m_arrIOData[2];
 			SOCKET		m_Socket;
@@ -27,15 +30,61 @@ namespace ServerEngine
 			int8_t		m_Type;
 			SOCKADDR_IN m_ClientAddr;
 
+			chrono::system_clock::time_point m_BeforeBeatTime;
+			chrono::system_clock::time_point m_CurrentBeatTime;
+
+			time_t m_SendTime;
+			time_t m_RecvTime;
+			time_t m_Ping;
+
+			void Send(const WSABUF& wsaBuf);
+			void Recv(const WSABUF& wsabuf);
+			bool IsRecving(const size_t& transferSize);
+
 		public:
 			Session();
 			virtual ~Session();
 
-			//TODO : 실제 게임 만들때 필요하니 나중에 구현할 것
-			//void				updateHeartBeat();
+			//하트비트 관련 함수들
+			void UpdateHeartBeat();
+			void SendHeartBeat();
+			void RecvHeartBeat();
+			bool ChackHeartBeat();
+
+			const time_t& GetPing() const { return m_Ping; }
 
 			//소켓 옵션(좀비 소켓 체크) 설정
 			bool setSocketOpt();
+
+			/****************************************************************************
+			함수명	: PacketParsing
+			설명		: 페킷을 파싱함
+			*****************************************************************************/
+			virtual const bool PacketParsing(T_PACKET* const pakcet) = 0;
+
+			/****************************************************************************
+			함수명	: sendPacket
+			설명		: packet데이터를 ioData_ 형태로 변형 후 send함
+			*****************************************************************************/
+			void SendPacket(const T_PACKET& packet);
+
+			/****************************************************************************
+			함수명	: onRecv
+			설명		: 데이터 분석, Recv 상태인 패킷 리턴해줌
+			*****************************************************************************/
+			T_PACKET* OnRecv(const size_t& transferSize);
+
+			/****************************************************************************
+			함수명	: onSend
+			설명		: 페킷 보내기 On이면 패킷 송신함
+			*****************************************************************************/
+			void OnSend(size_t transferSize);
+
+			/****************************************************************************
+			함수명	: RecvStandBy
+			설명		: ioData[IO_READ] 버퍼 초기화, IOCP의 recv 비동기 실행
+			*****************************************************************************/
+			void RecvStandBy();
 
 		public:
 			//get함수

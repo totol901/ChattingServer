@@ -36,7 +36,13 @@ namespace ServerEngine
 
 		bool ClientSessionParser::PacketParsing(T_PACKET* packet)
 		{
-			SLogPrintAtFile("PacketParsing override ¿¡·¯");
+			switch (packet->type)
+			{
+			case PK_RECV_HEARTBEAT:
+				RecvHeatBeat(packet);
+				return true;
+			}
+
 			return false;
 		}
 
@@ -78,6 +84,11 @@ namespace ServerEngine
 			LeaveCriticalSection(&RecvQueueCS);
 
 			return temp;
+		}
+
+		void ClientSessionParser::RecvHeatBeat(T_PACKET * packet)
+		{
+			m_ClientSession->RecvHeartBeat();
 		}
 	}
 }

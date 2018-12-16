@@ -14,11 +14,15 @@ LoginChattingClientSession::~LoginChattingClientSession()
 
 HRESULT LoginChattingClientSession::Init()
 {
-	return S_OK;
+	HRESULT hr = ClientSession::Init();
+
+	return hr;
 }
 
 void LoginChattingClientSession::Release()
 {
+	ClientSession::Release();
+
 	//채널에 있을수 있으니 있다면 빠져나옴
 	if (m_PlayerData.GetChannel())
 	{

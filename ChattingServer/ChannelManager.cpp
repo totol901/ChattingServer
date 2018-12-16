@@ -54,6 +54,10 @@ Channel * ChannelManager::FindChannelByName(const wstring& channelName)
 
 Channel * ChannelManager::FindChannelByID(UINT id)
 {
+	if (m_mapIDChannels.size() == 0)
+	{
+		return nullptr;
+	}
 	auto iter = m_mapIDChannels.find(id);
 	if (iter == m_mapIDChannels.end())
 	{

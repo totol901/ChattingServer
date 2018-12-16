@@ -19,7 +19,10 @@ private:
 public:
 	HRESULT Init();
 	void Release();
-	
+
+	static bool IsDeleteSession(LoginChattingClientSession* pClientSession, DWORD bytesTransferred);
+	static bool IsDeleteSessionCommon(LoginChattingClientSession* pClientSession, DWORD bytesTransferred);
+
 	static unsigned int WINAPI AcceptRoop(LPVOID sNetwork);
 	static unsigned int WINAPI CompletionClientSessionThread(LPVOID pComPort);
 

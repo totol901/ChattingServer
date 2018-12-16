@@ -16,8 +16,21 @@ namespace ServerEngine
 
 		void Timer::Init()
 		{
+			m_startTime = chrono::system_clock::now();
+			//m_startClock = chrono::system_clock::to_time_t(chrono::system_clock::now());
+
 			m_NowTime = clock();
 			m_LastTime = clock();
+		}
+
+		time_t Timer::GetStartTime_t() const
+		{
+			return chrono::system_clock::to_time_t(m_startTime);
+		}
+
+		time_t Timer::GetNowTime_t() const
+		{
+			return chrono::system_clock::to_time_t(chrono::system_clock::now());
 		}
 
 		const tm & Timer::GetTM()
@@ -68,6 +81,11 @@ namespace ServerEngine
 		{
 			m_LastTime = m_NowTime;
 			m_NowTime = clock();
+		}
+
+		chrono::minutes Timer::DuraionMin(const chrono::system_clock::time_point & EndTime, const chrono::system_clock::time_point & StartTime)
+		{
+			return chrono::duration_cast<chrono::minutes>(EndTime- StartTime);
 		}
 
 		double Timer::ElipsedSec()

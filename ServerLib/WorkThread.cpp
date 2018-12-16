@@ -69,7 +69,7 @@ namespace ServerEngine
 				//할일이 끝났으니 다시 Wait스택에 넣어줌
 				THREADPOOLMANAGER->PushWaitStack(pWorkThread);
 				//한 사이클이 끝났으니 스위치 해줌
-				SwitchToThread();
+				//SwitchToThread();
 			}
 
 			return 0;

@@ -103,8 +103,17 @@ namespace ServerEngine
 				Work* ptempWork = pPoolManager->PopDoWorkQueue();
 				if (ptempWork)
 				{
-					WorkThread* ptempWorkThread = pPoolManager->PopWaitStack();
-					ptempWorkThread->HaveThreadWork(ptempWork);
+					while (pPoolManager->m_IsOn)
+					{
+						WorkThread* ptempWorkThread = pPoolManager->PopWaitStack();
+					
+						//일이 있으면 처리
+						if (ptempWorkThread)
+						{
+							ptempWorkThread->HaveThreadWork(ptempWork);
+							break;
+						}
+					}
 				}
 			}
 

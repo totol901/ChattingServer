@@ -84,24 +84,13 @@ void MainClass::Monitering()
 	);
 }
 
-//unsigned int __stdcall MainClass::MoniteringThread(LPVOID param)
+//unsigned int __stdcall MainClass::HartBeatThread(LPVOID param)
 //{
 //	MainClass* mainClass = (MainClass*)param;
 //	double MoniteringSec = 0.0;
 //	while (mainClass->IsOn())
 //	{
-//		TIMER->Update();
-//
-//		//2초마다 서버 모니터링
-//		MoniteringSec += TIMER->ElipsedSec();
-//		if (MoniteringSec > 5.0)
-//		{
-//			MoniteringSec = 0.0;
-//			SLogPrintAtFile("CPU : %0.2f%%, 사용 메모리 : %u byte, 동접자 : %u",
-//				MONITORING->processCpuUsage(),
-//				MONITORING->processMemUsage(),
-//				CLIENTSESSIONMANAGER->GetCCU());
-//		}
+//		
 //	}
 //
 //	OutputDebugStringA("모니터링 스레드 종료");

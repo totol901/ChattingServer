@@ -17,7 +17,6 @@ public:
 	Channel(const wstring& channelName);
 	~Channel();
 
-	
 	bool ChannelErase();
 
 	bool InsertClientSession(ClientSession* clientsession);
@@ -25,6 +24,7 @@ public:
 	bool DeleteClientSession(ClientSession* clientsession);
 
 	void SendPacketToChannelMember(NetworkSystem::T_PACKET& packet);
+	void SendPacketChannelData(ClientSession* clientsession);
 
 	wstring& GetName()		{ return m_name; }
 	UINT	GetChannelID() const	{ return m_ChannelID; }

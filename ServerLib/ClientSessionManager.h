@@ -15,6 +15,9 @@ namespace ServerEngine
 			UINT						m_GenerateSessionID;
 			unordered_map<SOCKET, ClientSession*> m_mapClientSession;		//억셉트된 세션
 
+			bool m_bIsOn;
+			HANDLE m_HarbeatEndEvent;
+
 			ClientSessionManager();
 			virtual ~ClientSessionManager();
 
@@ -27,6 +30,8 @@ namespace ServerEngine
 			bool			AddClientSession(ClientSession* const clientSession);
 			bool			DeleteClientSession(const SOCKET& socket);
 			ClientSession*	FindClientSession(SOCKET socket);
+
+			void SendSessionHartBeats();
 
 			const size_t GetCCU() const { return m_mapClientSession.size(); }
 		};

@@ -4,7 +4,7 @@ namespace ServerEngine
 {
 	namespace System
 	{
-		const UINT THREAD_MAX = 100;    //최대 쓰레드 수
+		const UINT THREAD_MAX = 8 + 1;    //최대 쓰레드 수
 
 		class ThreadPoolManager : public Singleton<ThreadPoolManager>
 		{

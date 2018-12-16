@@ -6,9 +6,11 @@ namespace ServerEngine
 	namespace NetworkSystem
 	{
 		ClientSessionManager::ClientSessionManager()
-			:m_GenerateSessionID(0)
+			:m_GenerateSessionID(0),
+			m_bIsOn(true)
 		{
 			InitializeCriticalSection(&ManagerCS);
+			m_HarbeatEndEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 		}
 
 		ClientSessionManager::~ClientSessionManager()
@@ -18,11 +20,20 @@ namespace ServerEngine
 
 		HRESULT ClientSessionManager::Init()
 		{
+			THREADPOOLMANAGER->MakeWork(
+				bind(&ClientSessionManager::SendSessionHartBeats,this)
+			);
+
 			return S_OK;
 		}
 
 		void ClientSessionManager::Release()
 		{
+			m_bIsOn = false;
+			//스래드가 종료될때까지 클래스 파괴 기다려줌
+			WaitForSingleObject(m_HarbeatEndEvent, INFINITE);
+			CloseHandle(m_HarbeatEndEvent);
+
 			for (auto iter = m_mapClientSession.begin();
 				iter != m_mapClientSession.end();
 				iter++)
@@ -51,8 +62,6 @@ namespace ServerEngine
 			return false;
 		}
 
-
-
 		const UINT ClientSessionManager::GetGenerateSessionID()
 		{
 			return m_GenerateSessionID++;
@@ -80,8 +89,6 @@ namespace ServerEngine
 			return true;
 		}
 
-
-
 		ClientSession* ClientSessionManager::FindClientSession(SOCKET socket)
 		{
 			if (m_mapClientSession.empty())
@@ -99,5 +106,23 @@ namespace ServerEngine
 			return iter->second;
 		}
 
+		void ClientSessionManager::SendSessionHartBeats()
+		{
+			while (m_bIsOn)
+			{
+				//10초 마다 스레드 하트비트 송신
+				WaitForSingleObject(GetCurrentThread(), 10.0f);
+				EnterCriticalSection(&ManagerCS);
+				for (auto iter = m_mapClientSession.begin();
+					iter != m_mapClientSession.end();
+					iter++)
+				{
+					iter->second->SendHeartBeat();
+				}
+				LeaveCriticalSection(&ManagerCS);
+			}
+
+			SetEvent(m_HarbeatEndEvent);
+		}
 	}
 }

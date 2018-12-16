@@ -33,6 +33,8 @@ namespace ServerEngine
 			void PushQueueRecvPk(T_PACKET* pPacket);
 			T_PACKET* PopQueueRecvPk();
 
+			void RecvHeatBeat(T_PACKET* packet);
+
 			void RecvQueuePkParsing();
 
 			virtual bool PacketParsing(T_PACKET* packet);

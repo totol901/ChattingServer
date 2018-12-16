@@ -12,7 +12,9 @@ LoginChattingClientSessionManager::~LoginChattingClientSessionManager()
 
 HRESULT LoginChattingClientSessionManager::Init()
 {
-	return S_OK;
+	HRESULT hr = ClientSessionManager::Init();
+
+	return hr;
 }
 
 void LoginChattingClientSessionManager::Release()

@@ -3,6 +3,7 @@
 목적		: 클라이언트 세션의 파싱 객체
 ******************************************************************************/
 #pragma once
+#include <thread>
 
 class LoginChattingClientSession;
 class LoginChattingClientSessionParser : public NetworkSystem::ClientSessionParser
@@ -22,10 +23,18 @@ private:
 	void RecvMoveStart(NetworkSystem::T_PACKET* packet);
 	void RecvMoveEnd(NetworkSystem::T_PACKET* packet);
 	void RecvLocationRenewal(NetworkSystem::T_PACKET* packet);
+	void RecvServerTime(NetworkSystem::T_PACKET* packet);
+	
+	void SendChannelJoinAnnounce();
+	
+	void SendChannelData();
+
 
 public:
 	LoginChattingClientSessionParser(ClientSession * clientSession);
 	~LoginChattingClientSessionParser();
 	
+	void SendChannelOutAnnounce();
+
 	virtual bool PacketParsing(T_PACKET* packet);
 };
