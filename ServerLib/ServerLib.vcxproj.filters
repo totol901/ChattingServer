@@ -153,6 +153,12 @@
     <ClInclude Include="Database.h">
       <Filter>SystemModule\Database</Filter>
     </ClInclude>
+    <ClInclude Include="PacketHeader.h">
+      <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketFactory.h">
+      <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -190,9 +196,6 @@
     </ClCompile>
     <ClCompile Include="IOData.cpp">
       <Filter>SystemModule\NetworkSystem\IOCP</Filter>
-    </ClCompile>
-    <ClCompile Include="Packet.cpp">
-      <Filter>SystemModule\NetworkSystem\Packet</Filter>
     </ClCompile>
     <ClCompile Include="RecvStream.cpp">
       <Filter>SystemModule\NetworkSystem\Packet</Filter>

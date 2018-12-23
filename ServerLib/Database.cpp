@@ -7,7 +7,7 @@ namespace ServerEngine
 	{
 		Database::Database()
 		{
-			DB_HOST = "localhost";
+			DB_HOST = "";
 			DB_NAME = "login_db";
 			DB_SOCK = NULL;
 			DB_USER = "root";

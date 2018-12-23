@@ -6,6 +6,30 @@ namespace ServerEngine
 {
 	namespace NetworkSystem
 	{
+		void * Stream::operator new(size_t allocSize)
+		{
+			if (m_AllocatorOn == FALSE)
+			{
+				MEMORYMANAGER->AddNewAllocator(
+					System::MemoryManager::E_PoolAllocator,
+					allocSize * 10000,
+					TEXT("PacketMemory"),
+					allocSize
+				);
+				m_AllocatorOn = TRUE;
+			}
+
+			return (Stream*)(MEMORYMANAGER->
+				GetAllocator(TEXT("PacketMemory"))->Allocate(sizeof(Stream),
+					__alignof(Stream)));
+		}
+
+		void Stream::operator delete(void * deletepointer)
+		{
+			MEMORYMANAGER->GetAllocator(TEXT("PacketMemory"))
+				->Deallocate(deletepointer);
+		}
+
 		Stream::Stream()
 		{
 			clear();

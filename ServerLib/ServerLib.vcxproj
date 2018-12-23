@@ -84,6 +84,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Program Files\MySQL\MySQL Server 8.0\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -168,6 +169,8 @@
     <ClInclude Include="Monitoring.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Packet.h" />
+    <ClInclude Include="PacketFactory.h" />
+    <ClInclude Include="PacketHeader.h" />
     <ClInclude Include="PoolAllocator.h" />
     <ClInclude Include="RecvStream.h" />
     <ClInclude Include="resource.h" />
@@ -197,7 +200,6 @@
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
     <ClCompile Include="Network.cpp" />
-    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="PoolAllocator.cpp" />
     <ClCompile Include="RecvStream.cpp" />
     <ClCompile Include="SendStream.cpp" />

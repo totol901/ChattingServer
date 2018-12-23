@@ -58,6 +58,8 @@ using namespace std;
 #include "ClientSession.h"
 #include "ClientSessionManager.h"
 #include "Database.h"
+#include "PacketHeader.h"
+#include "PacketFactory.h"
 
 using namespace ServerEngine;
 using namespace NetworkSystem;

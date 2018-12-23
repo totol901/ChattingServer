@@ -127,10 +127,10 @@ unsigned int LoginChattingServerNetwork::AcceptRoop(LPVOID sNetwork)
 
 unsigned int LoginChattingServerNetwork::CompletionClientSessionThread(LPVOID pComPort)
 {
-	HANDLE			completionPort		= (HANDLE)pComPort;
-	DWORD			bytesTransferred	= 0;
-	LoginChattingClientSession*	pClientSession		= nullptr;
-	IOData* pIOData		= nullptr;
+	HANDLE completionPort = (HANDLE)pComPort;
+	DWORD bytesTransferred = 0;
+	LoginChattingClientSession*	pClientSession = nullptr;
+	IOData* pIOData = nullptr;
 
 	while (1)
 	{

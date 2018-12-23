@@ -15,6 +15,8 @@ namespace ServerEngine
 			size_t readPt;
 
 			array <CHAR, PAKCET_BUFF_SIZE> stream;
+		private:
+			static BOOL m_AllocatorOn;
 
 		public:
 			Stream();
@@ -27,6 +29,9 @@ namespace ServerEngine
 
 			void operator = (Stream &stream);
 			void set(CHAR *stream, size_t size);
+
+			static void* operator new(size_t allocSize);
+			static void operator delete(void* deletepointer);
 		};
 	}
 }

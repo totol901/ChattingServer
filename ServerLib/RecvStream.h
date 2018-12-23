@@ -19,11 +19,19 @@ namespace ServerEngine
 			// read
 			//------------------------------------------------------------------------//
 			bool checkReadBound(size_t len);
-			void read(OUT string& retVal);
+			void read(OUT string* retVal);
+			void read(OUT wstring* retVal);
+			void read(OUT bool* reVal);
+			void read(OUT int* reVal);
+			void read(OUT UINT* reVal);
+			void read(OUT BYTE* reVal);
+			void read(OUT float* reVal);
+			void read(OUT INT64* reVal);
+			void read(OUT UINT64* reVal);
 			void read(OUT void *retVal, size_t len);
-			void wStringread(OUT wstring & retVal);
+			
 
-			void WStringStaticRead(OUT string & retVal);
+			//void WStringStaticRead(OUT string & retVal);
 		};
 	}
 }

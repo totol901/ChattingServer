@@ -20,7 +20,15 @@ namespace ServerEngine
 			//------------------------------------------------------------------------//
 			bool checkWriteBound(size_t len);
 			void write(wstring reVal);
+			void write(string reval);
+			void write(const bool& reVal);
+			void write(const float& reVal);
+			void write(const int& reVal);
+			void write(const UINT& reVal);
+			void write(const INT64& reVal);
+			void write(const BYTE& reVal);
 			void write(void* retVal, size_t len);
+			void write(const E_PACKET_TYPE& retVal);
 		};
 	}
 }

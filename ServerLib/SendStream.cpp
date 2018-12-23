@@ -46,10 +46,68 @@ namespace ServerEngine
 			offset += (Stringlen) * sizeof(wchar_t);
 		}
 
+		void SendStream::write(string reval)
+		{
+			//string ±Ê¿Ã ≥÷æÓ¡‹
+			UINT Stringlen = (UINT)reval.length();
+			memcpy_s((void *)(stream.data() + offset), stream.size() - offset,
+				(void *)&Stringlen, sizeof(Stringlen));
+			offset += sizeof(Stringlen);
+
+			//πÆ¿Â ≥÷æÓ¡‹
+			const char* str = reval.c_str();
+			memcpy_s((void *)(stream.data() + offset), stream.size() - offset,
+				(void *)str, Stringlen);
+			offset += (Stringlen);
+		}
+
+		void SendStream::write(const bool & reVal)
+		{
+			memcpy_s((void *)(stream.data() + offset), stream.size() - offset, (const void *)&reVal, sizeof(reVal));
+			offset += sizeof(reVal);
+		}
+
+		void SendStream::write(const float & reVal)
+		{
+			memcpy_s((void *)(stream.data() + offset), stream.size() - offset, (const void *)&reVal, sizeof(reVal));
+			offset += sizeof(reVal);
+		}
+
+		void SendStream::write(const int & reVal)
+		{
+			memcpy_s((void *)(stream.data() + offset), stream.size() - offset, (const void *)&reVal, sizeof(reVal));
+			offset += sizeof(reVal);
+		}
+
+		void SendStream::write(const UINT & reVal)
+		{
+			memcpy_s((void *)(stream.data() + offset), stream.size() - offset, (const void *)&reVal, sizeof(reVal));
+			offset += sizeof(reVal);
+		}
+
+		void SendStream::write(const INT64 & reVal)
+		{
+			memcpy_s((void *)(stream.data() + offset), stream.size() - offset, (const void *)&reVal, sizeof(reVal));
+			offset += sizeof(reVal);
+		}
+
+		void SendStream::write(const BYTE & reVal)
+		{
+			memcpy_s((void *)(stream.data() + offset), stream.size() - offset, (const void *)&reVal, sizeof(reVal));
+			offset += sizeof(reVal);
+		}
+
 		void SendStream::write(void * retVal, size_t len)
 		{
 			memcpy_s((void *)(stream.data() + offset), stream.size() - offset, (const void *)retVal, len);
 			offset += len;
 		}
+
+		void SendStream::write(const E_PACKET_TYPE& retVal)
+		{
+			memcpy_s((void *)(stream.data() + offset), stream.size() - offset, (const void *)&retVal, sizeof(retVal));
+			offset += sizeof(retVal);
+		}
+
 	}
 }
