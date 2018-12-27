@@ -157,7 +157,7 @@ unsigned int LoginChattingServerNetwork::CompletionClientSessionThread(LPVOID pC
 		}
 
 		//정상적 접속 종료
-		if (!LoginChattingServerNetwork::IsDeleteSessionCommon(pClientSession, bytesTransferred))
+		if (pIOData != NULL && !LoginChattingServerNetwork::IsDeleteSessionCommon(pClientSession, bytesTransferred))
 		{
 			continue;
 		}
@@ -170,7 +170,7 @@ unsigned int LoginChattingServerNetwork::CompletionClientSessionThread(LPVOID pC
 
 		case IO_READ:
 			{
-				T_PACKET *pPacket = pClientSession->OnRecv((size_t)bytesTransferred);
+				Packet *pPacket = pClientSession->OnRecv((size_t)bytesTransferred);
 
 				if (pPacket != nullptr)
 				{

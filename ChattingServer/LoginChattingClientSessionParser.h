@@ -12,23 +12,22 @@ private:
 	LoginChattingClientSession* m_LoginChattingClientSession;
 	
 	//패킷 분석 함수들
-	void ReqLogin(NetworkSystem::T_PACKET* packet);
-	void ReqCreateID(NetworkSystem::T_PACKET * packet);
-	void ReqWatingChannelEnter(NetworkSystem::T_PACKET* packet);
-	void ReqWaitingChannelCreateChannel(NetworkSystem::T_PACKET* packet);
-	void ReqWaitingChannelChannelJoin(NetworkSystem::T_PACKET* packet);
-	void ReqChannelSendMessage(NetworkSystem::T_PACKET* packet);
-	void ReqChannelOut(NetworkSystem::T_PACKET* packet);
-	void ReqExit(NetworkSystem::T_PACKET* packet);
-	void RecvMoveStart(NetworkSystem::T_PACKET* packet);
-	void RecvMoveEnd(NetworkSystem::T_PACKET* packet);
-	void RecvLocationRenewal(NetworkSystem::T_PACKET* packet);
-	void RecvServerTime(NetworkSystem::T_PACKET* packet);
+	void ReqLogin(NetworkSystem::Packet* packetData);
+	void ReqCreateID(NetworkSystem::Packet * packetData);
+	void ReqWatingChannelEnter(NetworkSystem::Packet* packetData);
+	void ReqWaitingChannelCreateChannel(NetworkSystem::Packet* packetData);
+	void ReqWaitingChannelChannelJoin(NetworkSystem::Packet* packetData);
+	void ReqChannelSendMessage(NetworkSystem::Packet* packetData);
+	void ReqChannelOut(NetworkSystem::Packet* packetData);
+	void ReqExit(NetworkSystem::Packet* packetData);
+	void RecvMoveStart(NetworkSystem::Packet* packetData);
+	void RecvMoveEnd(NetworkSystem::Packet* packetData);
+	void RecvLocationRenewal(NetworkSystem::Packet* packetData);
+	void RecvServerTime(NetworkSystem::Packet* packetData);
 	
 	void SendChannelJoinAnnounce();
 	
 	void SendChannelData();
-
 
 public:
 	LoginChattingClientSessionParser(ClientSession * clientSession);
@@ -36,5 +35,5 @@ public:
 	
 	void SendChannelOutAnnounce();
 
-	virtual bool PacketParsing(T_PACKET* packet);
+	virtual bool PacketParsing(Packet* packetData);
 };

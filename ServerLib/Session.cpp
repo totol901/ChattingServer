@@ -82,22 +82,22 @@ namespace ServerEngine
 			return false;
 		}
 
-		void Session::SendPacket(const T_PACKET & packet)
+		void Session::SendPacket(Stream&  stream)
 		{
-			if (!m_arrIOData[IO_WRITE].SetData(packet))
+			if (!m_arrIOData[IO_WRITE].SetData(stream))
 			{
 				SLogPrintAtFile("Send error");
 				return;
 			}
 
 			WSABUF wsaBuf;
-			wsaBuf.buf = (char*)m_arrIOData[IO_WRITE].GetptPacket();
-			wsaBuf.len = packet.Size;
+			wsaBuf.buf = (char*)m_arrIOData[IO_WRITE].GetptStream()->data();
+			wsaBuf.len = (ULONG)m_arrIOData[IO_WRITE].GetptStream()->size();
 
 			this->Send(wsaBuf);
 		}
 
-		T_PACKET * Session::OnRecv(const size_t & transferSize)
+		Packet * Session::OnRecv(const size_t & transferSize)
 		{
 			int32_t offset = 0;
 			m_arrIOData[IO_READ].SetTotalBytes();
@@ -107,15 +107,17 @@ namespace ServerEngine
 				return nullptr;
 			}
 
-			T_PACKET* packetData = new T_PACKET();
-			*packetData = *m_arrIOData[IO_READ].GetptPacket();
-
+			//패킷 사이즈 제외한 데이터만 넣어줌
+			Packet* packet = PACKETMAKER->GetPacket(m_arrIOData[IO_READ].GetptStream()->GetType());
+			m_arrIOData[IO_READ].GetptStream()->SetreadPt(sizeof(int) + sizeof(int));
+			packet->Decode(*(RecvStream*)(m_arrIOData[IO_READ].GetptStream()));
+			
 			//하트비트 시간 업데이트 해줌
 			UpdateHeartBeat();
 
 			//패킷 하나를 다 받은 뒤에 다시 recv 해준다
 			RecvStandBy();
-			return packetData;
+			return packet;
 		}
 
 		void Session::OnSend(size_t transferSize)
@@ -131,7 +133,7 @@ namespace ServerEngine
 			m_arrIOData[IO_READ].Clear();
 
 			WSABUF wsaBuf;
-			wsaBuf.buf = (char*)m_arrIOData[IO_READ].GetptPacket();
+			wsaBuf.buf = (char*)m_arrIOData[IO_READ].GetptStream()->data();
 			wsaBuf.len = PACKET_MAX_SIZE;
 
 			Recv(wsaBuf);
@@ -148,17 +150,15 @@ namespace ServerEngine
 
 		void Session::SendHeartBeat()
 		{
-			T_PACKET packet;
-			const UINT pakcetSize = sizeof(packet.Size) + sizeof(packet.type);
-
-			packet.type = PK_SEND_HEARTBEAT;
-			packet.Size = pakcetSize;
+			PK_SEND_HARTBEAT packet;
+			SendStream stream;
+			packet.Encode(stream);
 
 			EnterCriticalSection(&m_HeartBeatSendRecvCS);
 			m_SendTime = TIMER->GetNowTime_t();
 			LeaveCriticalSection(&m_HeartBeatSendRecvCS);
 
-			//SendPacket(packet);
+			SendPacket(stream);
 		}
 
 		void Session::RecvHeartBeat()

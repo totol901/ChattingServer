@@ -23,7 +23,7 @@ public:
 	bool IsClientSessionIntoSet(ClientSession* clientsession);
 	bool DeleteClientSession(ClientSession* clientsession);
 
-	void SendPacketToChannelMember(NetworkSystem::T_PACKET& packet);
+	void SendPacketToChannelMember(NetworkSystem::Stream& packetData);
 	void SendPacketChannelData(ClientSession* clientsession);
 
 	wstring& GetName()		{ return m_name; }

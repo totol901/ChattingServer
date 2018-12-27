@@ -26,16 +26,18 @@ using namespace std;
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "libmysql.lib")
 
-#define PACKET_MAX_SIZE 1024
+#define PACKET_MAX_SIZE 128
 #define PAKCET_BUFF_SIZE (PACKET_MAX_SIZE - sizeof(UINT) - sizeof(int))
 
-#include "mysql.h"
+#include "PacketHeader.h"
+#include "Singleton.h"
 #include "Stream.h"
 #include "RecvStream.h"
 #include "SendStream.h"
-#include "Packet.h"
 #include "Util.h"
-#include "Singleton.h"
+#include "Packet.h"
+#include "PacketFactory.h"
+#include "mysql.h"
 #include "WinSock.h"
 #include "IOData.h"
 #include "Session.h"
@@ -58,8 +60,6 @@ using namespace std;
 #include "ClientSession.h"
 #include "ClientSessionManager.h"
 #include "Database.h"
-#include "PacketHeader.h"
-#include "PacketFactory.h"
 
 using namespace ServerEngine;
 using namespace NetworkSystem;
@@ -68,6 +68,7 @@ using namespace NetworkSystem;
 #define TIMER TimerSystem::Timer::GetInstance()
 #define MEMORYMANAGER System::MemoryManager::GetInstance()
 #define THREADPOOLMANAGER System::ThreadPoolManager::GetInstance()
+#define PACKETMAKER NetworkSystem::PacketFactory::GetInstance()
 
 //파싱 에러 상태
 enum E_PARSING_ERROR

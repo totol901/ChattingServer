@@ -17,6 +17,7 @@ namespace ServerEngine
                     case E_PK_ANS_LOGIN: return new PK_ANS_LOGIN();
                     case E_PK_REQ_CREATE_ID: return new PK_REQ_CREATE_ID();
                     case E_PK_ANS_CREATE_ID: return new PK_ANS_CREATE_ID();
+                    case E_PK_REQ_WAITINGCHANNAL_ENTER: return new PK_REQ_WAITINGCHANNAL_ENTER();
                     case E_PK_ANS_WAITINGCHANNAL_ENTER: return new PK_ANS_WAITINGCHANNAL_ENTER();
                     case E_PK_REQ_WAITINGCHANNAL_CHREAT_CHANNAL: return new PK_REQ_WAITINGCHANNAL_CHREAT_CHANNAL();
                     case E_PK_ANS_WAITINGCHANNAL_CHREAT_CHANNAL: return new PK_ANS_WAITINGCHANNAL_CHREAT_CHANNAL();
@@ -38,6 +39,7 @@ namespace ServerEngine
                     case E_PK_RECV_HARTBEAT: return new PK_RECV_HARTBEAT();
                     case E_PK_SEND_SERVERTIME: return new PK_SEND_SERVERTIME();
                     case E_PK_RECV_CHANNAL_JOIN_ANNOUNCE: return new PK_RECV_CHANNAL_JOIN_ANNOUNCE();
+                    case E_PK_RECV_CHANNAL_OUT_ANNOUNCE: return new PK_RECV_CHANNAL_OUT_ANNOUNCE();
                     case E_PK_RECV_CHANNAL_DATA: return new PK_RECV_CHANNAL_DATA();
                  }
                  return nullptr;

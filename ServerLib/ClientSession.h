@@ -53,7 +53,7 @@ namespace ServerEngine
 			*****************************************************************************/
 			virtual void Release();
 
-			virtual const bool PacketParsing(T_PACKET* const pakcet);
+			virtual const bool PacketParsing(Packet* const pakcet);
 		};
 	}
 }

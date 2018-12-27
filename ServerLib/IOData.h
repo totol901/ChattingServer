@@ -22,7 +22,7 @@ namespace ServerEngine
 			IO_OPERATION	m_IOType;
 			size_t			m_TotalBytes;
 			size_t			m_CurrentBytes;
-			T_PACKET		m_Packet;
+			Stream			m_Stream;
 
 		public:
 			IOData();
@@ -56,13 +56,13 @@ namespace ServerEngine
 			함수명	: setData
 			설명		: buffer_에 stream의 크기를 헤더로, 버퍼를 뒤에 추가해주는 패킷 만듬, totalBytes_ 갱신
 			*****************************************************************************/
-			bool SetData(T_PACKET packet);
+			bool SetData(Stream& packet);
 
 		public:
 			//get함수
 			const size_t& GetTotalByte() const { return m_TotalBytes; }
 			const IO_OPERATION& GetType() const { return m_IOType; }
-			T_PACKET * const GetptPacket() { return &m_Packet; }
+			Stream * const GetptStream() { return &m_Stream; }
 			LPWSAOVERLAPPED const GetptOverlapped() { return &m_Overlapped; }
 
 			//set함수

@@ -60,31 +60,26 @@ bool Channel::DeleteClientSession(ClientSession * clientsession)
 	return true;
 }
 
-void Channel::SendPacketToChannelMember(T_PACKET& packet)
+void Channel::SendPacketToChannelMember(Stream& packetData)
 {
 	for (auto iter = m_setClientSessions.begin();
 		iter != m_setClientSessions.end();
 		iter++)
 	{
-		(*iter)->SendPacket(packet);
+		(*iter)->SendPacket(packetData);
 	}
 }
 
 void Channel::SendPacketChannelData(ClientSession* clientsession)
 {
-	T_PACKET packet;
+	PK_RECV_CHANNAL_DATA packet;
 	SendStream sendStream;
+
 	for (auto iter = m_setClientSessions.begin();
 		iter != m_setClientSessions.end();
 		iter++)
 	{
 		LoginChattingClientSession* temp = (LoginChattingClientSession*)(*iter);
-		packet.Clear();
-		packet.type = PK_RECV_CHANNAL_DATA;
-
-		float LocationLengthX = 0.0f;
-		float LocationLengthY = 0.0f;
-		float Valocity = temp->GetPlayerData()->GetVelocity();
 
 		//움직인 시간 구해줌
 		chrono::high_resolution_clock::time_point currentTime = TIMER->GetNowHighTimePoint();
@@ -93,7 +88,7 @@ void Channel::SendPacketChannelData(ClientSession* clientsession)
 		double moveTime = mill.count() * 0.001f;
 
 		//움직인 거리
-		float moveLength = moveTime * temp->GetPlayerData()->GetVelocity();
+		float moveLength = (float)moveTime * temp->GetPlayerData()->GetVelocity();
 		//총 거리
 		float Length = Util::GetDistance(temp->GetPlayerData()->GetLocationX(),
 			temp->GetPlayerData()->GetLocationY(),
@@ -117,20 +112,18 @@ void Channel::SendPacketChannelData(ClientSession* clientsession)
 		}
 
 		sendStream.clear();
-		sendStream.write(temp->GetPlayerData()->GetPlayerID());
-		sendStream.write(&resultX,
-			sizeof(resultX));
-		sendStream.write(&resultY,
-			sizeof(resultY));
-		sendStream.write(&temp->GetPlayerData()->GetDirectionX(),
-			sizeof(temp->GetPlayerData()->GetDirectionX()));
-		sendStream.write(&temp->GetPlayerData()->GetDirectionY(),
-			sizeof(temp->GetPlayerData()->GetDirectionY()));
-		sendStream.write(&temp->GetPlayerData()->GetVelocity(),
-			sizeof(temp->GetPlayerData()->GetVelocity()));
-		packet.SetStream(sendStream);
+		CHAR asiiID[32] = { 0, };
+		Util::StrConvW2A((WCHAR*)temp->GetPlayerData()->GetPlayerID().c_str(),
+			asiiID, sizeof(asiiID));
+		packet.ID = asiiID;
+		packet.LocationX = resultX;
+		packet.LocationY = resultY;
+		packet.DirectionX = temp->GetPlayerData()->GetDirectionX();
+		packet.DirectionY = temp->GetPlayerData()->GetDirectionY();
+		packet.Velocity = temp->GetPlayerData()->GetVelocity();
+		packet.Encode(sendStream);
 
-		clientsession->SendPacket(packet);
+		clientsession->SendPacket(sendStream);
 
 		SLogPrint(L"%s : MoveEnd, resultX : %f, resultY : %f",
 			temp->GetPlayerData()->GetPlayerID().c_str(),

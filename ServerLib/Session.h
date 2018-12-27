@@ -60,19 +60,19 @@ namespace ServerEngine
 			함수명	: PacketParsing
 			설명		: 페킷을 파싱함
 			*****************************************************************************/
-			virtual const bool PacketParsing(T_PACKET* const pakcet) = 0;
+			virtual const bool PacketParsing(Packet* const pakcet) = 0;
 
 			/****************************************************************************
 			함수명	: sendPacket
 			설명		: packet데이터를 ioData_ 형태로 변형 후 send함
 			*****************************************************************************/
-			void SendPacket(const T_PACKET& packet);
+			void SendPacket(Stream& stream);
 
 			/****************************************************************************
 			함수명	: onRecv
 			설명		: 데이터 분석, Recv 상태인 패킷 리턴해줌
 			*****************************************************************************/
-			T_PACKET* OnRecv(const size_t& transferSize);
+			Packet* OnRecv(const size_t& transferSize);
 
 			/****************************************************************************
 			함수명	: onSend

@@ -51,7 +51,7 @@ namespace ServerEngine
 		{
 		}
 
-		const bool ClientSession::PacketParsing(T_PACKET * const packet)
+		const bool ClientSession::PacketParsing(Packet * const packet)
 		{
 			return false;
 		}

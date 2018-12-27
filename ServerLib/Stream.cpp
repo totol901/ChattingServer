@@ -6,6 +6,8 @@ namespace ServerEngine
 {
 	namespace NetworkSystem
 	{
+		BOOL Stream::m_AllocatorOn = FALSE;
+
 		void * Stream::operator new(size_t allocSize)
 		{
 			if (m_AllocatorOn == FALSE)
@@ -23,7 +25,7 @@ namespace ServerEngine
 				GetAllocator(TEXT("PacketMemory"))->Allocate(sizeof(Stream),
 					__alignof(Stream)));
 		}
-
+		
 		void Stream::operator delete(void * deletepointer)
 		{
 			MEMORYMANAGER->GetAllocator(TEXT("PacketMemory"))
@@ -49,12 +51,12 @@ namespace ServerEngine
 		{
 			offset = 0;
 			readPt = 0;
-			memset(&stream, 0, sizeof(stream));
+			memset(&buffer, 0, sizeof(buffer));
 		}
 
 		CHAR *Stream::data()
 		{
-			return stream.data();
+			return buffer.data();
 		}
 
 		size_t Stream::size()
@@ -70,7 +72,8 @@ namespace ServerEngine
 		void Stream::set(CHAR *data, size_t size)
 		{
 			this->offset = size;
-			memcpy_s(this->stream.data(), stream.size(), (void *)data, size);
+			memcpy_s(this->buffer.data(), buffer.size(), (void *)data, size);
 		}
+
 	}
 }

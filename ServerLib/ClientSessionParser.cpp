@@ -13,11 +13,22 @@ namespace ServerEngine
 		{
 			InitializeCriticalSection(&RecvQueueCS);
 			InitializeCriticalSection(&PacketParsingCS);
-
 		}
 
 		ClientSessionParser::~ClientSessionParser()
 		{
+			//¾ø¾Ö±â
+			EnterCriticalSection(&RecvQueueCS);
+			EnterCriticalSection(&PacketParsingCS);
+			while (m_recvPkQueue.size() != 0)
+			{
+				Packet* temp = m_recvPkQueue.front();
+				SAFE_DELETE(temp);
+				m_recvPkQueue.pop();
+			}
+			LeaveCriticalSection(&PacketParsingCS);
+			LeaveCriticalSection(&RecvQueueCS);
+
 			DeleteCriticalSection(&RecvQueueCS);
 			DeleteCriticalSection(&PacketParsingCS);
 
@@ -26,7 +37,7 @@ namespace ServerEngine
 
 		void ClientSessionParser::RecvQueuePkParsing()
 		{
-			T_PACKET * temp = PopQueueRecvPk();
+			Packet * temp = PopQueueRecvPk();
 			if (temp)
 			{
 				PacketParsing(temp);
@@ -34,12 +45,12 @@ namespace ServerEngine
 			SAFE_DELETE(temp);
 		}
 
-		bool ClientSessionParser::PacketParsing(T_PACKET* packet)
+		bool ClientSessionParser::PacketParsing(Packet* packetData)
 		{
-			switch (packet->type)
+			switch (packetData->Type())
 			{
-			case PK_RECV_HEARTBEAT:
-				RecvHeatBeat(packet);
+			case E_PK_RECV_HARTBEAT:
+				RecvHeatBeat(packetData);
 				return true;
 			}
 
@@ -48,28 +59,40 @@ namespace ServerEngine
 
 		void ClientSessionParser::SendPacketWithSendStream(E_PACKET_TYPE && type)
 		{
-			m_SendPk.Clear();
-			m_SendPk.type = type;
-			m_SendPk.SetStream(SendStream);
+			Packet* packet = PACKETMAKER->GetPacket(type);
+			packet->Encode(SendStream);
+			SAFE_DELETE(packet);
 
-			m_ClientSession->SendPacket(m_SendPk);
+			m_ClientSession->SendPacket(SendStream);
 		}
 
-		void ClientSessionParser::SetRecvStream(T_PACKET * packet)
-		{
-			recvStream.clear();
-			const size_t headSize = sizeof(packet->Size) + sizeof(packet->type);
-			recvStream.set(packet->buff, packet->Size - headSize);
-		}
+		//void ClientSessionParser::SetRecvStream(Packet * packet)
+		//{
+		//	recvStream.clear();
+		//	packet->Decode(recvStream);
+		//}
 
-		void ClientSessionParser::PushQueueRecvPk(T_PACKET * pPacket)
+		void ClientSessionParser::PushQueueRecvPk(Packet * pPacketData)
 		{
 			EnterCriticalSection(&RecvQueueCS);
-			m_recvPkQueue.push(pPacket);
+			if (m_recvPkQueue.size() != 0)
+			{
+				if (m_recvPkQueue.back()->Type() != E_PK_SEND_MOVE_END)
+				{
+					m_recvPkQueue.push(pPacketData);
+				}
+			}
+			else
+			{
+				if (m_ClientSession != nullptr)
+				{
+					m_recvPkQueue.push(pPacketData);
+				}
+			}
 			LeaveCriticalSection(&RecvQueueCS);
 		}
 
-		T_PACKET * ClientSessionParser::PopQueueRecvPk()
+		Packet * ClientSessionParser::PopQueueRecvPk()
 		{
 			EnterCriticalSection(&RecvQueueCS);
 			if (m_recvPkQueue.size() == 0)
@@ -78,7 +101,7 @@ namespace ServerEngine
 				return nullptr;
 			}
 
-			T_PACKET * temp = m_recvPkQueue.front();
+			Packet * temp = m_recvPkQueue.front();
 			m_recvPkQueue.pop();
 
 			LeaveCriticalSection(&RecvQueueCS);
@@ -86,7 +109,7 @@ namespace ServerEngine
 			return temp;
 		}
 
-		void ClientSessionParser::RecvHeatBeat(T_PACKET * packet)
+		void ClientSessionParser::RecvHeatBeat(Packet * packetData)
 		{
 			m_ClientSession->RecvHeartBeat();
 		}

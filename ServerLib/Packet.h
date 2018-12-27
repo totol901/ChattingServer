@@ -125,6 +125,12 @@ namespace ServerEngine
             }
       };
 
+        class PK_REQ_WAITINGCHANNAL_ENTER : public Packet
+      {
+        public:
+           E_PACKET_TYPE Type()  {  return E_PK_REQ_WAITINGCHANNAL_ENTER;  }
+      };
+
         class PK_ANS_WAITINGCHANNAL_ENTER : public Packet
       {
         public:
@@ -512,6 +518,23 @@ namespace ServerEngine
       {
         public:
            E_PACKET_TYPE Type()  {  return E_PK_RECV_CHANNAL_JOIN_ANNOUNCE;  }
+            string             ID;
+
+            void Encode(SendStream& sendStream)
+            {
+                sendStream.write(this->Type());
+                sendStream.write(ID);
+            }
+
+            void Decode(RecvStream& recvStream)
+            {                recvStream.read(&ID);
+            }
+      };
+
+        class PK_RECV_CHANNAL_OUT_ANNOUNCE : public Packet
+      {
+        public:
+           E_PACKET_TYPE Type()  {  return E_PK_RECV_CHANNAL_OUT_ANNOUNCE;  }
             string             ID;
 
             void Encode(SendStream& sendStream)

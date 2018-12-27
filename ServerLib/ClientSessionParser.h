@@ -16,30 +16,30 @@ namespace ServerEngine
 			CRITICAL_SECTION PacketParsingCS;
 
 			ClientSession * m_ClientSession;
-			T_PACKET		m_SendPk;
-			queue<T_PACKET*> m_recvPkQueue;
+			//Packet		m_SendPk;
+			queue<Packet*> m_recvPkQueue;
 
-			RecvStream recvStream;
+			//RecvStream recvStream;
 			SendStream SendStream;
 
 			//스트림 관련 함수들
 			void SendPacketWithSendStream(E_PACKET_TYPE&& type);
-			void SetRecvStream(T_PACKET* packet);
+			//void SetRecvStream(Packet* packet);
 
 		public:
 			ClientSessionParser(ClientSession * clientSession);
 			virtual ~ClientSessionParser();
 
-			void PushQueueRecvPk(T_PACKET* pPacket);
-			T_PACKET* PopQueueRecvPk();
+			void PushQueueRecvPk(Packet* pPacketData);
+			Packet* PopQueueRecvPk();
 
-			void RecvHeatBeat(T_PACKET* packet);
+			void RecvHeatBeat(Packet * packetData);
 
 			void RecvQueuePkParsing();
 
-			virtual bool PacketParsing(T_PACKET* packet);
+			virtual bool PacketParsing(Packet* packetData);
 
-			const queue<T_PACKET*>& GetRecvPQueue() { return m_recvPkQueue; }
+			const queue<Packet*>& GetRecvPkQueue() { return m_recvPkQueue; }
 		};
 	}
 }

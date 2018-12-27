@@ -37,13 +37,13 @@ namespace ServerEngine
 			//문장의 길이 읽어옴
 			int stringlen = 0;
 			memcpy_s(&stringlen, sizeof(stringlen),
-				(void *)(stream.data() + readPt), sizeof(stringlen));
+				(void *)(buffer.data() + readPt), sizeof(stringlen));
 			readPt += sizeof(stringlen);
 
 			//문장을 버퍼에 넣어줌
 			char* buff = new char[stringlen + 1];
 			memcpy(buff,
-				(void *)(stream.data() + readPt),
+				(void *)(buffer.data() + readPt),
 				(stringlen));
 			readPt += stringlen;
 
@@ -58,7 +58,7 @@ namespace ServerEngine
 
 		void RecvStream::read(OUT void * retVal, size_t len)
 		{
-			memcpy_s(retVal, len, (void *)(stream.data() + readPt), len);
+			memcpy_s(retVal, len, (void *)(buffer.data() + readPt), len);
 			readPt += len;
 		}
 
@@ -67,13 +67,13 @@ namespace ServerEngine
 			//문장의 길이 읽어옴
 			int stringlen = 0;
 			memcpy_s(&stringlen, sizeof(stringlen),
-				(void *)(stream.data() + readPt), sizeof(stringlen));
+				(void *)(buffer.data() + readPt), sizeof(stringlen));
 			readPt += sizeof(stringlen);
 
 			//문장을 버퍼에 넣어줌
 			WCHAR* buff = new WCHAR[stringlen + 1];
 			memcpy(buff,
-				(void *)(stream.data() + readPt),
+				(void *)(buffer.data() + readPt),
 				sizeof(WCHAR)*(stringlen));
 			readPt += stringlen * sizeof(WCHAR);
 
@@ -88,43 +88,43 @@ namespace ServerEngine
 
 		void RecvStream::read(OUT bool * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(stream.data() + readPt), sizeof(reVal));
+			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
 			readPt += sizeof(reVal);
 		}
 
 		void RecvStream::read(OUT int * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(stream.data() + readPt), sizeof(reVal));
+			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
 			readPt += sizeof(reVal);
 		}
 
 		void RecvStream::read(OUT UINT * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(stream.data() + readPt), sizeof(reVal));
+			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
 			readPt += sizeof(reVal);
 		}
 
 		void RecvStream::read(OUT BYTE * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(stream.data() + readPt), sizeof(reVal));
+			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
 			readPt += sizeof(reVal);
 		}
 
 		void RecvStream::read(OUT float * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(stream.data() + readPt), sizeof(reVal));
+			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
 			readPt += sizeof(reVal);
 		}
 
 		void RecvStream::read(OUT INT64 * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(stream.data() + readPt), sizeof(reVal));
+			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
 			readPt += sizeof(reVal);
 		}
 
 		void RecvStream::read(OUT UINT64 * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(stream.data() + readPt), sizeof(reVal));
+			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
 			readPt += sizeof(reVal);
 		}
 

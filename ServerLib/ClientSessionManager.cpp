@@ -111,13 +111,13 @@ namespace ServerEngine
 			while (m_bIsOn)
 			{
 				//10초 마다 스레드 하트비트 송신
-				WaitForSingleObject(GetCurrentThread(), 10.0f);
+				WaitForSingleObject(GetCurrentThread(), 1000);
 				EnterCriticalSection(&ManagerCS);
 				for (auto iter = m_mapClientSession.begin();
 					iter != m_mapClientSession.end();
 					iter++)
 				{
-					iter->second->SendHeartBeat();
+					//iter->second->SendHeartBeat();
 				}
 				LeaveCriticalSection(&ManagerCS);
 			}
