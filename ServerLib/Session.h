@@ -38,6 +38,7 @@ namespace ServerEngine
 			time_t m_Ping;
 
 			void Send(const WSABUF& wsaBuf);
+			void SynchronizationSend(const WSABUF& wsaBuf);
 			void Recv(const WSABUF& wsabuf);
 			bool IsRecving(const size_t& transferSize);
 
@@ -67,6 +68,8 @@ namespace ServerEngine
 			설명		: packet데이터를 ioData_ 형태로 변형 후 send함
 			*****************************************************************************/
 			void SendPacket(Stream& stream);
+
+			void SynchronizationSendPacket(Stream& stream);
 
 			/****************************************************************************
 			함수명	: onRecv

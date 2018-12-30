@@ -63,6 +63,15 @@ namespace ServerEngine
 				m_arrIOData[IO_WRITE].GetptOverlapped(), NULL);
 		}
 
+		void Session::SynchronizationSend(const WSABUF & wsaBuf)
+		{
+			DWORD flags = 0;
+			DWORD sendBytes;
+			DWORD errorCode = WSASend(m_Socket,
+				(LPWSABUF)&wsaBuf, 1, &sendBytes, flags,
+				NULL, NULL);
+		}
+
 		void Session::Recv(const WSABUF & wsabuf)
 		{
 			DWORD flags = 0;
@@ -95,6 +104,21 @@ namespace ServerEngine
 			wsaBuf.len = (ULONG)m_arrIOData[IO_WRITE].GetptStream()->size();
 
 			this->Send(wsaBuf);
+		}
+
+		void Session::SynchronizationSendPacket(Stream & stream)
+		{
+			if (!m_arrIOData[IO_WRITE].SetData(stream))
+			{
+				SLogPrintAtFile("SynchronizationSend error");
+				return;
+			}
+
+			WSABUF wsaBuf;
+			wsaBuf.buf = (char*)m_arrIOData[IO_WRITE].GetptStream()->data();
+			wsaBuf.len = (ULONG)m_arrIOData[IO_WRITE].GetptStream()->size();
+
+			this->SynchronizationSend(wsaBuf);
 		}
 
 		Packet * Session::OnRecv(const size_t & transferSize)

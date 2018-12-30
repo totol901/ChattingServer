@@ -26,7 +26,5 @@ public:
 	static unsigned int WINAPI AcceptRoop(LPVOID sNetwork);
 	static unsigned int WINAPI CompletionClientSessionThread(LPVOID pComPort);
 
-	static bool DisconnectClientSession(SOCKET socket);
 	static bool DisconnectLoginClientSession(LoginChattingClientSession* pClientSession);
-
 };

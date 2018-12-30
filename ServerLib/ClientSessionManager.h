@@ -13,7 +13,8 @@ namespace ServerEngine
 		protected:
 			CRITICAL_SECTION ManagerCS;
 			UINT						m_GenerateSessionID;
-			unordered_map<SOCKET, ClientSession*> m_mapClientSession;		//撅剂飘等 技记
+			//unordered_map<SOCKET, ClientSession*> m_mapClientSession;		//撅剂飘等 技记
+			unordered_set<ClientSession*> m_setClientSession;
 
 			bool m_bIsOn;
 			HANDLE m_HarbeatEndEvent;
@@ -28,12 +29,11 @@ namespace ServerEngine
 			const UINT GetGenerateSessionID();
 
 			bool			AddClientSession(ClientSession* const clientSession);
-			bool			DeleteClientSession(const SOCKET& socket);
-			ClientSession*	FindClientSession(SOCKET socket);
+			bool			DeleteClientSession(ClientSession* cs);
+			ClientSession*	FindClientSession(ClientSession* cs);
 
 			void SendSessionHartBeats();
-
-			const size_t GetCCU() const { return m_mapClientSession.size(); }
+			const size_t GetCCU() const { return m_setClientSession.size(); }
 		};
 	}
 }

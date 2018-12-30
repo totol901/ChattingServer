@@ -36,7 +36,6 @@ namespace ServerEngine
 			virtual void* Allocate(size_t size, size_t alignment = 4) = 0;
 			virtual void Deallocate(void* p) = 0;
 
-			
 			void* GetStartAddress() const { return m_pStartAddress; }
 			void* GetOriginalAddress() const { return m_pOriginalAddress; }
 			size_t GetSize() const { return m_totalSize; }

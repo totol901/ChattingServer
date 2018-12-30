@@ -58,6 +58,9 @@
     <Filter Include="Singleton">
       <UniqueIdentifier>{6e2dfa0b-313f-4377-b281-c49ef94f8350}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SystemModule\System\MemoryLeakChecker">
+      <UniqueIdentifier>{12c25e84-bfac-4dd3-8b99-54c29cfb07b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -158,6 +161,9 @@
     </ClInclude>
     <ClInclude Include="PacketFactory.h">
       <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryLeakChecker.h">
+      <Filter>SystemModule\System\MemoryLeakChecker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

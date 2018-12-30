@@ -88,44 +88,44 @@ namespace ServerEngine
 
 		void RecvStream::read(OUT bool * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
-			readPt += sizeof(reVal);
+			memcpy_s(reVal, sizeof(*reVal), (void *)(buffer.data() + readPt), sizeof(*reVal));
+			readPt += sizeof(*reVal);
 		}
 
 		void RecvStream::read(OUT int * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
-			readPt += sizeof(reVal);
+			memcpy_s(reVal, sizeof(*reVal), (void *)(buffer.data() + readPt), sizeof(*reVal));
+			readPt += sizeof(*reVal);
 		}
 
 		void RecvStream::read(OUT UINT * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
-			readPt += sizeof(reVal);
+			memcpy_s(reVal, sizeof(*reVal), (void *)(buffer.data() + readPt), sizeof(*reVal));
+			readPt += sizeof(*reVal);
 		}
 
 		void RecvStream::read(OUT BYTE * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
-			readPt += sizeof(reVal);
+			memcpy_s(reVal, sizeof(*reVal), (void *)(buffer.data() + readPt), sizeof(*reVal));
+			readPt += sizeof(*reVal);
 		}
 
 		void RecvStream::read(OUT float * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
-			readPt += sizeof(reVal);
+			memcpy_s(reVal, sizeof(*reVal), (void *)(buffer.data() + readPt), sizeof(*reVal));
+			readPt += sizeof(*reVal);
 		}
 
 		void RecvStream::read(OUT INT64 * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
-			readPt += sizeof(reVal);
+			memcpy_s(reVal, sizeof(*reVal), (void *)(buffer.data() + readPt), sizeof(*reVal));
+			readPt += sizeof(*reVal);
 		}
 
 		void RecvStream::read(OUT UINT64 * reVal)
 		{
-			memcpy_s(reVal, sizeof(reVal), (void *)(buffer.data() + readPt), sizeof(reVal));
-			readPt += sizeof(reVal);
+			memcpy_s(reVal, sizeof(*reVal), (void *)(buffer.data() + readPt), sizeof(*reVal));
+			readPt += sizeof(*reVal);
 		}
 
 		//void RecvStream::WStringStaticRead(OUT string & retVal)

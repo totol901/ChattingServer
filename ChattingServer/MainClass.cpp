@@ -4,7 +4,7 @@
 MainClass::MainClass()
 	:m_isOn(true)
 {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	System::StartMemoryLeakCheck();
 }
 
 MainClass::~MainClass()
@@ -79,8 +79,7 @@ void MainClass::Monitering()
 	//메모리 풀 사용량
 	SLogPrintAtFile("WorkClass MemPool : %0.2f%%, ClientSession MemPool : %0.2f%%, PacketClass MemPool : %0.2f%%",
 		MEMORYMANAGER->GetAllocator(TEXT("WorkMemory"))->GetUsedMemoryPercentage(),
-		MEMORYMANAGER->GetAllocator(TEXT("ClientSessionMemory"))->GetUsedMemoryPercentage(),
-		MEMORYMANAGER->GetAllocator(TEXT("PacketMemory"))->GetUsedMemoryPercentage()
+		MEMORYMANAGER->GetAllocator(TEXT("ClientSessionMemory"))->GetUsedMemoryPercentage()
 	);
 }
 

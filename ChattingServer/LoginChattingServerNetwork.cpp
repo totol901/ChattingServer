@@ -157,7 +157,8 @@ unsigned int LoginChattingServerNetwork::CompletionClientSessionThread(LPVOID pC
 		}
 
 		//정상적 접속 종료
-		if (pIOData != NULL && !LoginChattingServerNetwork::IsDeleteSessionCommon(pClientSession, bytesTransferred))
+		if (pIOData->GetType() == IO_READ 
+			&&!LoginChattingServerNetwork::IsDeleteSessionCommon(pClientSession, bytesTransferred))
 		{
 			continue;
 		}
@@ -200,15 +201,11 @@ bool LoginChattingServerNetwork::IsDeleteSession(LoginChattingClientSession* pCl
 {
 	EnterCriticalSection(&ClientSessionThreadCS);
 
+	
 	//하트비트에 문제 있다면, 클라에서 갑작스럽게 소켓 종료했을때 비정상 접속 종료
 	if (bytesTransferred == 0 || !pClientSession->ChackHeartBeat())
 	{
-		//접속한 세션 제거
-		if (!LoginChattingServerNetwork::DisconnectClientSession(pClientSession->GetSocket()))
-		{
-			return false;
-		}
-
+		
 		if (pClientSession->GetPlayerData())
 		{
 			DATABASE->InsertUserLogQuery(pClientSession->GetPlayerData()->GetPlayerID(),
@@ -246,16 +243,10 @@ bool LoginChattingServerNetwork::IsDeleteSession(LoginChattingClientSession* pCl
 bool LoginChattingServerNetwork::IsDeleteSessionCommon(LoginChattingClientSession * pClientSession, DWORD bytesTransferred)
 {
 	EnterCriticalSection(&ClientSessionThreadCS);
-
+	
 	//하트비트에 문제 있다면, 클라에서 갑작스럽게 소켓 종료했을때 비정상 접속 종료
 	if (bytesTransferred == 0 || !pClientSession->ChackHeartBeat())
 	{
-		//접속한 세션 제거
-		if (!LoginChattingServerNetwork::DisconnectClientSession(pClientSession->GetSocket()))
-		{
-			return false;
-		}
-
 		if (pClientSession->GetPlayerData())
 		{
 			DATABASE->InsertUserLogQuery(pClientSession->GetPlayerData()->GetPlayerID(),
@@ -289,19 +280,6 @@ bool LoginChattingServerNetwork::IsDeleteSessionCommon(LoginChattingClientSessio
 	return true;
 }
 
-bool LoginChattingServerNetwork::DisconnectClientSession(SOCKET socket)
-{
-	//recv, send한 IOData 2개가 들어오게됨
-	//때문에 임계영역 설정
-	if (!CLIENTSESSIONMANAGER->DeleteClientSession(socket))
-	{
-		LeaveCriticalSection(&ClientSessionThreadCS);
-		return false;
-	}
-
-	return true;
-}
-
 bool LoginChattingServerNetwork::DisconnectLoginClientSession(LoginChattingClientSession* pClientSession)
 {
 	if (pClientSession->GetPlayerData() != nullptr &&
@@ -309,14 +287,12 @@ bool LoginChattingServerNetwork::DisconnectLoginClientSession(LoginChattingClien
 	{
 		if (!CLIENTSESSIONMANAGER->DeleteClientSessionID(pClientSession->GetPlayerData()->GetPlayerID()))
 		{
-			LeaveCriticalSection(&ClientSessionThreadCS);
 			return false;
 		}
 	}
 
 	pClientSession->Release();
 	SAFE_DELETE(pClientSession);
-
 
 	return true;
 }

@@ -11,7 +11,7 @@
 #include <array>
 #include <psapi.h>
 #include <time.h>
-#include <set>
+#include <unordered_set>
 #include <mstcpip.h>
 #include <crtdbg.h>
 #include <locale.h>
@@ -26,7 +26,7 @@ using namespace std;
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "libmysql.lib")
 
-#define PACKET_MAX_SIZE 128
+#define PACKET_MAX_SIZE 256
 #define PAKCET_BUFF_SIZE (PACKET_MAX_SIZE - sizeof(UINT) - sizeof(int))
 
 #include "PacketHeader.h"
@@ -60,6 +60,7 @@ using namespace std;
 #include "ClientSession.h"
 #include "ClientSessionManager.h"
 #include "Database.h"
+#include "MemoryLeakChecker.h"
 
 using namespace ServerEngine;
 using namespace NetworkSystem;

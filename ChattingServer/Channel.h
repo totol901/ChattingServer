@@ -8,7 +8,7 @@ class Channel : public Object
 {
 private:
 	UINT				m_ChannelID;
-	set<ClientSession*> m_setClientSessions;
+	unordered_set<ClientSession*> m_setClientSessions;
 	wstring				m_name;
 
 	bool IsChannelEmpty() { return m_setClientSessions.empty(); }

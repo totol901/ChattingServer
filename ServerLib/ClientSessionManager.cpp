@@ -34,27 +34,34 @@ namespace ServerEngine
 			WaitForSingleObject(m_HarbeatEndEvent, INFINITE);
 			CloseHandle(m_HarbeatEndEvent);
 
-			for (auto iter = m_mapClientSession.begin();
-				iter != m_mapClientSession.end();
+			for (auto iter = m_setClientSession.begin();
+				iter != m_setClientSession.end();
 				iter++)
 			{
-				SAFE_DELETE(iter->second);
+				ClientSession* temp = (*iter);
+				SAFE_DELETE(temp);
 			}
+
+			//for (auto iter = m_mapClientSession.begin();
+			//	iter != m_mapClientSession.end();
+			//	iter++)
+			//{
+			//	SAFE_DELETE(iter->second);
+			//}
 		}
 
 		bool ClientSessionManager::AddClientSession(ClientSession * const clientSession)
 		{
 			EnterCriticalSection(&ManagerCS);
-			if (m_mapClientSession.find(clientSession->GetSocket()) ==
-				m_mapClientSession.end())
+			if (m_setClientSession.find(clientSession) ==
+				m_setClientSession.end())
 			{
-
-				m_mapClientSession.insert(
-					make_pair((SOCKET)clientSession->GetSocket(),
-					(ClientSession*)clientSession));
+				m_setClientSession.insert((ClientSession*)clientSession);
+				//m_mapClientSession.insert(
+				//	make_pair((SOCKET)clientSession->GetSocket(),
+				//	(ClientSession*)clientSession));
 				LeaveCriticalSection(&ManagerCS);
 				clientSession->SetId(GetGenerateSessionID());
-
 
 				return true;
 			}
@@ -67,43 +74,43 @@ namespace ServerEngine
 			return m_GenerateSessionID++;
 		}
 
-		bool ClientSessionManager::DeleteClientSession(const SOCKET & socket)
+		bool ClientSessionManager::DeleteClientSession(ClientSession* cs)
 		{
-			if (m_mapClientSession.empty())
+			if (m_setClientSession.empty())
 			{
 				return false;
 			}
 			EnterCriticalSection(&ManagerCS);
-			auto iter = m_mapClientSession.find(socket);
+			auto iter = m_setClientSession.find(cs);
 
-			if (iter == m_mapClientSession.end())
+			if (iter == m_setClientSession.end())
 			{
 				return false;
 			}
 
 			//DeleteClientSessionID(iter->second->GetPlayerData()->GetPlayerID());
 
-			m_mapClientSession.erase(iter);
+			m_setClientSession.erase(iter);
 			LeaveCriticalSection(&ManagerCS);
 
 			return true;
 		}
 
-		ClientSession* ClientSessionManager::FindClientSession(SOCKET socket)
+		ClientSession* ClientSessionManager::FindClientSession(ClientSession* cs)
 		{
-			if (m_mapClientSession.empty())
+			if (m_setClientSession.empty())
 			{
 				return nullptr;
 			}
 			EnterCriticalSection(&ManagerCS);
-			auto iter = m_mapClientSession.find(socket);
+			auto iter = m_setClientSession.find(cs);
 			LeaveCriticalSection(&ManagerCS);
-			if (iter == m_mapClientSession.end())
+			if (iter == m_setClientSession.end())
 			{
 				return nullptr;
 			}
 
-			return iter->second;
+			return *iter;
 		}
 
 		void ClientSessionManager::SendSessionHartBeats()
@@ -113,8 +120,8 @@ namespace ServerEngine
 				//10초 마다 스레드 하트비트 송신
 				WaitForSingleObject(GetCurrentThread(), 1000);
 				EnterCriticalSection(&ManagerCS);
-				for (auto iter = m_mapClientSession.begin();
-					iter != m_mapClientSession.end();
+				for (auto iter = m_setClientSession.begin();
+					iter != m_setClientSession.end();
 					iter++)
 				{
 					//iter->second->SendHeartBeat();

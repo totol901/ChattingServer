@@ -40,7 +40,7 @@ namespace ServerEngine
 			Packet * temp = PopQueueRecvPk();
 			if (temp)
 			{
-				PacketParsing(temp);
+				this->PacketParsing(temp);
 			}
 			SAFE_DELETE(temp);
 		}

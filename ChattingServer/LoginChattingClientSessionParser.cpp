@@ -47,15 +47,23 @@ void LoginChattingClientSessionParser::ReqLogin(Packet * packetData)
 		if (CLIENTSESSIONMANAGER->FindClientSessionID(
 			id) != nullptr)
 		{
-			
 			//로그인 이미 함
 			ansLoginPacket.IsSuccess = false;
 			ansLoginPacket.ErrorNumber = LOGIN_ERROR_ALREADY_LOGIN;
 
-			SLogPrint(L"%s - 로그인 실패", id.c_str());
+			SLogPrint(L"%s - 로그인 실패, 이미 로그인 중", id.c_str());
 
 			//데이터베이스에 로그 남겨줌
-			DATABASE->InsertUserLogQuery(id, L"로그인 실패");
+			DATABASE->InsertUserLogQuery(id, L"로그인 실패, 이미 로그인 중");
+
+			//패킷 송신
+			SendStream.clear();
+			ansLoginPacket.Encode(SendStream);
+			m_ClientSession->SynchronizationSendPacket(SendStream);
+
+			//기존에 넣어둔 클라세션 빼서 없애줌, 소켓도 닫아버림
+			closesocket(m_LoginChattingClientSession->GetSocket());
+			CLIENTSESSIONMANAGER->DeleteClientSession(m_LoginChattingClientSession);
 		}
 		else
 		{
@@ -82,6 +90,14 @@ void LoginChattingClientSessionParser::ReqLogin(Packet * packetData)
 
 			//로그인된 세션 풀에 넣음
 			CLIENTSESSIONMANAGER->AddClientSessionID(id, m_LoginChattingClientSession);
+			//기존에 넣어둔 클라세션 빼서 없애줌
+			CLIENTSESSIONMANAGER->DeleteClientSession(m_LoginChattingClientSession);
+
+			//패킷 송신
+			SendStream.clear();
+			ansLoginPacket.Encode(SendStream);
+
+			m_ClientSession->SendPacket(SendStream);
 		}
 	}
 	else
@@ -93,13 +109,16 @@ void LoginChattingClientSessionParser::ReqLogin(Packet * packetData)
 
 		//데이터베이스에 로그 남겨줌
 		DATABASE->InsertUserLogQuery(id, L"로그인 실패");
-	}
 
-	//패킷 송신
-	SendStream.clear();
-	ansLoginPacket.Encode(SendStream);
-	
-	m_ClientSession->SendPacket(SendStream);
+		//패킷 송신
+		SendStream.clear();
+		ansLoginPacket.Encode(SendStream);
+		m_ClientSession->SynchronizationSendPacket(SendStream);
+
+		//기존에 넣어둔 클라세션 빼서 없애줌, 소켓도 닫아버림
+		closesocket(m_LoginChattingClientSession->GetSocket());
+		CLIENTSESSIONMANAGER->DeleteClientSession(m_LoginChattingClientSession);
+	}
 }
 
 void LoginChattingClientSessionParser::ReqCreateID(Packet * packetData)
@@ -118,13 +137,17 @@ void LoginChattingClientSessionParser::ReqCreateID(Packet * packetData)
 	//아스키->유니코드로 변환
 	WCHAR strID[32] = { 0, };
 	WCHAR strPW[32] = { 0, };
+	WCHAR strNickname[32] = { 0, };
 	Util::StrConvA2W((CHAR*)reqPacket->ID.c_str(),
 		strID, sizeof(strID));
 	Util::StrConvA2W((CHAR*)reqPacket->PW.c_str(),
 		strPW, sizeof(strPW));
+	Util::StrConvA2W((CHAR*)reqPacket->Nickname.c_str(),
+		strNickname, sizeof(strNickname));
 	id = strID;
 	pw = strPW;
-
+	nickname = strNickname;
+	 
 	if (DATABASE->InsertUserInfoQuery(id, pw, nickname))
 	{
 		//아이디 생성 성공
@@ -200,7 +223,6 @@ void LoginChattingClientSessionParser::ReqWaitingChannelCreateChannel(Packet * p
 	{
 		SLogPrintAtFile(L"%s : 채널 생성 성공", m_LoginChattingClientSession->GetPlayerData()->GetPlayerNickname().c_str());
 
-		
 		//생성 완료됬다는 패킷 전송
 		ansPacket.IsSuccess = true;
 		ansPacket.ErrorNumber = ERROR_NONE;
@@ -423,12 +445,12 @@ void LoginChattingClientSessionParser::RecvMoveStart(NetworkSystem::Packet * pac
 	recvPacket.Velocity = m_LoginChattingClientSession->GetPlayerData()->GetVelocity();
 	//SendStream.write(&COUNT, sizeof(COUNT));
 
-	SLogPrint(L"%s : MoveStart, LocationX : %f, LocationY : %f, Time : %d",
-		m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str(),
-		m_LoginChattingClientSession->GetPlayerData()->GetLocationX(),
-		m_LoginChattingClientSession->GetPlayerData()->GetLocationY(),
-		++COUNT
-	);
+	//SLogPrint(L"%s : MoveStart, LocationX : %f, LocationY : %f, Time : %d",
+	//	m_LoginChattingClientSession->GetPlayerData()->GetPlayerID().c_str(),
+	//	m_LoginChattingClientSession->GetPlayerData()->GetLocationX(),
+	//	m_LoginChattingClientSession->GetPlayerData()->GetLocationY(),
+	//	++COUNT
+	//);
 
 	recvPacket.Encode(SendStream);
 	//채널내에있는 클라이언트에 패킷 보냄
