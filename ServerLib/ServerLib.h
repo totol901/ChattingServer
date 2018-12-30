@@ -20,6 +20,7 @@
 #include <stack>
 #include <unordered_map>
 #include <chrono>
+#include "dbghelp.h"
 
 using namespace std;
 
@@ -29,8 +30,12 @@ using namespace std;
 #define PACKET_MAX_SIZE 256
 #define PAKCET_BUFF_SIZE (PACKET_MAX_SIZE - sizeof(UINT) - sizeof(int))
 
+#include "Type.h"
+#include "tinyxml2.h"
+#include "MemoryLowFragmentationHeap.h"
 #include "PacketHeader.h"
 #include "Singleton.h"
+#include "MiniDump.h"
 #include "Stream.h"
 #include "RecvStream.h"
 #include "SendStream.h"
@@ -61,15 +66,16 @@ using namespace std;
 #include "ClientSessionManager.h"
 #include "Database.h"
 #include "MemoryLeakChecker.h"
+#include "SMTPMail.h"
+#include "Well512Random.h"
 
-using namespace ServerEngine;
-using namespace NetworkSystem;
-
-#define MONITORING MonitoringSystem::Monitoring::GetInstance()
-#define TIMER TimerSystem::Timer::GetInstance()
-#define MEMORYMANAGER System::MemoryManager::GetInstance()
-#define THREADPOOLMANAGER System::ThreadPoolManager::GetInstance()
-#define PACKETMAKER NetworkSystem::PacketFactory::GetInstance()
+#define MONITORING ServerEngine::MonitoringSystem::Monitoring::GetInstance()
+#define TIMER ServerEngine::TimerSystem::Timer::GetInstance()
+#define MEMORYMANAGER ServerEngine::System::MemoryManager::GetInstance()
+#define THREADPOOLMANAGER ServerEngine::System::ThreadPoolManager::GetInstance()
+#define PACKETMAKER ServerEngine::NetworkSystem::PacketFactory::GetInstance()
+#define MINIDUMP ServerEngine::Util::MiniDump::GetInstance()
+#define WELLRAND ServerEngine::Util::Well512Random::GetInstance()
 
 //파싱 에러 상태
 enum E_PARSING_ERROR

@@ -41,6 +41,8 @@ namespace ServerEngine
 
 			//·Î±×¿¡ ¾¸
 			SErrPrintAtFile("! error %s", msg.c_str());
+			//¸Þ¸ð¸® ´ýÇÁ¿¡ ¾¸
+			MiniDump::GetInstance()->execptionFilter(NULL);
 		}
 	}
 }

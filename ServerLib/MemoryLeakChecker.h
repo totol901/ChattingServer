@@ -2,7 +2,7 @@
 
 namespace ServerEngine
 {
-	namespace System
+	namespace Util
 	{
 		//메모리 릭 채킹
 		inline void StartMemoryLeakCheck()

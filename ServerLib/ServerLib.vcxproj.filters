@@ -58,8 +58,23 @@
     <Filter Include="Singleton">
       <UniqueIdentifier>{6e2dfa0b-313f-4377-b281-c49ef94f8350}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SystemModule\System\MemoryLeakChecker">
+    <Filter Include="Util\XMLParser">
+      <UniqueIdentifier>{a452dbe8-f007-4d07-83d4-454f428f4554}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\MemoryLeakChecker">
       <UniqueIdentifier>{12c25e84-bfac-4dd3-8b99-54c29cfb07b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\MemoryLowFragmentationHeap">
+      <UniqueIdentifier>{87e43e7b-6810-46c4-86e5-912ed54925a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\MiniDump">
+      <UniqueIdentifier>{4bbbd6e8-2759-42eb-ac7f-f2e21e44b745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\SMTPMail">
+      <UniqueIdentifier>{ba87156f-f872-4ba1-a6da-03ea4abe7753}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\WallRandom">
+      <UniqueIdentifier>{290de6e3-08e5-4dc6-8452-ba41d85d4087}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -163,7 +178,25 @@
       <Filter>SystemModule\NetworkSystem\Packet</Filter>
     </ClInclude>
     <ClInclude Include="MemoryLeakChecker.h">
-      <Filter>SystemModule\System\MemoryLeakChecker</Filter>
+      <Filter>Util\MemoryLeakChecker</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml2.h">
+      <Filter>Util\XMLParser</Filter>
+    </ClInclude>
+    <ClInclude Include="Type.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryLowFragmentationHeap.h">
+      <Filter>Util\MemoryLowFragmentationHeap</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniDump.h">
+      <Filter>Util\MiniDump</Filter>
+    </ClInclude>
+    <ClInclude Include="SMTPMail.h">
+      <Filter>Util\SMTPMail</Filter>
+    </ClInclude>
+    <ClInclude Include="Well512Random.h">
+      <Filter>Util\WallRandom</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +265,12 @@
     </ClCompile>
     <ClCompile Include="Database.cpp">
       <Filter>SystemModule\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml2.cpp">
+      <Filter>Util\XMLParser</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniDump.cpp">
+      <Filter>Util\MiniDump</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

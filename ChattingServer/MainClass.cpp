@@ -4,7 +4,7 @@
 MainClass::MainClass()
 	:m_isOn(true)
 {
-	System::StartMemoryLeakCheck();
+	Util::StartMemoryLeakCheck();
 }
 
 MainClass::~MainClass()
