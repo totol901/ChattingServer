@@ -61,9 +61,6 @@
     <Filter Include="Util\XMLParser">
       <UniqueIdentifier>{a452dbe8-f007-4d07-83d4-454f428f4554}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Util\MemoryLeakChecker">
-      <UniqueIdentifier>{12c25e84-bfac-4dd3-8b99-54c29cfb07b3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Util\MemoryLowFragmentationHeap">
       <UniqueIdentifier>{87e43e7b-6810-46c4-86e5-912ed54925a2}</UniqueIdentifier>
     </Filter>
@@ -75,6 +72,21 @@
     </Filter>
     <Filter Include="Util\WallRandom">
       <UniqueIdentifier>{290de6e3-08e5-4dc6-8452-ba41d85d4087}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\MemoryLeakChecker">
+      <UniqueIdentifier>{12c25e84-bfac-4dd3-8b99-54c29cfb07b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\Lock">
+      <UniqueIdentifier>{626f69ea-50b5-4c5f-b06f-27d6978b2125}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\CSVParser">
+      <UniqueIdentifier>{c769285f-481d-4d73-9dbd-0992183f6898}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SystemModule\System\Task">
+      <UniqueIdentifier>{118f7b93-2869-47c0-82d9-fbae3f9fb94a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SystemModule\System\Contents">
+      <UniqueIdentifier>{f7a54cb7-0b09-4c26-a384-f540cd61372b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +210,48 @@
     <ClInclude Include="Well512Random.h">
       <Filter>Util\WallRandom</Filter>
     </ClInclude>
+    <ClInclude Include="Lock.h">
+      <Filter>Util\Lock</Filter>
+    </ClInclude>
+    <ClInclude Include="LockSafeScope.h">
+      <Filter>Util\Lock</Filter>
+    </ClInclude>
+    <ClInclude Include="LockManager.h">
+      <Filter>Util\Lock</Filter>
+    </ClInclude>
+    <ClInclude Include="csv_parser.hpp">
+      <Filter>Util\CSVParser</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadManager.h">
+      <Filter>SystemModule\System\ThreadPool</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread.h">
+      <Filter>SystemModule\System\ThreadPool</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskNode.h">
+      <Filter>SystemModule\System\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="Task.h">
+      <Filter>SystemModule\System\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalValue.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadJobQueue.h">
+      <Filter>SystemModule\System\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentsProcess.h">
+      <Filter>SystemModule\System\Contents</Filter>
+    </ClInclude>
+    <ClInclude Include="Package.h">
+      <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskManager.h">
+      <Filter>SystemModule\System\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionManager.h">
+      <Filter>SystemModule\NetworkSystem\Session</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -271,6 +325,42 @@
     </ClCompile>
     <ClCompile Include="MiniDump.cpp">
       <Filter>Util\MiniDump</Filter>
+    </ClCompile>
+    <ClCompile Include="Lock.cpp">
+      <Filter>Util\Lock</Filter>
+    </ClCompile>
+    <ClCompile Include="LockSafeScope.cpp">
+      <Filter>Util\Lock</Filter>
+    </ClCompile>
+    <ClCompile Include="LockManager.cpp">
+      <Filter>Util\Lock</Filter>
+    </ClCompile>
+    <ClCompile Include="csv_parser.cpp">
+      <Filter>Util\CSVParser</Filter>
+    </ClCompile>
+    <ClCompile Include="ThreadManager.cpp">
+      <Filter>SystemModule\System\ThreadPool</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread.cpp">
+      <Filter>SystemModule\System\ThreadPool</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskNode.cpp">
+      <Filter>SystemModule\System\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="Task.cpp">
+      <Filter>SystemModule\System\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentsProcess.cpp">
+      <Filter>SystemModule\System\Contents</Filter>
+    </ClCompile>
+    <ClCompile Include="Package.cpp">
+      <Filter>SystemModule\NetworkSystem\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskManager.cpp">
+      <Filter>SystemModule\System\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionManager.cpp">
+      <Filter>SystemModule\NetworkSystem\Session</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

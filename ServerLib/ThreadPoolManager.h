@@ -48,6 +48,8 @@ namespace ServerEngine
 
 			Work* PopRecvWorkQueue();
 
+			WorkThread* FindThread(DWORD ThreadID);
+
 			void MakeWork(WORK_FUNCTION_VOID_VOID func);
 		};
 	}

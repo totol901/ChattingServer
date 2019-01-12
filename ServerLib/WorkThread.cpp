@@ -10,7 +10,8 @@ namespace ServerEngine
 			m_dThreadID(0),
 			m_bIsWork(FALSE),
 			m_bIsOn(FALSE),
-			m_pWork(nullptr)
+			m_pWork(nullptr),
+			m_CurrentLock(nullptr)
 		{
 			m_Event = CreateEvent(NULL, FALSE, FALSE, NULL);
 		}

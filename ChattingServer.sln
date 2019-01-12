@@ -6,16 +6,14 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChattingServer", "ChattingServer\ChattingServer.vcxproj", "{08B19DC4-AC9F-442A-9EFB-98537DE9E373}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerLib", "ServerLib\ServerLib.vcxproj", "{CFC55488-A6E6-4B66-8017-56779891F049}"
-	ProjectSection(ProjectDependencies) = postProject
-		{FE9A370C-F371-4475-BADE-D96C7EABECB4} = {FE9A370C-F371-4475-BADE-D96C7EABECB4}
-		{08B19DC4-AC9F-442A-9EFB-98537DE9E373} = {08B19DC4-AC9F-442A-9EFB-98537DE9E373}
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{61E07D9F-4FA7-40E8-AA49-DDB702677C11}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{EFDA753F-CE6E-4506-B6A8-FEA67FE697F1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoginServer", "LoginServer\LoginServer.vcxproj", "{FE9A370C-F371-4475-BADE-D96C7EABECB4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DatabaseServer", "DatabaseServer\DatabaseServer.vcxproj", "{5683CBFA-2E13-4343-9E58-E216D3EFD6C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +47,14 @@ Global
 		{FE9A370C-F371-4475-BADE-D96C7EABECB4}.Release|x64.Build.0 = Release|x64
 		{FE9A370C-F371-4475-BADE-D96C7EABECB4}.Release|x86.ActiveCfg = Release|Win32
 		{FE9A370C-F371-4475-BADE-D96C7EABECB4}.Release|x86.Build.0 = Release|Win32
+		{5683CBFA-2E13-4343-9E58-E216D3EFD6C5}.Debug|x64.ActiveCfg = Debug|x64
+		{5683CBFA-2E13-4343-9E58-E216D3EFD6C5}.Debug|x64.Build.0 = Debug|x64
+		{5683CBFA-2E13-4343-9E58-E216D3EFD6C5}.Debug|x86.ActiveCfg = Debug|Win32
+		{5683CBFA-2E13-4343-9E58-E216D3EFD6C5}.Debug|x86.Build.0 = Debug|Win32
+		{5683CBFA-2E13-4343-9E58-E216D3EFD6C5}.Release|x64.ActiveCfg = Release|x64
+		{5683CBFA-2E13-4343-9E58-E216D3EFD6C5}.Release|x64.Build.0 = Release|x64
+		{5683CBFA-2E13-4343-9E58-E216D3EFD6C5}.Release|x86.ActiveCfg = Release|Win32
+		{5683CBFA-2E13-4343-9E58-E216D3EFD6C5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +62,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{08B19DC4-AC9F-442A-9EFB-98537DE9E373} = {61E07D9F-4FA7-40E8-AA49-DDB702677C11}
 		{CFC55488-A6E6-4B66-8017-56779891F049} = {EFDA753F-CE6E-4506-B6A8-FEA67FE697F1}
+		{FE9A370C-F371-4475-BADE-D96C7EABECB4} = {61E07D9F-4FA7-40E8-AA49-DDB702677C11}
+		{5683CBFA-2E13-4343-9E58-E216D3EFD6C5} = {61E07D9F-4FA7-40E8-AA49-DDB702677C11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {79E9218B-3157-40C9-A879-74AACA18B2E2}

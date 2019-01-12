@@ -40,6 +40,7 @@ namespace ServerEngine
 			m_BeforeBeatTime = TIMER->GetNowTimePoint();
 			m_CurrentBeatTime = m_BeforeBeatTime;
 			m_SendTime = TIMER->GetNowTime_t();
+			m_LastHeartBeat = TIMER->GetNowTime_t();
 			m_RecvTime = m_SendTime;
 
 			m_arrIOData[IO_READ].SetType(IO_READ);
@@ -104,6 +105,25 @@ namespace ServerEngine
 			wsaBuf.len = (ULONG)m_arrIOData[IO_WRITE].GetptStream()->size();
 
 			this->Send(wsaBuf);
+			this->RecvStandBy();
+		}
+
+		void Session::SendPacket(Packet * packet)
+		{
+			SendStream stream;
+			packet->Encode(stream);
+			if (!m_arrIOData[IO_WRITE].SetData(stream))
+			{
+				SLogPrintAtFile("Send error");
+				return;
+			}
+
+			WSABUF wsaBuf;
+			wsaBuf.buf = (char*)m_arrIOData[IO_WRITE].GetptStream()->data();
+			wsaBuf.len = (ULONG)m_arrIOData[IO_WRITE].GetptStream()->size();
+
+			this->Send(wsaBuf);
+			this->RecvStandBy();
 		}
 
 		void Session::SynchronizationSendPacket(Stream & stream)
@@ -163,13 +183,24 @@ namespace ServerEngine
 			Recv(wsaBuf);
 		}
 
+		void Session::OnClose(bool force)
+		{
+			if (force)
+			{
+				SESSIONMANAGER->forceCloseSession(this);
+			}
+			else
+			{
+				SESSIONMANAGER->closeSession(this);
+			}
+		}
+
 		void Session::UpdateHeartBeat()
 		{
-			//살아있으니 새로 갱신
-			EnterCriticalSection(&m_HartBeatCS);
-			m_BeforeBeatTime = TIMER->GetNowTimePoint();
-			//m_CurrentBeatTime = TIMER->GetNowTimePoint();
-			LeaveCriticalSection(&m_HartBeatCS);
+			
+			//m_BeforeBeatTime = TIMER->GetNowTimePoint();
+
+			m_LastHeartBeat = TIMER->GetNowTime_t();
 		}
 
 		void Session::SendHeartBeat()

@@ -12,4 +12,5 @@ using namespace ServerEngine;
 
 extern bool is_On;
 
+#include "DBSession.h"
 #include "MainClass.h"

@@ -41,6 +41,7 @@ namespace ServerEngine
                     case E_PK_RECV_CHANNAL_JOIN_ANNOUNCE: return new PK_RECV_CHANNAL_JOIN_ANNOUNCE();
                     case E_PK_RECV_CHANNAL_OUT_ANNOUNCE: return new PK_RECV_CHANNAL_OUT_ANNOUNCE();
                     case E_PK_RECV_CHANNAL_DATA: return new PK_RECV_CHANNAL_DATA();
+                    case E_PK_I_NOTIFY_TERMINAL: return new PK_I_NOTIFY_TERMINAL();
                  }
                  return nullptr;
              }

@@ -39,9 +39,13 @@ using namespace std;
 #include "Stream.h"
 #include "RecvStream.h"
 #include "SendStream.h"
+#include "Lock.h"
+#include "LockSafeScope.h"
+#include "LockManager.h"
 #include "Util.h"
 #include "Packet.h"
 #include "PacketFactory.h"
+#include "Package.h"
 #include "mysql.h"
 #include "WinSock.h"
 #include "IOData.h"
@@ -68,6 +72,16 @@ using namespace std;
 #include "MemoryLeakChecker.h"
 #include "SMTPMail.h"
 #include "Well512Random.h"
+#include "csv_parser.hpp"
+#include "Thread.h"
+#include "ThreadManager.h"
+#include "TaskNode.h"
+#include "Task.h"
+#include "GlobalValue.h"
+#include "TaskManager.h"
+#include "ThreadJobQueue.h"
+#include "ContentsProcess.h"
+#include "SessionManager.h"
 
 #define MONITORING ServerEngine::MonitoringSystem::Monitoring::GetInstance()
 #define TIMER ServerEngine::TimerSystem::Timer::GetInstance()
@@ -76,6 +90,14 @@ using namespace std;
 #define PACKETMAKER ServerEngine::NetworkSystem::PacketFactory::GetInstance()
 #define MINIDUMP ServerEngine::Util::MiniDump::GetInstance()
 #define WELLRAND ServerEngine::Util::Well512Random::GetInstance()
+#define THREADMANAGER ServerEngine::System::ThreadManager::GetInstance()
+#define SESSIONMANAGER ServerEngine::NetworkSystem::SessionManager::GetInstance()
+
+#if _DEBUG
+#define CONTEXT_SWITCH		Sleep(1)
+#else
+#define CONTEXT_SWITCH		::SwitchToThread()
+#endif
 
 //파싱 에러 상태
 enum E_PARSING_ERROR

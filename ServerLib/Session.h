@@ -37,6 +37,8 @@ namespace ServerEngine
 			time_t m_RecvTime;
 			time_t m_Ping;
 
+			time_t m_LastHeartBeat;
+
 			void Send(const WSABUF& wsaBuf);
 			void SynchronizationSend(const WSABUF& wsaBuf);
 			void Recv(const WSABUF& wsabuf);
@@ -68,6 +70,7 @@ namespace ServerEngine
 			설명		: packet데이터를 ioData_ 형태로 변형 후 send함
 			*****************************************************************************/
 			void SendPacket(Stream& stream);
+			void SendPacket(Packet* packet);
 
 			void SynchronizationSendPacket(Stream& stream);
 
@@ -89,12 +92,15 @@ namespace ServerEngine
 			*****************************************************************************/
 			void RecvStandBy();
 
+			void OnClose(bool force = false);
+
 		public:
 			//get함수
 			const SOCKET&		GetSocket() const { return m_Socket; }
 			const INT64&		GetId() const { return m_ID; }
 			const int8_t&		GetType() const { return m_Type; }
 			const SOCKADDR_IN&	GetClientAddr() const { return m_ClientAddr; }
+			const time_t& GetLastHeartBeat() const { return m_LastHeartBeat; }
 
 			//set함수
 			void SetSocketAddr(const SOCKADDR_IN& addr) { m_ClientAddr = addr; }

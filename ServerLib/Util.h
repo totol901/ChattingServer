@@ -21,11 +21,37 @@
 	if ((arr)) delete [] (arr);		    		\
     (arr) = nullptr;							\
 }
+
+//-------------------------------------------------------------------//
+//컴파일 기본 메크로 회피용 __FUNCTION__ 같은..
+#define __W(x)              L##x
+#define _W(x)               __W(x)
 	
 namespace ServerEngine
 {
 	namespace Util
 	{
+
+		inline bool loadConfig(IN OUT tinyxml2::XMLDocument *config)
+		{
+			if (!config->LoadFile("./config.xml"))
+			{
+				printf("! not exist config file.");
+				return false;
+			}
+			return true;
+		}
+
+		/****************************************************************************
+		함수명	: SAFE_LOCK
+		설명		: 안전한 스레드 락을 실시함
+		매개변수	: Lock&
+		*****************************************************************************/
+		inline void SAFE_LOCK(Lock& lock)
+		{
+			LockSafeScope __lockSafe(&lock, _W(__FILE__), __LINE__);
+		}
+
 		//-------------------------------------------------------------------//
 		//범위 보정 및 체크
 		template<typename T>
@@ -97,6 +123,23 @@ namespace ServerEngine
 		inline float Lerp(float x1, float x2, float time)
 		{
 
+		}
+
+		/****************************************************************************
+		함수명	: isOverFlower_uint
+		설명		: original에 add를 더 했을시 overflow 유무 검사함
+		리턴값	: bool
+		매개변수	: unsigned int, unsigned int
+		*****************************************************************************/
+		inline bool isOverFlower_uint(unsigned int original, unsigned int add)
+		{
+			unsigned int before = original;
+			unsigned int after = original + add;
+			if ((original & 0x80000000) != (after & 0x80000000))
+			{
+				return false;
+			}
+			return true;
 		}
 	}
 }

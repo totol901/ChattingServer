@@ -16,6 +16,8 @@ namespace ServerEngine
 
 			HANDLE m_Event;
 
+			Util::Lock* m_CurrentLock;
+
 		public:
 			WorkThread();
 			~WorkThread();
@@ -32,6 +34,10 @@ namespace ServerEngine
 			HANDLE GetEvent() { return m_Event; }
 			Work* GetWork() { return m_pWork; }
 			void SetWork(Work* work) { m_pWork = work; }
+			const DWORD GetThreadID() const { return m_dThreadID; }
+
+			void SetCurrentLock(Util::Lock* lock) { m_CurrentLock = lock; }
+			Util::Lock* GetCurrentLock() const { return m_CurrentLock; }
 		};
 	}
 }

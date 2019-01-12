@@ -17,6 +17,11 @@ namespace ServerEngine
 			virtual ~Work();
 
 			virtual void DoWork();
+			virtual void Tick() {};// = 0;
+			virtual void WakeUp() {};
+			virtual void Suspend() {};
+			virtual void Stop() {};
+			virtual void Start() {};
 
 			void SetCallbackFunction(WORK_FUNCTION_VOID_VOID func) { function = func; }
 			WORK_FUNCTION_VOID_VOID GetCallbackFunc() { return function; }

@@ -160,10 +160,16 @@
     <ClInclude Include="ClientSession.h" />
     <ClInclude Include="ClientSessionManager.h" />
     <ClInclude Include="ClientSessionParser.h" />
+    <ClInclude Include="ContentsProcess.h" />
+    <ClInclude Include="csv_parser.hpp" />
     <ClInclude Include="Database.h" />
     <ClInclude Include="FreeListAllocator.h" />
+    <ClInclude Include="GlobalValue.h" />
     <ClInclude Include="IOData.h" />
     <ClInclude Include="LinearAllocator.h" />
+    <ClInclude Include="Lock.h" />
+    <ClInclude Include="LockManager.h" />
+    <ClInclude Include="LockSafeScope.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MemoryLeakChecker.h" />
     <ClInclude Include="MemoryLowFragmentationHeap.h" />
@@ -171,6 +177,7 @@
     <ClInclude Include="MiniDump.h" />
     <ClInclude Include="Monitoring.h" />
     <ClInclude Include="Network.h" />
+    <ClInclude Include="Package.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="PacketFactory.h" />
     <ClInclude Include="PacketHeader.h" />
@@ -181,12 +188,19 @@
     <ClInclude Include="ServerLib.h" />
     <ClInclude Include="ServerNetwork.h" />
     <ClInclude Include="Session.h" />
+    <ClInclude Include="SessionManager.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SMTPMail.h" />
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Stream.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Task.h" />
+    <ClInclude Include="TaskManager.h" />
+    <ClInclude Include="TaskNode.h" />
+    <ClInclude Include="Thread.h" />
+    <ClInclude Include="ThreadJobQueue.h" />
+    <ClInclude Include="ThreadManager.h" />
     <ClInclude Include="ThreadPoolManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="tinyxml2.h" />
@@ -200,19 +214,26 @@
     <ClCompile Include="ClientSession.cpp" />
     <ClCompile Include="ClientSessionManager.cpp" />
     <ClCompile Include="ClientSessionParser.cpp" />
+    <ClCompile Include="ContentsProcess.cpp" />
+    <ClCompile Include="csv_parser.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="FreeListAllocator.cpp" />
     <ClCompile Include="IOData.cpp" />
     <ClCompile Include="LinearAllocator.cpp" />
+    <ClCompile Include="Lock.cpp" />
+    <ClCompile Include="LockManager.cpp" />
+    <ClCompile Include="LockSafeScope.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
     <ClCompile Include="MiniDump.cpp" />
     <ClCompile Include="Network.cpp" />
+    <ClCompile Include="Package.cpp" />
     <ClCompile Include="PoolAllocator.cpp" />
     <ClCompile Include="RecvStream.cpp" />
     <ClCompile Include="SendStream.cpp" />
     <ClCompile Include="ServerNetwork.cpp" />
     <ClCompile Include="Session.cpp" />
+    <ClCompile Include="SessionManager.cpp" />
     <ClCompile Include="StackAllocator.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -221,6 +242,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Stream.cpp" />
+    <ClCompile Include="Task.cpp" />
+    <ClCompile Include="TaskManager.cpp" />
+    <ClCompile Include="TaskNode.cpp" />
+    <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="ThreadManager.cpp" />
     <ClCompile Include="ThreadPoolManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="tinyxml2.cpp" />

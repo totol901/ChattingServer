@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+bool is_On = false;
+
 int main()
 {
 	MINIDUMP->Init();

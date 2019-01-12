@@ -88,17 +88,18 @@ namespace ServerEngine
 			while (pPoolManager->m_IsOn)
 			{
 				//더 이상 할 일이 없으면 스왑, 병목이 예상됨...
+				EnterCriticalSection(&pPoolManager->WorkDoQueueCS);
 				if (!pPoolManager->m_DoWorkQueue.size())
 				{
-					EnterCriticalSection(&pPoolManager->WorkDoQueueCS);
+					
 					EnterCriticalSection(&pPoolManager->WorkRecvQueueCS);
 
 					swap(pPoolManager->m_DoWorkQueue, pPoolManager->m_RecvWorkQueue);
 
 					LeaveCriticalSection(&pPoolManager->WorkRecvQueueCS);
-					LeaveCriticalSection(&pPoolManager->WorkDoQueueCS);
+					
 				}
-
+				LeaveCriticalSection(&pPoolManager->WorkDoQueueCS);
 				//할일 처리
 				Work* ptempWork = pPoolManager->PopDoWorkQueue();
 				if (ptempWork)
@@ -113,6 +114,7 @@ namespace ServerEngine
 							ptempWorkThread->HaveThreadWork(ptempWork);
 							break;
 						}
+						CONTEXT_SWITCH;
 					}
 				}
 			}
@@ -192,6 +194,20 @@ namespace ServerEngine
 			LeaveCriticalSection(&WorkRecvQueueCS);
 
 			return work;
+		}
+
+		WorkThread * ThreadPoolManager::FindThread(DWORD ThreadID)
+		{
+			for (auto iter = m_vecWorkThreads.begin(); iter != m_vecWorkThreads.end();
+				iter++)
+			{
+				if ((*iter)->GetThreadID() == ThreadID)
+				{
+					return (*iter);
+				}
+			}
+
+			return nullptr;
 		}
 
 		void ThreadPoolManager::MakeWork(WORK_FUNCTION_VOID_VOID func)

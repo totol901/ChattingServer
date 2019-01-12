@@ -17,6 +17,10 @@ namespace ServerEngine
 			bool	m_Shutdown;
 			WSADATA m_WSAData;
 
+			char m_ip[16];
+			int m_port;
+			int m_workThreadCount;
+
 			virtual void CreateIOCP() = 0;
 
 		private:

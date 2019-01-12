@@ -580,5 +580,11 @@ namespace ServerEngine
             }
       };
 
+        class PK_I_NOTIFY_TERMINAL : public Packet
+      {
+        public:
+           E_PACKET_TYPE Type()  {  return E_PK_I_NOTIFY_TERMINAL;  }
+      };
+
    }
 }
