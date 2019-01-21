@@ -4,6 +4,13 @@ namespace ServerEngine
 {
 	namespace DatabaseSystem
 	{
+		typedef enum
+		{
+			DB_STOP,                // 정지
+			DB_STANDBY,             // 쿼리 받을 준비
+			DB_RUNNING,             // 쿼리 실행중
+		} DB_STATE;
+
 		class Database
 		{
 		protected:
@@ -23,16 +30,27 @@ namespace ServerEngine
 			MYSQL_RES*	res;
 			MYSQL_ROW	row;
 
-			Database(); 
-			virtual ~Database();
+			//-----------------------------
+			DB_STATE        m_State;
 
 		public:
+			Database();
+			virtual ~Database();
+
 			/****************************************************************************
 			함수명	: InitDB
 			설명		: Mysql 초기화
 			*****************************************************************************/
 			HRESULT InitDB();
 			void Release();
+
+			virtual bool connect(const WCHAR *serverName, const WCHAR *dbName, const WCHAR *id, const WCHAR *password) {};// = 0;
+			virtual bool connect() {};// = 0;
+			virtual bool connected() {};// = 0;
+			virtual bool disconnect() {};// = 0;
+
+			virtual void run();// = 0;
+			const DB_STATE& GetState() { return m_State; }
 
 			/****************************************************************************
 			함수명	: MySQLError

@@ -22,6 +22,13 @@
     (arr) = nullptr;							\
 }
 
+#undef SAFE_RELEASE
+#define SAFE_RELEASE(obj)		\
+{								\
+	if((obj)) obj->Release();	\
+	obj = nullptr;				\
+}
+
 //-------------------------------------------------------------------//
 //컴파일 기본 메크로 회피용 __FUNCTION__ 같은..
 #define __W(x)              L##x

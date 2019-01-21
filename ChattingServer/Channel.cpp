@@ -60,7 +60,7 @@ bool Channel::DeleteClientSession(ClientSession * clientsession)
 	return true;
 }
 
-void Channel::SendPacketToChannelMember(Stream& packetData)
+void Channel::SendPacketToChannelMember(NetworkSystem::Stream& packetData)
 {
 	for (auto iter = m_setClientSessions.begin();
 		iter != m_setClientSessions.end();

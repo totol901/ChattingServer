@@ -43,7 +43,7 @@ namespace ServerEngine
 			*****************************************************************************/
 			inline void push(const T &t)
 			{
-				Util::SAFE_LOCK(lock_);
+				Util::SAFE_LOCK(m_lock);
 			
 				m_pWriteQueue->push(t);
 			}
@@ -56,7 +56,7 @@ namespace ServerEngine
 			*****************************************************************************/
 			inline bool pop(_Out_ T &t)
 			{
-				Util::SAFE_LOCK(lock_);
+				Util::SAFE_LOCK(m_lock);
 
 				size_t size = this->size();
 
@@ -84,17 +84,17 @@ namespace ServerEngine
 			*****************************************************************************/
 			inline void swap()
 			{
-				Util::SAFE_LOCK(lock_);
+				Util::SAFE_LOCK(m_lock);
 
-				if (m_pWriteQueue == &queue_[WRITE_QUEUE])
+				if (m_pWriteQueue == &m_queue[WRITE_QUEUE])
 				{
-					m_pWriteQueue = &queue_[READ_QUEUE];
-					m_pReadQueue = &queue_[WRITE_QUEUE];
+					m_pWriteQueue = &m_queue[READ_QUEUE];
+					m_pReadQueue = &m_queue[WRITE_QUEUE];
 				}
 				else
 				{
-					m_pWriteQueue = &queue_[WRITE_QUEUE];
-					m_pReadQueue = &queue_[READ_QUEUE];
+					m_pWriteQueue = &m_queue[WRITE_QUEUE];
+					m_pReadQueue = &m_queue[READ_QUEUE];
 				}
 			}
 
@@ -114,7 +114,7 @@ namespace ServerEngine
 			*****************************************************************************/
 			inline size_t size()
 			{
-				Util::SAFE_LOCK(lock_);
+				Util::SAFE_LOCK(m_lock);
 
 				size_t size = (size_t)(m_queue[WRITE_QUEUE].size() + m_queue[READ_QUEUE].size());
 				

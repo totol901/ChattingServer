@@ -88,6 +88,9 @@
     <Filter Include="SystemModule\System\Contents">
       <UniqueIdentifier>{f7a54cb7-0b09-4c26-a384-f540cd61372b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SystemModule\Database\Query">
+      <UniqueIdentifier>{f8eaae97-aede-4006-9e88-91f16d6991c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -252,6 +255,21 @@
     <ClInclude Include="SessionManager.h">
       <Filter>SystemModule\NetworkSystem\Session</Filter>
     </ClInclude>
+    <ClInclude Include="ADODatabase.h">
+      <Filter>SystemModule\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="DBManager.h">
+      <Filter>SystemModule\Database</Filter>
+    </ClInclude>
+    <ClInclude Include="Query.h">
+      <Filter>SystemModule\Database\Query</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryRecord.h">
+      <Filter>SystemModule\Database\Query</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryStatement.h">
+      <Filter>SystemModule\Database\Query</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -361,6 +379,21 @@
     </ClCompile>
     <ClCompile Include="SessionManager.cpp">
       <Filter>SystemModule\NetworkSystem\Session</Filter>
+    </ClCompile>
+    <ClCompile Include="ADODatabase.cpp">
+      <Filter>SystemModule\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="DBManager.cpp">
+      <Filter>SystemModule\Database</Filter>
+    </ClCompile>
+    <ClCompile Include="Query.cpp">
+      <Filter>SystemModule\Database\Query</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryRecord.cpp">
+      <Filter>SystemModule\Database\Query</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryStatement.cpp">
+      <Filter>SystemModule\Database\Query</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

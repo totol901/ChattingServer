@@ -1,5 +1,7 @@
 #pragma once
 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+
 #include <WinSock2.h>
 #include <Windows.h>
 #include <iostream>
@@ -21,6 +23,8 @@
 #include <unordered_map>
 #include <chrono>
 #include "dbghelp.h"
+
+#import "C:\Program Files (x86)\Common Files\system\ado\msado15.dll" no_namespace rename("EOF", "EndOfFile")
 
 using namespace std;
 
@@ -45,11 +49,11 @@ using namespace std;
 #include "Util.h"
 #include "Packet.h"
 #include "PacketFactory.h"
-#include "Package.h"
 #include "mysql.h"
 #include "WinSock.h"
 #include "IOData.h"
 #include "Session.h"
+#include "Package.h"
 #include "Monitoring.h"
 #include "Timer.h"
 #include "Logger.h"
@@ -82,6 +86,11 @@ using namespace std;
 #include "ThreadJobQueue.h"
 #include "ContentsProcess.h"
 #include "SessionManager.h"
+#include "QueryStatement.h"
+#include "QueryRecord.h"
+#include "Query.h"
+#include "DBManager.h"
+#include "ADODatabase.h"
 
 #define MONITORING ServerEngine::MonitoringSystem::Monitoring::GetInstance()
 #define TIMER ServerEngine::TimerSystem::Timer::GetInstance()
@@ -92,6 +101,7 @@ using namespace std;
 #define WELLRAND ServerEngine::Util::Well512Random::GetInstance()
 #define THREADMANAGER ServerEngine::System::ThreadManager::GetInstance()
 #define SESSIONMANAGER ServerEngine::NetworkSystem::SessionManager::GetInstance()
+#define DBMANAGER ServerEngine::DatabaseSystem::DBManager::GetInstance()
 
 #if _DEBUG
 #define CONTEXT_SWITCH		Sleep(1)

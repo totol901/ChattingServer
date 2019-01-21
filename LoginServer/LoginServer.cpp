@@ -12,5 +12,8 @@ int main()
 	_wsetlocale(LC_ALL, L"korean");
 
 
+
+	MINIDUMP->Release();
+
 	return 0;
 }

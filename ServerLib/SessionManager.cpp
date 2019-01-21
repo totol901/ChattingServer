@@ -80,7 +80,7 @@ namespace ServerEngine
 			if (findSession != m_sessionList.end())
 			{
 				Session *delSession = *findSession;
-				
+
 				SLogPrintAtFile("* detected close by client [%s]", inet_ntoa(delSession->GetClientAddr().sin_addr));
 				::closesocket(delSession->GetSocket());
 

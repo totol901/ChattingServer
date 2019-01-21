@@ -36,7 +36,7 @@ namespace ServerEngine
 			if (MAX_PACKET_THREAD < processCount)
 			{
 				SLogPrintAtFile(L"! processThread limit[%d], but config setting [%d]", MAX_PACKET_THREAD, processCount);
-				return;
+				return S_OK;
 			}
 
 			m_pPackageQueue = new ThreadJobQueue<NetworkSystem::Package*>((WCHAR*)L"ContentsProcessQueue");
