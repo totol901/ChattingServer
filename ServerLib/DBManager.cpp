@@ -26,8 +26,9 @@ namespace ServerEngine
 			if (!root) 
 			{
 				SLogPrintAtFile(L"@ not exist database setting");
-				return;
+				return E_FAIL;
 			}
+
 			tinyxml2::XMLElement* elem = root->FirstChildElement("ThreadCount");
 			sscanf_s(elem->GetText(), "%d", &m_workerCount);
 
@@ -57,6 +58,8 @@ namespace ServerEngine
 				m_dbPool.push_back(adodb);
 			}
 			this->run();
+
+			return S_OK;
 		}
 
 		void DBManager::Release()

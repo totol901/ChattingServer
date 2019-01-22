@@ -91,6 +91,9 @@
     <Filter Include="SystemModule\Database\Query">
       <UniqueIdentifier>{f8eaae97-aede-4006-9e88-91f16d6991c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SystemModule\NetworkSystem\Terminal">
+      <UniqueIdentifier>{c995f0eb-9c83-455e-9359-d7e2e6badc2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -270,6 +273,18 @@
     <ClInclude Include="QueryStatement.h">
       <Filter>SystemModule\Database\Query</Filter>
     </ClInclude>
+    <ClInclude Include="TerminalSession.h">
+      <Filter>SystemModule\NetworkSystem\Terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="TerminalManager.h">
+      <Filter>SystemModule\NetworkSystem\Terminal</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>SystemModule\NetworkSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Terminal.h">
+      <Filter>SystemModule\NetworkSystem\Terminal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -394,6 +409,18 @@
     </ClCompile>
     <ClCompile Include="QueryStatement.cpp">
       <Filter>SystemModule\Database\Query</Filter>
+    </ClCompile>
+    <ClCompile Include="TerminalSession.cpp">
+      <Filter>SystemModule\NetworkSystem\Terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="TerminalManager.cpp">
+      <Filter>SystemModule\NetworkSystem\Terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>SystemModule\NetworkSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Terminal.cpp">
+      <Filter>SystemModule\NetworkSystem\Terminal</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

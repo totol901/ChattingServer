@@ -190,6 +190,7 @@
     <ClInclude Include="RecvStream.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SendStream.h" />
+    <ClInclude Include="Server.h" />
     <ClInclude Include="ServerLib.h" />
     <ClInclude Include="ServerNetwork.h" />
     <ClInclude Include="Session.h" />
@@ -203,6 +204,9 @@
     <ClInclude Include="Task.h" />
     <ClInclude Include="TaskManager.h" />
     <ClInclude Include="TaskNode.h" />
+    <ClInclude Include="Terminal.h" />
+    <ClInclude Include="TerminalManager.h" />
+    <ClInclude Include="TerminalSession.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="ThreadJobQueue.h" />
     <ClInclude Include="ThreadManager.h" />
@@ -241,6 +245,7 @@
     <ClCompile Include="QueryStatement.cpp" />
     <ClCompile Include="RecvStream.cpp" />
     <ClCompile Include="SendStream.cpp" />
+    <ClCompile Include="Server.cpp" />
     <ClCompile Include="ServerNetwork.cpp" />
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="SessionManager.cpp" />
@@ -255,6 +260,9 @@
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="TaskManager.cpp" />
     <ClCompile Include="TaskNode.cpp" />
+    <ClCompile Include="Terminal.cpp" />
+    <ClCompile Include="TerminalManager.cpp" />
+    <ClCompile Include="TerminalSession.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="ThreadManager.cpp" />
     <ClCompile Include="ThreadPoolManager.cpp" />

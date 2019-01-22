@@ -44,12 +44,12 @@ namespace ServerEngine
 			HRESULT InitDB();
 			void Release();
 
-			virtual bool connect(const WCHAR *serverName, const WCHAR *dbName, const WCHAR *id, const WCHAR *password) {};// = 0;
-			virtual bool connect() {};// = 0;
-			virtual bool connected() {};// = 0;
-			virtual bool disconnect() {};// = 0;
+			virtual bool connect(const WCHAR *serverName, const WCHAR *dbName, const WCHAR *id, const WCHAR *password) { return false; };// = 0;
+			virtual bool connect() { return false; };// = 0;
+			virtual bool connected() { return false; };// = 0;
+			virtual bool disconnect() { return false; };// = 0;
 
-			virtual void run();// = 0;
+			virtual void run() {};// = 0;
 			const DB_STATE& GetState() { return m_State; }
 
 			/****************************************************************************

@@ -21,7 +21,7 @@ namespace ServerEngine
 			int m_port;
 			int m_workThreadCount;
 
-			virtual void CreateIOCP() = 0;
+			virtual void CreateIOCP() {};
 
 		private:
 			HRESULT InitWinSock();
@@ -35,6 +35,9 @@ namespace ServerEngine
 			virtual void Release();
 
 		public:
+			const char *GetIP() const { return m_ip; }
+			const int& GetPort() const { return m_port; }
+			const int& GetThreadCount() const { return m_workThreadCount; }
 			const bool&		IsShutdown()	const { return m_Shutdown; }
 			const SOCKET &	GetListenSock() const { return m_ListenSock; }
 			const HANDLE &	GetIOCPHandle() const { return m_IOCP; }

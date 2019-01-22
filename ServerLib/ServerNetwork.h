@@ -8,17 +8,10 @@ namespace ServerEngine
 {
 	namespace NetworkSystem
 	{
-		enum SERVER_STATUS
-		{
-			SERVER_STOP,
-			SERVER_INITIALZE,
-			SERVER_READY,
-		};
-
 		class ServerNetwork : public Network
 		{
 		protected:
-			SERVER_STATUS m_status;
+			//SERVER_STATUS m_status;
 			//ConetentsProcess;
 
 			ServerNetwork();

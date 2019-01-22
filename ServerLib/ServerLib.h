@@ -91,6 +91,10 @@ using namespace std;
 #include "Query.h"
 #include "DBManager.h"
 #include "ADODatabase.h"
+#include "Server.h"
+#include "TerminalSession.h"
+#include "Terminal.h"
+#include "TerminalManager.h"
 
 #define MONITORING ServerEngine::MonitoringSystem::Monitoring::GetInstance()
 #define TIMER ServerEngine::TimerSystem::Timer::GetInstance()
@@ -102,6 +106,8 @@ using namespace std;
 #define THREADMANAGER ServerEngine::System::ThreadManager::GetInstance()
 #define SESSIONMANAGER ServerEngine::NetworkSystem::SessionManager::GetInstance()
 #define DBMANAGER ServerEngine::DatabaseSystem::DBManager::GetInstance()
+#define TASKAMANGER ServerEngine::System::TaskManager::GetInstance()
+#define GLOBALVAL ServerEngine::Util::GlobalValue::GetInstance()
 
 #if _DEBUG
 #define CONTEXT_SWITCH		Sleep(1)
@@ -121,3 +127,23 @@ enum E_PARSING_ERROR
 	LEAVE_CHANNEL_CANT_FIND,
 };
 
+inline void shutdownServer()
+{
+	ServerEngine::SLogPrintAtFile(L"### server shutdown!!! ###");
+	ServerEngine::Util::GlobalValue::GetInstance()->m_IsShutdown = true;
+
+	//현재 접속중 모든 유저들 세션 종료
+	SESSIONMANAGER->Release();
+
+	//스레드와 테스크 정리
+	THREADPOOLMANAGER->Release();
+	TASKAMANGER->Release();
+
+	//서버 데이터 정리 (랭킹이나 ...)
+	
+	//DB 커넥션 종료
+	DBMANAGER->Release();
+
+	//메모리 풀 해제
+	MEMORYMANAGER->Release();
+}

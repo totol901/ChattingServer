@@ -123,7 +123,6 @@ namespace ServerEngine
 			wsaBuf.len = (ULONG)m_arrIOData[IO_WRITE].GetptStream()->size();
 
 			this->Send(wsaBuf);
-			this->RecvStandBy();
 		}
 
 		void Session::SynchronizationSendPacket(Stream & stream)

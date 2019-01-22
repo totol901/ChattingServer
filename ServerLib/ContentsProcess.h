@@ -19,7 +19,7 @@ namespace ServerEngine
 
 		public:
 			ContentsProcess();
-			~ContentsProcess();
+			virtual ~ContentsProcess();
 
 			HRESULT Init();
 			void Release();

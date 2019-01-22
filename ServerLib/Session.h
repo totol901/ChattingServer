@@ -63,8 +63,8 @@ namespace ServerEngine
 			함수명	: PacketParsing
 			설명		: 페킷을 파싱함
 			*****************************************************************************/
-			virtual const bool PacketParsing(Packet* const pakcet) = 0;
-
+			virtual const bool PacketParsing(Packet* const pakcet) { return false; };// = 0;
+			
 			/****************************************************************************
 			함수명	: sendPacket
 			설명		: packet데이터를 ioData_ 형태로 변형 후 send함

@@ -6,7 +6,7 @@ namespace ServerEngine
 	{
 		class TaskManager : public Singleton <TaskManager>
 		{
-			friend TaskManager;
+			friend Singleton;
 		private:
 			int m_ThreadCount;
 			vector<Task *> m_vecTaskPool;
