@@ -24,7 +24,7 @@
 #include <chrono>
 #include "dbghelp.h"
 
-#import "C:\Program Files (x86)\Common Files\system\ado\msado15.dll" no_namespace rename("EOF", "EndOfFile")
+#import "C:\Program Files\Common Files\system\ado\msado15.dll" no_namespace rename("EOF", "EndOfFile")
 
 using namespace std;
 
@@ -108,6 +108,7 @@ using namespace std;
 #define DBMANAGER ServerEngine::DatabaseSystem::DBManager::GetInstance()
 #define TASKAMANGER ServerEngine::System::TaskManager::GetInstance()
 #define GLOBALVAL ServerEngine::Util::GlobalValue::GetInstance()
+#define TERMINALMANAGER ServerEngine::NetworkSystem::TerminalManager::GetInstance()
 
 #if _DEBUG
 #define CONTEXT_SWITCH		Sleep(1)

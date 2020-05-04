@@ -91,6 +91,12 @@ namespace ServerEngine
 			offset += sizeof(reVal);
 		}
 
+		void SendStream::write(const UINT64 & reVal)
+		{
+			memcpy_s((void *)(buffer.data() + offset), buffer.size() - offset, (const void *)&reVal, sizeof(reVal));
+			offset += sizeof(reVal);
+		}
+
 		void SendStream::write(const BYTE & reVal)
 		{
 			memcpy_s((void *)(buffer.data() + offset), buffer.size() - offset, (const void *)&reVal, sizeof(reVal));

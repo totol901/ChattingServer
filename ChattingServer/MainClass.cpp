@@ -16,6 +16,7 @@ BOOL MainClass::Init()
 	is_On = true;
 	
 	HRESULT hVal = MEMORYMANAGER->Init();
+	
 	if (SUCCEEDED(hVal))
 	{
 		hVal = THREADPOOLMANAGER->Init();

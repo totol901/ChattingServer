@@ -6,7 +6,7 @@
 
 class ChannelManager : public ServerEngine::Singleton<ChannelManager>
 {
-	friend ChannelManager;
+	friend Singleton;
 private:
 	unordered_map<wstring, Channel*>	m_mapStringChannels;
 	unordered_map<UINT, Channel*>		m_mapIDChannels;

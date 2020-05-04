@@ -111,9 +111,6 @@
     <ClInclude Include="Allocator.h">
       <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClInclude>
-    <ClInclude Include="PoolAllocator.h">
-      <Filter>SystemModule\System\MemoryAllocator</Filter>
-    </ClInclude>
     <ClInclude Include="MemoryManager.h">
       <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClInclude>
@@ -421,6 +418,9 @@
     </ClCompile>
     <ClCompile Include="Terminal.cpp">
       <Filter>SystemModule\NetworkSystem\Terminal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\NewServer\GraduationProject\ServerLib\Util\EngineClass\Base\MemoryAllocator\PoolAllocator.cpp">
+      <Filter>SystemModule\System\MemoryAllocator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

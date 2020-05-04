@@ -26,6 +26,7 @@ namespace ServerEngine
 			void write(const int& reVal);
 			void write(const UINT& reVal);
 			void write(const INT64& reVal);
+			void write(const UINT64& reVal);
 			void write(const BYTE& reVal);
 			void write(void* retVal, size_t len);
 			void write(const E_PACKET_TYPE& retVal);

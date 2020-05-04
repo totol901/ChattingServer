@@ -57,7 +57,7 @@ namespace ServerEngine
 			{
 				SAFE_DELETE(thread);
 			}
-			runFuncTable_.clear();
+			m_runFuncTable.clear();
 		}
 
 		unsigned int __stdcall ContentsProcess::process(void * param)
@@ -107,16 +107,16 @@ namespace ServerEngine
 
 		void ContentsProcess::registDefaultPacketFunc()
 		{
-			runFuncTable_.insert(make_pair(NetworkSystem::E_PK_RECV_HARTBEAT, &ContentsProcess::Packet_HeartBeat));
-			runFuncTable_.insert(make_pair(NetworkSystem::E_PK_I_NOTIFY_TERMINAL, &ContentsProcess::Packet_Notify_Terminal));
-			runFuncTable_.insert(make_pair(NetworkSystem::E_PK_ANS_EXIT, &ContentsProcess::C_REQ_EXIT));
+			m_runFuncTable.insert(make_pair(NetworkSystem::E_PK_RECV_HARTBEAT, &ContentsProcess::Packet_HeartBeat));
+			m_runFuncTable.insert(make_pair(NetworkSystem::E_PK_I_NOTIFY_TERMINAL, &ContentsProcess::Packet_Notify_Terminal));
+			m_runFuncTable.insert(make_pair(NetworkSystem::E_PK_ANS_EXIT, &ContentsProcess::C_REQ_EXIT));
 		}
 
 		void ContentsProcess::run(NetworkSystem::Package *package)
 		{
 			NetworkSystem::E_PACKET_TYPE type = package->m_pPacket->Type();
-			auto itr = runFuncTable_.find(type);
-			if (itr == runFuncTable_.end())
+			auto itr = m_runFuncTable.find(type);
+			if (itr == m_runFuncTable.end())
 			{
 				SLogPrintAtFile(L"! invaild packet runFunction. type[%d]", type);
 				//package->m_pSession->->onClose();

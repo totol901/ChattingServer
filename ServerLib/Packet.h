@@ -586,5 +586,51 @@ namespace ServerEngine
            E_PACKET_TYPE Type()  {  return E_PK_I_NOTIFY_TERMINAL;  }
       };
 
+        class PK_I_DB_REQ_ID_PW : public Packet
+      {
+        public:
+           E_PACKET_TYPE Type()  {  return E_PK_I_DB_REQ_ID_PW;  }
+            UInt64             ClientID;
+            string             ID;
+            string             PW;
+
+            void Encode(SendStream& sendStream)
+            {
+                sendStream.write(this->Type());
+                sendStream.write(ClientID);
+                sendStream.write(ID);
+                sendStream.write(PW);
+            }
+
+            void Decode(RecvStream& recvStream)
+            {                recvStream.read(&ClientID);
+                recvStream.read(&ID);
+                recvStream.read(&PW);
+            }
+      };
+
+        class PK_I_DB_ANS_ID_PW : public Packet
+      {
+        public:
+           E_PACKET_TYPE Type()  {  return E_PK_I_DB_ANS_ID_PW;  }
+            UInt64             ClientID;
+            UInt64             oioAccountID;
+            bool             result;
+
+            void Encode(SendStream& sendStream)
+            {
+                sendStream.write(this->Type());
+                sendStream.write(ClientID);
+                sendStream.write(oioAccountID);
+                sendStream.write(result);
+            }
+
+            void Decode(RecvStream& recvStream)
+            {                recvStream.read(&ClientID);
+                recvStream.read(&oioAccountID);
+                recvStream.read(&result);
+            }
+      };
+
    }
 }

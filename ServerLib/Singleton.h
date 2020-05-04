@@ -11,11 +11,13 @@ namespace ServerEngine
 	class Singleton
 	{
 	protected:
+		//복사를 막기 위해서
 		Singleton(const Singleton&) = delete;
 		Singleton(const Singleton&&) = delete;
 		Singleton& operator = (const Singleton&) = delete;
 		Singleton& operator = (const Singleton&&) = delete;
 
+		//새로운 생성을 막기 위해서
 		Singleton() {}
 		virtual ~Singleton() {}
 

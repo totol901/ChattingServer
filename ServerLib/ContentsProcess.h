@@ -15,7 +15,7 @@ namespace ServerEngine
 		protected:
 			typedef function<void(NetworkSystem::Session *pSession, 
 				NetworkSystem::Packet *pRowPacket)> RunFunc;
-			unordered_map<NetworkSystem::E_PACKET_TYPE, RunFunc> runFuncTable_;
+			unordered_map<NetworkSystem::E_PACKET_TYPE, RunFunc> m_runFuncTable;
 
 		public:
 			ContentsProcess();

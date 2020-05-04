@@ -6,7 +6,7 @@ namespace ServerEngine
     {
         inline wstring PacketMakeDate()
         {
-             return L"2019-45-12 20:45:04";
+             return L"2019-04-23 08:04:26";
         }
         enum E_PACKET_TYPE
         {
@@ -40,6 +40,8 @@ namespace ServerEngine
               /*27*/    E_PK_RECV_CHANNAL_OUT_ANNOUNCE = 27,
               /*28*/    E_PK_RECV_CHANNAL_DATA = 28,
               /*29*/    E_PK_I_NOTIFY_TERMINAL = 29,
+              /*30*/    E_PK_I_DB_REQ_ID_PW = 30,
+              /*31*/    E_PK_I_DB_ANS_ID_PW = 31,
         };
     }
 }

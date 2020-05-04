@@ -10,7 +10,6 @@ namespace ServerEngine
 			QueryStatement* m_pStatement;
 			QueryRecord m_Record;
 
-
 		public:
 			Query();
 			virtual ~Query();
